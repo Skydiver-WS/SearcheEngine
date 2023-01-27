@@ -7,7 +7,7 @@ import javax.persistence.*;
 import javax.persistence.Index;
 
 @Entity
-@Table(name = "page", indexes = @Index(columnList = "path", unique = true))
+@Table(name = "page")
 @Getter
 @Setter
 public class PageInfo {
@@ -17,7 +17,7 @@ public class PageInfo {
   @ManyToOne
   @JoinColumn(name = "site_id", nullable = false)
   private SiteInfo siteId;
-  @Column(nullable = false)
+  @Column(columnDefinition = "TEXT NOT NULL, UNIQUE KEY (path(512))")
   private String path;
   @Column(nullable = false)
   private int code;
