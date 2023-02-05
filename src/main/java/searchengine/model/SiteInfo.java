@@ -2,6 +2,7 @@ package searchengine.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 import searchengine.config.Status;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "site")
 @Getter
 @Setter
+@Component
 public class SiteInfo {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
