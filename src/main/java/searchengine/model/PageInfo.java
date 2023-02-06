@@ -2,14 +2,15 @@ package searchengine.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
-import javax.persistence.Index;
 
 @Entity
 @Table(name = "page")
 @Getter
 @Setter
+@Component
 public class PageInfo {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

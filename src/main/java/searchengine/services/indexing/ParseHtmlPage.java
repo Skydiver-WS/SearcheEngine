@@ -13,21 +13,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
-public class ParseHtmlPage extends RecursiveTask<Set<String>> {
-  private final TreeSet<String> finalWebStructure = new TreeSet<>();
+public class ParseHtmlPage extends RecursiveTask<Map<String, String>> {
+  private final TreeMap<String, String> finalWebStructure = new TreeMap<>();
 
   @NonNull
   private String url;
 
   @SneakyThrows
   @Override
-  protected Set<String> compute() {
+  protected Map<String, String> compute() {
     url = insertUrl(url);
-    if (!finalWebStructure.contains(url)) {
-      finalWebStructure.add(url);
+    if (!finalWebStructure.containsKey(url)) {
       Document doc = Jsoup.connect(url).userAgent("Mozilla/5.0 (Windows; U; WindowsNT" +
           "5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
         .referrer("http://www.google.com").get(); // TODO: вынести в конфигурацию
+      finalWebStructure.put(url, doc.html());
       List<String> listAllRef = doc.select("a").eachAttr("abs:href");
       TreeSet<String> checkRef = filterSite(listAllRef);
       ArrayList<ParseHtmlPage> pages = new ArrayList<>();
@@ -51,7 +51,7 @@ public class ParseHtmlPage extends RecursiveTask<Set<String>> {
   private void join(ArrayList<ParseHtmlPage> pages) {
     for (ParseHtmlPage page : pages) {
       try {
-      finalWebStructure.addAll(page.join());
+      finalWebStructure.putAll(page.join());
       //Logger.getLogger(ParseHtmlPage.class.getName()).info(url + " JOIN complete");
       }
       catch (Exception ex) {
@@ -65,7 +65,7 @@ public class ParseHtmlPage extends RecursiveTask<Set<String>> {
     Pattern pattern = Pattern.compile(url);
     for (String ref : list) {
       Matcher matcher = pattern.matcher(ref);
-      if (matcher.find() && !finalWebStructure.contains(ref)) {
+      if (matcher.find() && !finalWebStructure.containsKey(ref)) {
         filterList.add(ref);
       }
     }

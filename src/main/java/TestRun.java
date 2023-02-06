@@ -7,10 +7,11 @@ import java.util.TreeSet;
 public class TestRun {
   public static void main(String[] args) {
     long start = System.currentTimeMillis();
-    ParseHtmlPage page = new ParseHtmlPage("https://baza.team/shop/");
-    for (String url:page.invoke()) {
-      System.out.println(url);
-    }
+    ParseHtmlPage page = new ParseHtmlPage("https://baza.team/shop/#");
+//    for (String url:page.invoke().keySet()) {
+//      System.out.println(url + " - " + page.invoke().get(url));
+//    }
+    System.out.println(page.invoke());
     System.out.println(System.currentTimeMillis() - start);
   }
 }

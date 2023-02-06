@@ -2,11 +2,12 @@ package searchengine.dto.sites;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 import searchengine.config.Status;
 
 import java.time.LocalDateTime;
-@Component
+import java.util.Map;
+
+
 @Getter
 @Setter
 public class SiteDTO {
@@ -14,4 +15,7 @@ public class SiteDTO {
   private String url;
   private String name;
   private LocalDateTime time;
+
+  private Map<String, String> content;
+  private int response;
 }

@@ -10,12 +10,13 @@ import searchengine.model.PageInfo;
 import searchengine.model.SiteInfo;
 import searchengine.repository.PageRepository;
 import searchengine.repository.SiteRepository;
+import searchengine.services.writeDB.WritePageDBService;
 import searchengine.services.writeDB.WriteSiteDBService;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Service
 public class IndexingImpl implements IndexingService {
@@ -28,20 +29,14 @@ public class IndexingImpl implements IndexingService {
   @Autowired
   private WriteSiteDBService writeSite;
   @Autowired
-  private SiteDTO siteDTO;
+  private WritePageDBService writePage;
 
   @Override
   public boolean getIndexing() {
     for (Site site : sites()) {
-      String url = site.getUrl();
-      deleteSite(url);
       new Thread(() -> {
-        siteDTO.setUrl(site.getUrl());
-        siteDTO.setName(site.getName());
-        siteDTO.setStatus(Status.INDEXING);
-        siteDTO.setTime(LocalDateTime.now());
-        writeSite.write(siteDTO);
-        parse(url);
+        deleteSite(site.getUrl());
+        parse(site);
       }).start();
     }
     return false;
@@ -65,9 +60,24 @@ public class IndexingImpl implements IndexingService {
     pageRepository.deleteById(siteId);
   }
 
+  private void parse(Site site) {
+    SiteDTO siteDTO = new SiteDTO();
+    writeSite.write(siteTableData(siteDTO, site));
+    ParseHtmlPage parse = new ParseHtmlPage(site.getUrl());
+    writePage.write(pageTableData(siteDTO, parse.invoke()));
+  }
 
-  private void parse(String url) {
-    ParseHtmlPage parse = new ParseHtmlPage(url);
+  private SiteDTO siteTableData(SiteDTO siteDTO, Site site) {
+    siteDTO.setUrl(site.getUrl());
+    siteDTO.setName(site.getName());
+    siteDTO.setStatus(Status.INDEXING);
+    siteDTO.setTime(LocalDateTime.now());
+    return siteDTO;
+  }
+
+  private SiteDTO pageTableData(SiteDTO siteDTO, Map<String, String> map){
+    siteDTO.setContent(map);
+    return siteDTO;
   }
 
   private List<Site> sites() {
