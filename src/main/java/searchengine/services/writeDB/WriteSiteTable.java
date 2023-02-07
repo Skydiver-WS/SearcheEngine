@@ -15,8 +15,7 @@ public class WriteSiteTable implements WriteSiteDBService {
 
   @Override
   public synchronized void write(SiteDTO siteDTO) {
-    int id = 0;
-    siteInfo.setId(1);
+    siteInfo.setId(0);
     siteInfo.setUrl(siteDTO.getUrl());
     siteInfo.setName(siteDTO.getName());
     siteInfo.setStatus(siteDTO.getStatus());

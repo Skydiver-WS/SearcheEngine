@@ -5,6 +5,7 @@ import lombok.Setter;
 import searchengine.config.Status;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -15,7 +16,5 @@ public class SiteDTO {
   private String url;
   private String name;
   private LocalDateTime time;
-
-  private Map<String, String> content;
-  private int response;
+  private Map<String, HashMap<Integer, String>> content;
 }

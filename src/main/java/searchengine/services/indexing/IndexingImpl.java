@@ -14,81 +14,82 @@ import searchengine.services.writeDB.WritePageDBService;
 import searchengine.services.writeDB.WriteSiteDBService;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 @Service
 public class IndexingImpl implements IndexingService {
-  @Autowired
-  private PageRepository pageRepository;
-  @Autowired
-  private SiteRepository siteRepository;
-  @Autowired
-  private SitesList sitesList;
-  @Autowired
-  private WriteSiteDBService writeSite;
-  @Autowired
-  private WritePageDBService writePage;
+    @Autowired
+    private PageRepository pageRepository;
+    @Autowired
+    private SiteRepository siteRepository;
+    @Autowired
+    private SitesList sitesList;
+    @Autowired
+    private WriteSiteDBService writeSite;
+    @Autowired
+    private WritePageDBService writePage;
 
-  @Override
-  public boolean getIndexing() {
-    for (Site site : sites()) {
-      new Thread(() -> {
-        deleteSite(site.getUrl());
-        parse(site);
-      }).start();
+    @Override
+    public boolean getIndexing() {
+        for (Site site : sites()) {
+            new Thread(() -> {
+                deleteSite(site.getUrl());
+                parse(site);
+            }).start();
+        }
+        return false;
     }
-    return false;
-  }
 
-  private void deleteSite(String site) {
-    for (SiteInfo siteInfo : sitesInfo()) {
-      if (siteInfo.getUrl().equals(site)) {
-        //deletePages(siteInfo.getId()); //TODO: вернуть, как пропишу удаление PAGE
-        siteRepository.deleteById(siteInfo.getId());
-      }
+    private void deleteSite(String site) {
+        for (SiteInfo siteInfo : sitesInfo()) {
+            if (siteInfo.getUrl().equals(site)) {
+                //deletePages(siteInfo.getId()); //TODO: вернуть, как пропишу удаление PAGE
+                siteRepository.deleteById(siteInfo.getId());
+            }
+        }
     }
-  }
 
-  private void deletePages(int siteId) {
-    for (PageInfo pageInfo : pageInfo()) {
-      if (pageInfo.getSiteId().getId() == siteId) {
-        pageRepository.deleteById(pageInfo.getId());
-      }
+    private void deletePages(int siteId) {
+        for (PageInfo pageInfo : pageInfo()) {
+            if (pageInfo.getSiteId().getId() == siteId) {
+                pageRepository.deleteById(pageInfo.getId());
+            }
+        }
+        pageRepository.deleteById(siteId);
     }
-    pageRepository.deleteById(siteId);
-  }
 
-  private void parse(Site site) {
-    SiteDTO siteDTO = new SiteDTO();
-    writeSite.write(siteTableData(siteDTO, site));
-    ParseHtmlPage parse = new ParseHtmlPage(site.getUrl());
-    writePage.write(pageTableData(siteDTO, parse.invoke()));
-  }
+    private void parse(Site site) {
+        SiteDTO siteDTO = new SiteDTO();
+        siteTableData(siteDTO, site);
+        ParseHtmlPage parse = new ParseHtmlPage(site.getUrl());
+        pageTableData(siteDTO, parse.invoke());
+    }
 
-  private SiteDTO siteTableData(SiteDTO siteDTO, Site site) {
-    siteDTO.setUrl(site.getUrl());
-    siteDTO.setName(site.getName());
-    siteDTO.setStatus(Status.INDEXING);
-    siteDTO.setTime(LocalDateTime.now());
-    return siteDTO;
-  }
+    private void siteTableData(SiteDTO siteDTO, Site site) {
+        siteDTO.setUrl(site.getUrl());
+        siteDTO.setName(site.getName());
+        siteDTO.setStatus(Status.INDEXING);
+        siteDTO.setTime(LocalDateTime.now());
+        writeSite.write(siteDTO);
+    }
 
-  private SiteDTO pageTableData(SiteDTO siteDTO, Map<String, String> map){
-    siteDTO.setContent(map);
-    return siteDTO;
-  }
+    private void pageTableData(SiteDTO siteDTO, Map<String, HashMap<Integer, String>> map) {
+        siteDTO.setContent(map);
+        writePage.write(siteDTO);
+    }
 
-  private List<Site> sites() {
-    return sitesList.getSites();
-  }
+    private List<Site> sites() {
+        return sitesList.getSites();
+    }
 
-  private List<SiteInfo> sitesInfo() {
-    return siteRepository.findAll();
-  }
+    private List<SiteInfo> sitesInfo() {
+        return siteRepository.findAll();
+    }
 
-  private List<PageInfo> pageInfo() {
-    return pageRepository.findAll();
-  }
+    private List<PageInfo> pageInfo() {
+        return pageRepository.findAll();
+    }
 }
