@@ -6,6 +6,9 @@ import searchengine.dto.sites.SiteDTO;
 import searchengine.model.SiteInfo;
 import searchengine.repository.SiteRepository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class WriteSiteTable implements WriteSiteDBService {
   @Autowired
@@ -20,6 +23,23 @@ public class WriteSiteTable implements WriteSiteDBService {
     siteInfo.setName(siteDTO.getName());
     siteInfo.setStatus(siteDTO.getStatus());
     siteInfo.setStatusTime(siteDTO.getTime());
-    siteRepository.save(siteInfo);
+    siteRepository.saveAndFlush(siteInfo);
+    getId(siteDTO);
+  }
+
+  @Override
+  public synchronized void setStatusIndexing(SiteDTO siteDTO) {
+    siteInfo.setId(siteDTO.getIdSite());
+    siteInfo.setStatusTime(siteDTO.getTime());
+    siteInfo.setStatus(siteDTO.getStatus());
+    siteRepository.saveAndFlush(siteInfo);
+  }
+
+  private void getId(SiteDTO siteDTO) {
+    for (SiteInfo site : siteRepository.findAll()) {
+      if (site.getUrl().contains(siteDTO.getUrl())) {
+        siteDTO.setIdSite(site.getId());
+      }
+    }
   }
 }

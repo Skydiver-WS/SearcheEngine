@@ -1,6 +1,7 @@
 package searchengine.services.statistics;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import searchengine.config.Site;
 import searchengine.config.SitesList;
@@ -8,6 +9,9 @@ import searchengine.dto.statistics.DetailedStatisticsItem;
 import searchengine.dto.statistics.StatisticsData;
 import searchengine.dto.statistics.StatisticsResponse;
 import searchengine.dto.statistics.TotalStatistics;
+import searchengine.model.SiteInfo;
+import searchengine.repository.PageRepository;
+import searchengine.repository.SiteRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +23,10 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     private final Random random = new Random();
     private final SitesList sites;
+    @Autowired
+    private SiteRepository siteRepository;
+    @Autowired
+    private PageRepository pageRepository;
 
     @Override
     public StatisticsResponse getStatistics() {
@@ -34,21 +42,20 @@ public class StatisticsServiceImpl implements StatisticsService {
         total.setIndexing(true);
 
         List<DetailedStatisticsItem> detailed = new ArrayList<>();
-        List<Site> sitesList = sites.getSites();
-        for(int i = 0; i < sitesList.size(); i++) {
-            Site site = sitesList.get(i);
+        List<SiteInfo> sitesList = siteRepository.findAll();
+        for (SiteInfo site : sitesList) {
             DetailedStatisticsItem item = new DetailedStatisticsItem();
             item.setName(site.getName());
             item.setUrl(site.getUrl());
-            int pages = random.nextInt(1_000);
-            int lemmas = pages * random.nextInt(1_000);
+            int pages = pageRepository.findAll().size(); //страниц на сайте
+            int lemmas = pages * random.nextInt(1_000);//TODO: не забыть исправить
             item.setPages(pages);
             item.setLemmas(lemmas);
-            item.setStatus(statuses[i % 3]);
-            item.setError(errors[i % 3]);
+            item.setStatus(site.getStatus().name());
+            //item.setError(errors[i % 3]);
             item.setStatusTime(System.currentTimeMillis() -
-                    (random.nextInt(10_000)));
-            total.setPages(total.getPages() + pages);
+              (random.nextInt(10_000)));
+            total.setPages(total.getPages() + pages); // общее количество
             total.setLemmas(total.getLemmas() + lemmas);
             detailed.add(item);
         }

@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Component
 public class SiteInfo {
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)

@@ -27,6 +27,7 @@ public class ApiController {
     @GetMapping("/startIndexing")
     public HashMap<String, Boolean> indexing(){
         indexingService.getIndexing();
+        System.out.println("End");
         return null;
     }
 

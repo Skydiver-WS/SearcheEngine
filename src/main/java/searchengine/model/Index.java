@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Setter
 public class Index {
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
   @OneToOne
   @JoinColumn(name = "page_id")

@@ -12,6 +12,7 @@ import java.util.Map;
 @Getter
 @Setter
 public class SiteDTO {
+  private int idSite;
   private Status status;
   private String url;
   private String name;

@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Setter
 public class Lemma {
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
   @ManyToOne
   @JoinColumn(name = "site_id")
