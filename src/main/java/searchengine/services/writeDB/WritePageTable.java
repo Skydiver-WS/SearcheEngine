@@ -12,6 +12,7 @@ import searchengine.repository.SiteRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class WritePageTable implements WritePageDBService {
@@ -21,8 +22,6 @@ public class WritePageTable implements WritePageDBService {
     private PageRepository pageRepository;
     @Autowired
     private SiteInfo siteInfo;
-    @Autowired
-    private WriteSiteDBService writeSite;
 
     @Override
     public synchronized void write(SiteDTO siteDTO) {
@@ -40,20 +39,11 @@ public class WritePageTable implements WritePageDBService {
             list.add(pageInfo);
         }
         pageRepository.saveAllAndFlush(list);
-        siteDTO.setTime(LocalDateTime.now());
-        siteDTO.setStatus(Status.INDEXED);
-        writeSite.setStatusIndexing(siteDTO);
-
     }
 
     private SiteInfo site(SiteDTO siteDTO) {
-        List<SiteInfo> list = siteRepository.findAll();
-        for (SiteInfo site : list) {
-            if (site.getUrl().equals(siteDTO.getUrl())) {
-                return site;
-            }
-        }
-        return null;
+        Optional<SiteInfo> site = siteRepository.findById(siteDTO.getIdSite());
+        return site.orElse(null);
     }
 
     private Object[] key(SiteDTO dto) {

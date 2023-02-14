@@ -28,7 +28,7 @@ public class IndexingImpl implements IndexingService {
 
   @Override
   public boolean getIndexing() {
-    for (Site site : sites()) {
+    for (Site site : sitesList.getSites()) {
       new Thread(() -> {
         deleteSite.delete(site.getUrl());
         parse(site);
@@ -43,7 +43,6 @@ public class IndexingImpl implements IndexingService {
     siteTableData(siteDTO, site);
     ParseHtmlPage parse = new ParseHtmlPage(site.getUrl());
     pageTableData(siteDTO, parse.invoke());
-    writeSite.setStatusIndexing(siteDTO);
   }
 
   private void siteTableData(SiteDTO siteDTO, Site site) {
@@ -56,9 +55,7 @@ public class IndexingImpl implements IndexingService {
   private void pageTableData(SiteDTO siteDTO, Map<String, HashMap<Integer, String>> map) {
     siteDTO.setContent(map);
     writePage.write(siteDTO);
-  }
-
-  private List<Site> sites() {
-    return sitesList.getSites();
+    siteDTO.setStatus(Status.INDEXED);
+    writeSite.setStatusIndexing(siteDTO);
   }
 }

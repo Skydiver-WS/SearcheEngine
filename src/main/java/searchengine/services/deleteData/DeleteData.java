@@ -15,12 +15,13 @@ public class DeleteData implements DeleteDataService {
   private PageRepository pageRepository;
   @Autowired
   private SiteRepository siteRepository;
+
   @Override
   public void delete(String url) {
     deleteSite(url);
   }
 
-  private synchronized void deleteSite(String site) {
+  private void deleteSite(String site) {
     for (SiteInfo siteInfo : getSitesInfo()) {
       if (siteInfo.getUrl().equals(site)) {
         deletePages(siteInfo.getId());
@@ -36,11 +37,12 @@ public class DeleteData implements DeleteDataService {
       }
     }
   }
-  private List<SiteInfo> getSitesInfo() {
+
+  private synchronized List<SiteInfo> getSitesInfo() {
     return siteRepository.findAll();
   }
 
-  private List<PageInfo> getPageInfo() {
+  private synchronized List<PageInfo> getPageInfo() {
     return pageRepository.findAll();
   }
 }

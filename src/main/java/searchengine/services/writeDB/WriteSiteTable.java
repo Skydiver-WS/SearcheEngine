@@ -5,8 +5,6 @@ import org.springframework.stereotype.Service;
 import searchengine.dto.sites.SiteDTO;
 import searchengine.model.SiteInfo;
 import searchengine.repository.SiteRepository;
-
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,10 +27,13 @@ public class WriteSiteTable implements WriteSiteDBService {
 
   @Override
   public synchronized void setStatusIndexing(SiteDTO siteDTO) {
-    siteInfo.setId(siteDTO.getIdSite());
-    siteInfo.setStatusTime(siteDTO.getTime());
-    siteInfo.setStatus(siteDTO.getStatus());
-    siteRepository.saveAndFlush(siteInfo);
+    Optional<SiteInfo> siteById = siteRepository.findById(siteDTO.getIdSite());
+    if (siteById.isPresent()){
+      siteInfo = siteById.get();
+      siteInfo.setStatusTime(siteDTO.getTime());
+      siteInfo.setStatus(siteDTO.getStatus());
+      siteRepository.saveAndFlush(siteInfo);
+    }
   }
 
   private void getId(SiteDTO siteDTO) {
