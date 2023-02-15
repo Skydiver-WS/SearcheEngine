@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import searchengine.dto.statistics.StatisticsResponse;
 import searchengine.repository.nosql.CashStatisticsRepository;
 import searchengine.services.indexing.IndexingService;
-import searchengine.services.statistics.StatisticsService;
+import searchengine.services.statistics.extract.StatisticsService;
 
 import java.util.HashMap;
 

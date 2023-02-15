@@ -7,7 +7,7 @@ import searchengine.model.sql.PageInfo;
 import searchengine.model.sql.SiteInfo;
 import searchengine.repository.sql.PageRepository;
 import searchengine.repository.sql.SiteRepository;
-import searchengine.services.redis.CashStatisticsService;
+import searchengine.services.statistics.redis.CashStatisticsService;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -24,7 +24,7 @@ public class WritePageTable implements WritePageDBService {
     private CashStatisticsService statistics;
 
     @Override
-    public synchronized void write(SiteDTO siteDTO) {
+    public synchronized SiteDTO write(SiteDTO siteDTO) {
         ArrayList <PageInfo> list = new ArrayList<>();
         for (int i = 0; i < siteDTO.getContent().size(); i++) {
             PageInfo pageInfo = new PageInfo();
@@ -39,7 +39,7 @@ public class WritePageTable implements WritePageDBService {
             list.add(pageInfo);
         }
         pageRepository.saveAllAndFlush(list);
-        statistics.statistics();
+        return siteDTO;
     }
 
     private SiteInfo site(SiteDTO siteDTO) {

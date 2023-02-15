@@ -1,4 +1,4 @@
-package searchengine.services.statistics;
+package searchengine.services.statistics.extract;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +9,7 @@ import searchengine.dto.statistics.StatisticsData;
 import searchengine.dto.statistics.StatisticsResponse;
 import searchengine.dto.statistics.TotalStatistics;
 import searchengine.model.nosql.CashStatisticsDB;
-import searchengine.model.sql.PageInfo;
-import searchengine.model.sql.SiteInfo;
-import searchengine.repository.nosql.CashStatisticsRepository;
-import searchengine.repository.sql.PageRepository;
-import searchengine.repository.sql.SiteRepository;
+import searchengine.services.statistics.redis.CashStatisticsService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +22,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     private final Random random = new Random();
     private final SitesList sites;
     @Autowired
-    private CashStatisticsRepository cashStatistics;
+    private CashStatisticsService cashStatistics;
 
     @Override
     public StatisticsResponse getStatistics() {
@@ -42,7 +38,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         total.setIndexing(true);
 
         List<DetailedStatisticsItem> detailed = new ArrayList<>();
-        List<CashStatisticsDB> cashList = cashStatistics.findAll();
+        List<CashStatisticsDB> cashList = cashStatistics.getStatistics();
         int sum = 0;
         for (CashStatisticsDB statistics : cashList) {
             sum += statistics.getPages();

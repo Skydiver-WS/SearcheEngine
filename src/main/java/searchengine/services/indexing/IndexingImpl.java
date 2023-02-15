@@ -7,6 +7,7 @@ import searchengine.config.site.SitesList;
 import searchengine.config.status.Status;
 import searchengine.dto.sites.SiteDTO;
 import searchengine.services.deleteData.DeleteDataService;
+import searchengine.services.statistics.redis.CashStatisticsService;
 import searchengine.services.writeDB.WritePageDBService;
 import searchengine.services.writeDB.WriteSiteDBService;
 
@@ -23,6 +24,8 @@ public class IndexingImpl implements IndexingService {
   @Autowired
   private WritePageDBService writePage;
   @Autowired
+  private CashStatisticsService cashStatistics;
+  @Autowired
   private DeleteDataService deleteSite;
 
   @Override
@@ -38,23 +41,26 @@ public class IndexingImpl implements IndexingService {
 
   private void parse(Site site) {
     SiteDTO siteDTO = new SiteDTO();
-    siteDTO.setStatus(Status.INDEXING);
-    siteTableData(siteDTO, site);
     ParseHtmlPage parse = new ParseHtmlPage(site.getUrl());
+    siteTableData(siteDTO, site);
     pageTableData(siteDTO, parse.invoke());
   }
 
   private void siteTableData(SiteDTO siteDTO, Site site) {
     siteDTO.setUrl(site.getUrl());
     siteDTO.setName(site.getName());
+    siteDTO.setStatus(Status.INDEXING);
     siteDTO.setTime(LocalDateTime.now());
-    writeSite.write(siteDTO);
+    siteDTO = writeSite.write(siteDTO);
+    cashStatistics.setSiteStatistics(siteDTO);
   }
 
   private void pageTableData(SiteDTO siteDTO, Map<String, HashMap<Integer, String>> map) {
     siteDTO.setContent(map);
-    writePage.write(siteDTO);
+    siteDTO = writePage.write(siteDTO);
+    siteDTO.setTime(LocalDateTime.now());
     siteDTO.setStatus(Status.INDEXED);
-    writeSite.setStatusIndexing(siteDTO);
+    siteDTO = writeSite.setStatusIndexing(siteDTO);
+    cashStatistics.setPageStatistics(siteDTO);
   }
 }
