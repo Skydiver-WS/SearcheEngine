@@ -2,9 +2,9 @@ package searchengine.services.indexing;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import searchengine.config.Site;
-import searchengine.config.SitesList;
-import searchengine.config.Status;
+import searchengine.config.site.Site;
+import searchengine.config.site.SitesList;
+import searchengine.config.status.Status;
 import searchengine.dto.sites.SiteDTO;
 import searchengine.services.deleteData.DeleteDataService;
 import searchengine.services.writeDB.WritePageDBService;
@@ -12,7 +12,6 @@ import searchengine.services.writeDB.WriteSiteDBService;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service

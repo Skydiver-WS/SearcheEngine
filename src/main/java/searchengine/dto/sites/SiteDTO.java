@@ -2,7 +2,7 @@ package searchengine.dto.sites;
 
 import lombok.Getter;
 import lombok.Setter;
-import searchengine.config.Status;
+import searchengine.config.status.Status;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;

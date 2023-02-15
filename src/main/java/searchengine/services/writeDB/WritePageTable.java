@@ -2,16 +2,14 @@ package searchengine.services.writeDB;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import searchengine.config.Status;
 import searchengine.dto.sites.SiteDTO;
-import searchengine.model.PageInfo;
-import searchengine.model.SiteInfo;
-import searchengine.repository.PageRepository;
-import searchengine.repository.SiteRepository;
+import searchengine.model.sql.PageInfo;
+import searchengine.model.sql.SiteInfo;
+import searchengine.repository.sql.PageRepository;
+import searchengine.repository.sql.SiteRepository;
+import searchengine.services.redis.CashStatisticsService;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,6 +20,8 @@ public class WritePageTable implements WritePageDBService {
     private PageRepository pageRepository;
     @Autowired
     private SiteInfo siteInfo;
+    @Autowired
+    private CashStatisticsService statistics;
 
     @Override
     public synchronized void write(SiteDTO siteDTO) {
@@ -39,6 +39,7 @@ public class WritePageTable implements WritePageDBService {
             list.add(pageInfo);
         }
         pageRepository.saveAllAndFlush(list);
+        statistics.statistics();
     }
 
     private SiteInfo site(SiteDTO siteDTO) {
