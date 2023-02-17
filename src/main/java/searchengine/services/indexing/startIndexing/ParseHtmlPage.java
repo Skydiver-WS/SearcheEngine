@@ -1,16 +1,13 @@
-package searchengine.services.indexing;
+package searchengine.services.indexing.startIndexing;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.springframework.http.HttpStatus;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.RecursiveTask;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

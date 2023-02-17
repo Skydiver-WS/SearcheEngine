@@ -9,7 +9,7 @@ import searchengine.dto.statistics.StatisticsData;
 import searchengine.dto.statistics.StatisticsResponse;
 import searchengine.dto.statistics.TotalStatistics;
 import searchengine.model.nosql.CashStatisticsDB;
-import searchengine.services.statistics.redis.CashStatisticsService;
+import searchengine.services.statistics.packaging.CashStatisticsService;
 
 import java.util.ArrayList;
 import java.util.List;

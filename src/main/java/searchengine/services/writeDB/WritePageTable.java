@@ -7,7 +7,7 @@ import searchengine.model.sql.PageInfo;
 import searchengine.model.sql.SiteInfo;
 import searchengine.repository.sql.PageRepository;
 import searchengine.repository.sql.SiteRepository;
-import searchengine.services.statistics.redis.CashStatisticsService;
+
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -20,8 +20,6 @@ public class WritePageTable implements WritePageDBService {
     private PageRepository pageRepository;
     @Autowired
     private SiteInfo siteInfo;
-    @Autowired
-    private CashStatisticsService statistics;
 
     @Override
     public synchronized SiteDTO write(SiteDTO siteDTO) {

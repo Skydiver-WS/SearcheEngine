@@ -1,4 +1,4 @@
-package searchengine.services.statistics.redis;
+package searchengine.services.statistics.packaging;
 
 import searchengine.dto.sites.SiteDTO;
 import searchengine.model.nosql.CashStatisticsDB;

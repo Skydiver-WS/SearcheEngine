@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import searchengine.dto.sites.SiteDTO;
 import searchengine.model.sql.SiteInfo;
 import searchengine.repository.sql.SiteRepository;
-import searchengine.services.statistics.redis.CashStatisticsService;
 
 import java.util.Optional;
 
@@ -15,8 +14,6 @@ public class WriteSiteTable implements WriteSiteDBService {
   private SiteRepository siteRepository;
   @Autowired
   private SiteInfo siteInfo;
-  @Autowired
-  private CashStatisticsService statistics;
 
 
   @Override
@@ -28,7 +25,6 @@ public class WriteSiteTable implements WriteSiteDBService {
     siteInfo.setStatusTime(siteDTO.getTime());
     siteRepository.saveAndFlush(siteInfo);
     getId(siteDTO);
-    statistics.setSiteStatistics(siteDTO);
     return siteDTO;
   }
 

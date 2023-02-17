@@ -1,4 +1,4 @@
-package searchengine.services.statistics.redis;
+package searchengine.services.statistics.packaging;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
