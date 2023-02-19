@@ -1,10 +1,8 @@
-package searchengine.repository.sql;
+package searchengine.repository.SQL;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import searchengine.model.sql.PageInfo;
+import searchengine.model.SQL.PageInfo;
 @Repository
 public interface PageRepository extends JpaRepository<PageInfo, Integer> {
 }

@@ -1,4 +1,4 @@
-package searchengine.model.sql;
+package searchengine.model.SQL;
 
 import lombok.Getter;
 import lombok.Setter;

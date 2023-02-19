@@ -3,10 +3,11 @@ package searchengine.services.deleteData.sql;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import searchengine.model.sql.PageInfo;
-import searchengine.model.sql.SiteInfo;
-import searchengine.repository.sql.PageRepository;
-import searchengine.repository.sql.SiteRepository;
+import searchengine.dto.sites.SiteDTO;
+import searchengine.model.SQL.PageInfo;
+import searchengine.model.SQL.SiteInfo;
+import searchengine.repository.SQL.PageRepository;
+import searchengine.repository.SQL.SiteRepository;
 import searchengine.services.deleteData.nosql.DeleteCashService;
 
 import java.util.List;
@@ -21,17 +22,18 @@ public class DeleteData implements DeleteDataService {
     private DeleteCashService deleteCashService;
 
     @Override
-    @Transactional
-    public void delete(String url) {
-        deleteSite(url);
+    public void delete(SiteDTO siteDTO) {
+        deleteSite(siteDTO);
     }
 
-    private void deleteSite(String site) {
+    private void deleteSite(SiteDTO siteDTO) {
         for (SiteInfo siteInfo : getSitesInfo()) {
-            if (siteInfo.getUrl().equals(site)) {
-                deletePages(siteInfo.getId());
-                siteRepository.deleteById(siteInfo.getId());
-                deleteCashService.delete(siteInfo.getId());
+            if (siteInfo.getUrl().equals(siteDTO.getUrl())) {
+                siteDTO.setIdSite(siteInfo.getId());
+                int id = siteDTO.getIdSite();
+                deletePages(id);
+                siteRepository.deleteById(id);
+                deleteCashService.delete(id);
             }
         }
     }

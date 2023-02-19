@@ -1,10 +1,10 @@
-package searchengine.services.statistics.packaging;
+package searchengine.services.writeDB.noSQL;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import searchengine.dto.sites.SiteDTO;
-import searchengine.model.nosql.CashStatisticsDB;
-import searchengine.repository.nosql.CashStatisticsRepository;
+import searchengine.model.noSQL.CashStatisticsDB;
+import searchengine.repository.noSQL.CashStatisticsRepository;
 
 import java.util.List;
 

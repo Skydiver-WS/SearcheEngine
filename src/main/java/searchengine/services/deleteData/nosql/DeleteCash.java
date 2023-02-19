@@ -3,9 +3,7 @@ package searchengine.services.deleteData.nosql;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import searchengine.repository.nosql.CashStatisticsRepository;
-
-import java.util.List;
+import searchengine.repository.noSQL.CashStatisticsRepository;
 
 @Service
 public class DeleteCash implements DeleteCashService{

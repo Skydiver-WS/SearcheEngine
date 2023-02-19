@@ -1,12 +1,12 @@
-package searchengine.services.writeDB;
+package searchengine.services.writeDB.SQL;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import searchengine.dto.sites.SiteDTO;
-import searchengine.model.sql.PageInfo;
-import searchengine.model.sql.SiteInfo;
-import searchengine.repository.sql.PageRepository;
-import searchengine.repository.sql.SiteRepository;
+import searchengine.model.SQL.PageInfo;
+import searchengine.model.SQL.SiteInfo;
+import searchengine.repository.SQL.PageRepository;
+import searchengine.repository.SQL.SiteRepository;
 
 
 import java.util.ArrayList;

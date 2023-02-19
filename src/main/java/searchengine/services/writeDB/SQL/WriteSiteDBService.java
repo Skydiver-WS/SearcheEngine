@@ -1,4 +1,4 @@
-package searchengine.services.writeDB;
+package searchengine.services.writeDB.SQL;
 
 import searchengine.dto.sites.SiteDTO;
 

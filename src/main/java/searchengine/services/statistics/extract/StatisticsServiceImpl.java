@@ -8,8 +8,8 @@ import searchengine.dto.statistics.DetailedStatisticsItem;
 import searchengine.dto.statistics.StatisticsData;
 import searchengine.dto.statistics.StatisticsResponse;
 import searchengine.dto.statistics.TotalStatistics;
-import searchengine.model.nosql.CashStatisticsDB;
-import searchengine.services.statistics.packaging.CashStatisticsService;
+import searchengine.model.noSQL.CashStatisticsDB;
+import searchengine.services.writeDB.noSQL.CashStatisticsService;
 
 import java.util.ArrayList;
 import java.util.List;

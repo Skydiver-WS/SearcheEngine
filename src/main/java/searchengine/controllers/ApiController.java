@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import searchengine.dto.statistics.StatisticsResponse;
-import searchengine.repository.nosql.CashStatisticsRepository;
-import searchengine.services.indexing.startIndexing.IndexingService;
+import searchengine.repository.noSQL.CashStatisticsRepository;
+import searchengine.services.indexing.IndexingService;
 import searchengine.services.statistics.extract.StatisticsService;
 
 import java.util.HashMap;
@@ -29,11 +29,11 @@ public class ApiController {
 
     @GetMapping("/startIndexing")
     public HashMap<String, Object> indexing() {
-        return indexingService.getIndexing();
+        return indexingService.startIndexing();
     }
     @GetMapping("/stopIndexing")
     public HashMap<String, Object> stopIndexing(){
-        return indexingService.getIndexing();
+        return indexingService.stopIndexing();
     }
 
 }

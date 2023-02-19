@@ -1,7 +1,7 @@
-package searchengine.services.statistics.packaging;
+package searchengine.services.writeDB.noSQL;
 
 import searchengine.dto.sites.SiteDTO;
-import searchengine.model.nosql.CashStatisticsDB;
+import searchengine.model.noSQL.CashStatisticsDB;
 
 import java.util.List;
 

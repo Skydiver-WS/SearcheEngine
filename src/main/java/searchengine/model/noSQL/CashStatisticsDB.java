@@ -1,4 +1,4 @@
-package searchengine.model.nosql;
+package searchengine.model.noSQL;
 
 import lombok.Getter;
 import lombok.Setter;
