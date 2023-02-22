@@ -35,6 +35,7 @@ public class WriteSiteTable implements WriteSiteDBService {
       siteInfo = siteById.get();
       siteInfo.setStatusTime(siteDTO.getTime());
       siteInfo.setStatus(siteDTO.getStatus());
+      siteInfo.setLastError(siteDTO.getError());
       siteRepository.saveAndFlush(siteInfo);
     }
     return siteDTO;

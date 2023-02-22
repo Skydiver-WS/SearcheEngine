@@ -7,6 +7,7 @@ import searchengine.model.SQL.PageInfo;
 import searchengine.model.SQL.SiteInfo;
 import searchengine.repository.SQL.PageRepository;
 import searchengine.repository.SQL.SiteRepository;
+import searchengine.services.indexing.IndexingImpl;
 
 
 import java.util.ArrayList;
@@ -36,7 +37,9 @@ public class WritePageTable implements WritePageDBService {
             pageInfo.setContent(content);
             list.add(pageInfo);
         }
-        pageRepository.saveAllAndFlush(list);
+        if(IndexingImpl.getListThread().size() > 0){
+            pageRepository.saveAllAndFlush(list);
+        }
         return siteDTO;
     }
 

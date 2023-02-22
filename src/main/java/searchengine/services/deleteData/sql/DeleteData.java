@@ -2,13 +2,15 @@ package searchengine.services.deleteData.sql;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import searchengine.dto.sites.SiteDTO;
 import searchengine.model.SQL.PageInfo;
 import searchengine.model.SQL.SiteInfo;
 import searchengine.repository.SQL.PageRepository;
 import searchengine.repository.SQL.SiteRepository;
 import searchengine.services.deleteData.nosql.DeleteCashService;
+import searchengine.services.indexing.IndexingImpl;
+import searchengine.services.writeDB.SQL.WriteSiteTable;
+import searchengine.services.writeDB.noSQL.CashStatisticsService;
 
 import java.util.List;
 
@@ -20,30 +22,37 @@ public class DeleteData implements DeleteDataService {
     private SiteRepository siteRepository;
     @Autowired
     private DeleteCashService deleteCashService;
+    @Autowired
+    private WriteSiteTable writeSiteTable;
 
     @Override
     public void delete(SiteDTO siteDTO) {
-        deleteSite(siteDTO);
-    }
-
-    private void deleteSite(SiteDTO siteDTO) {
         for (SiteInfo siteInfo : getSitesInfo()) {
             if (siteInfo.getUrl().equals(siteDTO.getUrl())) {
                 siteDTO.setIdSite(siteInfo.getId());
-                int id = siteDTO.getIdSite();
-                deletePages(id);
-                siteRepository.deleteById(id);
-                deleteCashService.delete(id);
+                deleteSite(siteDTO);
+                //cashStatistics.setPageStatistics(siteDTO); TODO реализовать подгрузку в кэш из бд, пока хз как
             }
         }
     }
 
-    private void deletePages(int siteId) {
+    private void deleteSite(SiteDTO siteDTO) {
+        writeSiteTable.setStatusIndexing(siteDTO);
+        if(deletePages(siteDTO)){
+            siteRepository.deleteById(siteDTO.getIdSite());
+            deleteCashService.delete(siteDTO.getIdSite());
+        }
+    }
+
+    private boolean deletePages(SiteDTO siteDTO) {
         for (PageInfo pageInfo : getPageInfo()) {
-            if (pageInfo.getSiteId().getId() == siteId) {
+            if (IndexingImpl.getListThread().size() == 0) {
+                return false;
+            } else if (pageInfo.getSiteId().getId() == siteDTO.getIdSite()) {
                 pageRepository.deleteById(pageInfo.getId());
             }
         }
+        return true;
     }
 
     private synchronized List<SiteInfo> getSitesInfo() {

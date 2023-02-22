@@ -1,4 +1,4 @@
-package searchengine.services.statistics.extract;
+package searchengine.services.statistics;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

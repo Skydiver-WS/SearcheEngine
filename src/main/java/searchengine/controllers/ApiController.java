@@ -2,13 +2,11 @@ package searchengine.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import searchengine.dto.statistics.StatisticsResponse;
 import searchengine.repository.noSQL.CashStatisticsRepository;
 import searchengine.services.indexing.IndexingService;
-import searchengine.services.statistics.extract.StatisticsService;
+import searchengine.services.statistics.StatisticsService;
 
 import java.util.HashMap;
 
@@ -34,6 +32,14 @@ public class ApiController {
     @GetMapping("/stopIndexing")
     public HashMap<String, Object> stopIndexing(){
         return indexingService.stopIndexing();
+    }
+    @PostMapping("/indexPage")
+    public HashMap<String, Object> indexPage(@RequestParam String url){
+        HashMap<String, Object> test = new HashMap<>();
+        test.put("result", false);
+        test.put("error", "Данная страница находится за пределами сайтов," +
+                "указанных в конфигурационном файле");
+        return test;
     }
 
 }
