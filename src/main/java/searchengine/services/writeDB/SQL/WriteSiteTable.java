@@ -9,7 +9,7 @@ import searchengine.repository.SQL.SiteRepository;
 import java.util.Optional;
 
 @Service
-public class WriteSiteTable implements WriteSiteDBService {
+public class WriteSiteTable implements WriteSiteTableService {
   @Autowired
   private SiteRepository siteRepository;
   @Autowired
