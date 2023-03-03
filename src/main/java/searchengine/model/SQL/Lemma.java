@@ -14,7 +14,7 @@ public class Lemma {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
   @ManyToOne
-  @JoinColumn(name = "site_id")
+  @JoinColumn(name = "site_id", nullable = false)
   private SiteInfo siteId;
   @Column(nullable = false)
   private String lemma;

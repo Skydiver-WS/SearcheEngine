@@ -30,7 +30,7 @@ public class CashStatistics implements CashStatisticsService {
         CashStatisticsDB cash = cashRepository.findById(site.getIdSite()).get();
         cash.setStatusTime(site.getTime());
         cash.setStatus(site.getStatus().toString());
-        cash.setPages(site.getPagesInfo().size());
+        cash.setPages(site.getPageDTO().size());
         cashRepository.save(cash);
     }
 

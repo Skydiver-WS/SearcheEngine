@@ -5,10 +5,12 @@ import org.springframework.stereotype.Service;
 import searchengine.config.site.Site;
 import searchengine.config.site.SitesList;
 import searchengine.config.status.Status;
+import searchengine.dto.sites.PageDTO;
 import searchengine.dto.sites.SiteDTO;
-import searchengine.services.indexing.changeIndexing.ChangeStartIndexingService;
+import searchengine.services.indexing.checkIndexing.ChangeStartIndexingService;
 import searchengine.services.deleteData.sql.DeleteDataService;
 import searchengine.services.indexing.parse.ParseHtmlPage;
+import searchengine.services.indexing.checkDuplicateUrl.CheckDuplicateRef;
 import searchengine.services.indexing.stopIndexing.StopIndexingService;
 import searchengine.services.writeDB.noSQL.CashStatisticsService;
 import searchengine.services.writeDB.SQL.WritePageTableService;
@@ -55,6 +57,7 @@ public class IndexingImpl implements IndexingService {
   public HashMap<String, Object> stopIndexing() {
     HashMap<String, Object> response = new HashMap<>();
     if (stopIndexing.stop(threadList)) {
+      Thread.currentThread().interrupt();
       response.put("result", true);
       threadList.clear();
       return response;
@@ -78,10 +81,12 @@ public class IndexingImpl implements IndexingService {
   }
 
   private void parse(SiteDTO siteDTO) {
-    if (threadList.size() > 0) {
-      ParseHtmlPage parse = new ParseHtmlPage(siteDTO.getUrl());
+    ParseHtmlPage parse = new ParseHtmlPage(siteDTO.getUrl());
+    if (isAliveThread()) {
       siteDTO = writeSiteTableData(siteDTO);
-      siteDTO.setPagesInfo(parse.invoke());
+      List<PageDTO> list = parse.invoke().stream().toList();
+      CheckDuplicateRef check = new CheckDuplicateRef(list);
+      siteDTO.setPageDTO(check.getList());
       writePageTableData(siteDTO);
     }
   }
@@ -108,7 +113,7 @@ public class IndexingImpl implements IndexingService {
     siteDTO.setError("");
   }
 
-  public static List<Thread> getListThread() {
-    return threadList;
+  public static boolean isAliveThread() {
+    return threadList.size() > 0;
   }
 }

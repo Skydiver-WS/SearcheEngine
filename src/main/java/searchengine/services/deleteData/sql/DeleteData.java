@@ -10,7 +10,6 @@ import searchengine.repository.SQL.SiteRepository;
 import searchengine.services.deleteData.nosql.DeleteCashService;
 import searchengine.services.indexing.IndexingImpl;
 import searchengine.services.writeDB.SQL.WriteSiteTable;
-import searchengine.services.writeDB.noSQL.CashStatisticsService;
 
 import java.util.List;
 
@@ -46,7 +45,7 @@ public class DeleteData implements DeleteDataService {
 
     private boolean deletePages(SiteDTO siteDTO) {
         for (PageInfo pageInfo : getPageInfo()) {
-            if (IndexingImpl.getListThread().size() == 0) {
+            if (!IndexingImpl.isAliveThread()) {
                 return false;
             } else if (pageInfo.getSiteId().getId() == siteDTO.getIdSite()) {
                 pageRepository.deleteById(pageInfo.getId());

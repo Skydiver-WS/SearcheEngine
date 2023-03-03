@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import searchengine.dto.sites.SiteDTO;
 import searchengine.model.SQL.SiteInfo;
+import searchengine.repository.SQL.LemmaRepository;
 import searchengine.repository.SQL.SiteRepository;
 
 import java.util.Optional;

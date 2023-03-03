@@ -11,10 +11,7 @@ import searchengine.repository.SQL.SiteRepository;
 import searchengine.services.indexing.IndexingImpl;
 
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.TreeSet;
+import java.util.*;
 
 @Service
 public class WritePageTable implements WritePageTableService {
@@ -23,32 +20,51 @@ public class WritePageTable implements WritePageTableService {
     @Autowired
     private PageRepository pageRepository;
     @Autowired
+    private WriteLemmaTable writeLemmaTable;
+    @Autowired
     private SiteInfo siteInfo;
 
     @Override
-    public synchronized SiteDTO write(SiteDTO siteDTO) {
-        ArrayList <PageInfo> list = new ArrayList<>();
-        for (int i = 0; i < siteDTO.getPagesInfo().size(); i++) {
-            PageDTO pageDTO = pageDTO(siteDTO, i);
+    public SiteDTO write(SiteDTO siteDTO) {
+        ArrayList<PageInfo> list = new ArrayList<>();
+        for (int i = 0; i < siteDTO.getPageDTO().size(); i++) {
+            PageDTO pageDTO = getPageDTO(siteDTO, i);
             PageInfo pageInfo = new PageInfo();
             pageInfo.setId(0);
-            pageInfo.setSiteId(site(siteDTO));
+            pageInfo.setSiteId(getSiteInfo(siteDTO));
             pageInfo.setPath(pageDTO.getUrl());
             pageInfo.setCode(pageDTO.getCodeResponse());
             pageInfo.setContent(pageDTO.getContent());
             list.add(pageInfo);
+//            try{
+//                pageRepository.save(pageInfo);
+//            }catch (Exception ex){
+//                String url = pageInfo.getPath();
+//                List<PageInfo> test = pageRepository.findAll();
+//                for (PageInfo test2:test) {
+//                    if(test2.getPath().equals(url)){
+//                        System.out.println(url);
+//                    }
+//                }
+//                System.out.println(ex.getMessage());
+//            }
         }
-        if(IndexingImpl.getListThread().size() > 0){
-            pageRepository.saveAllAndFlush(list);
+        if (IndexingImpl.isAliveThread()) {
+            siteDTO.setSiteInfo(getSiteInfo(siteDTO));
+            synchronized (pageRepository){
+               pageRepository.saveAllAndFlush(list);
+               writeLemmaTable.write(siteDTO);
+            }
         }
         return siteDTO;
     }
 
-    private SiteInfo site(SiteDTO siteDTO) {
+    private SiteInfo getSiteInfo(SiteDTO siteDTO) {
         Optional<SiteInfo> site = siteRepository.findById(siteDTO.getIdSite());
         return site.orElse(null);
     }
-    private PageDTO pageDTO(SiteDTO siteDTO, int i){
-        return siteDTO.getPagesInfo().get(i);
+
+    private PageDTO getPageDTO(SiteDTO siteDTO, int i) {
+        return siteDTO.getPageDTO().get(i);
     }
 }

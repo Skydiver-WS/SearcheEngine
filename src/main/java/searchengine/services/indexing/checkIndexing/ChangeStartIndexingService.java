@@ -1,4 +1,4 @@
-package searchengine.services.indexing.changeIndexing;
+package searchengine.services.indexing.checkIndexing;
 
 import java.util.ArrayList;
 

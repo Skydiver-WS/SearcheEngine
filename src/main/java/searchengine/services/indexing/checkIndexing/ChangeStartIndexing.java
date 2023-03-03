@@ -1,4 +1,4 @@
-package searchengine.services.indexing.changeIndexing;
+package searchengine.services.indexing.checkIndexing;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
