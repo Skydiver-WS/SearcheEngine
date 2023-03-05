@@ -11,7 +11,7 @@ import java.util.List;
 
 //TODO: как доведу до ума обновление данных из Redis перевести работу на Redis репозиторий
 @Service
-public class ChangeStartIndexing implements ChangeStartIndexingService{
+public class ChangeStartIndexingImpl implements ChangeStartIndexingService{
     @Autowired
     private SiteRepository repository;
 

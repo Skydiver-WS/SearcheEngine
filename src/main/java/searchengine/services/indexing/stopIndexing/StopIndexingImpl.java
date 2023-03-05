@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Service
-public class StopIndexing implements StopIndexingService {
+public class StopIndexingImpl implements StopIndexingService {
   @Autowired
   private SiteRepository repository;
   @Override
@@ -20,7 +20,7 @@ public class StopIndexing implements StopIndexingService {
     if (threadList.size() > 0) {
       for (Thread thread : threadList) {
         thread.interrupt();
-        Logger.getLogger(StopIndexing.class.getName()).info(thread.getName()  + " stop.");
+        Logger.getLogger(StopIndexingImpl.class.getName()).info(thread.getName()  + " stop.");
       }
       setStatusFailed();
       return true;

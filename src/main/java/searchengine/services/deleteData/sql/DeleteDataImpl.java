@@ -14,7 +14,7 @@ import searchengine.services.writeDB.SQL.WriteSiteTable;
 import java.util.List;
 
 @Service
-public class DeleteData implements DeleteDataService {
+public class DeleteDataImpl implements DeleteDataService {
     @Autowired
     private PageRepository pageRepository;
     @Autowired

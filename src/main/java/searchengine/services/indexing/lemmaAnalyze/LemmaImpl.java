@@ -12,7 +12,8 @@ import java.util.concurrent.ForkJoinTask;
 import java.util.logging.Logger;
 
 @Service
-public class Lemma implements LemmaService {
+public class LemmaImpl implements LemmaService {
+    private ArrayList<Map<String, Integer>> listLemmas = new ArrayList<>();
     @SneakyThrows
     @Override
     public void lemma(SiteDTO siteDTO) {
@@ -25,11 +26,8 @@ public class Lemma implements LemmaService {
                 listInjectClass.add(injectText.fork());
         }
         for (ForkJoinTask<Map<String, Integer>> text:listInjectClass) {
-            text.join();
+            listLemmas.add(text.join());
             Logger.getLogger(InjectText.class.getName()).info(Thread.currentThread().getName() + " - finish");
-        }
-        for (ForkJoinTask<Map<String, Integer>> text:listInjectClass) {
-            System.out.println(text.get().keySet());
         }
         System.out.println(System.currentTimeMillis() - start);
     }
