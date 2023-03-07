@@ -76,6 +76,7 @@ public class IndexingImpl implements IndexingService {
         setStartParametric(siteDTO, site);
         deleteSite.delete(siteDTO);
         parse(siteDTO);
+        threadList.remove(Thread.currentThread());
       }).start();
     }
   }

@@ -14,47 +14,36 @@ import searchengine.services.indexing.IndexingImpl;
 import java.util.*;
 
 @Service
-public class WritePageTable implements WritePageTableService {
+public class WritePageTableImpl implements WritePageTableService {
     @Autowired
     private SiteRepository siteRepository;
     @Autowired
     private PageRepository pageRepository;
     @Autowired
-    private WriteLemmaTable writeLemmaTable;
+    private WriteLemmaTableService writeLemmaTable;
     @Autowired
     private SiteInfo siteInfo;
+    private PageInfo pageInfo;
 
     @Override
     public SiteDTO write(SiteDTO siteDTO) {
         ArrayList<PageInfo> list = new ArrayList<>();
         for (int i = 0; i < siteDTO.getPageDTO().size(); i++) {
-            PageDTO pageDTO = getPageDTO(siteDTO, i);
-            PageInfo pageInfo = new PageInfo();
+            PageDTO pageDTO = siteDTO.getPageDTO().get(i);
+            pageInfo = new PageInfo();
             pageInfo.setId(0);
             pageInfo.setSiteId(getSiteInfo(siteDTO));
             pageInfo.setPath(pageDTO.getUrl());
             pageInfo.setCode(pageDTO.getCodeResponse());
             pageInfo.setContent(pageDTO.getContent());
             list.add(pageInfo);
-//            try{
-//                pageRepository.save(pageInfo);
-//            }catch (Exception ex){
-//                String url = pageInfo.getPath();
-//                List<PageInfo> test = pageRepository.findAll();
-//                for (PageInfo test2:test) {
-//                    if(test2.getPath().equals(url)){
-//                        System.out.println(url);
-//                    }
-//                }
-//                System.out.println(ex.getMessage());
-//            }
         }
         if (IndexingImpl.isAliveThread()) {
             siteDTO.setSiteInfo(getSiteInfo(siteDTO));
             synchronized (pageRepository){
                pageRepository.saveAllAndFlush(list);
-               writeLemmaTable.write(siteDTO);
             }
+            writeLemmaTable.write(siteDTO);
         }
         return siteDTO;
     }
@@ -64,7 +53,4 @@ public class WritePageTable implements WritePageTableService {
         return site.orElse(null);
     }
 
-    private PageDTO getPageDTO(SiteDTO siteDTO, int i) {
-        return siteDTO.getPageDTO().get(i);
-    }
 }

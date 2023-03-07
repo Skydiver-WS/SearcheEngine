@@ -1,4 +1,7 @@
 import lombok.SneakyThrows;
+import org.apache.lucene.morphology.LuceneMorphology;
+import org.apache.lucene.morphology.english.EnglishLuceneMorphology;
+import searchengine.services.indexing.lemmaAnalyze.lemma.LemmaAnalyze;
 
 public class Test {
     @SneakyThrows
@@ -16,6 +19,8 @@ public class Test {
 //        for (ForkJoinTask<Integer> test2: test) {
 //            System.out.println(test2.get());
 //        }
+        LuceneMorphology luceneMorphology = new EnglishLuceneMorphology();
+        System.out.println(luceneMorphology.getMorphInfo("b"));
 
     }
 }

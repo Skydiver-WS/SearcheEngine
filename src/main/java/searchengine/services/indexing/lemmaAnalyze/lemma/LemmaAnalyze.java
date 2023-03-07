@@ -7,7 +7,7 @@ import org.apache.lucene.morphology.LuceneMorphology;
 import org.apache.lucene.morphology.english.EnglishLuceneMorphology;
 import org.apache.lucene.morphology.russian.RussianLuceneMorphology;
 import org.springframework.stereotype.Service;
-import searchengine.services.writeDB.SQL.WriteLemmaTable;
+import searchengine.services.writeDB.SQL.WriteLemmaTableImpl;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class LemmaAnalyze {
     @NonNull
-    private Map<String, Integer> splitText;
+    private String[] splitText;
     private static LuceneMorphology morphologyRus;
     private static LuceneMorphology morphologyEng;
 
@@ -28,19 +28,20 @@ public class LemmaAnalyze {
         Map<String, Integer> lemma = new TreeMap<>();
         Pattern pattern = Pattern.compile("СОЮЗ|МЕЖД|ПРЕДЛ|ARTICLE|CONJ|VBE|PN|PN_ADJ|PREP");
         init();
-        for (String key : splitText.keySet()) {
+        for (String text : splitText) {
             try {
-                Logger.getLogger(WriteLemmaTable.class.getName()).info("text  - " + key);
-                String newForm = morphologyRus.getMorphInfo(key).get(0);
-                Logger.getLogger(WriteLemmaTable.class.getName()).info("Russian lemma find - " + newForm);
+                Logger.getLogger(WriteLemmaTableImpl.class.getName()).info("text  - " + text);
+                String newForm = morphologyRus.getMorphInfo(text).get(0);
+                Logger.getLogger(WriteLemmaTableImpl.class.getName()).info("Russian lemma find - " + newForm);
                 Matcher matcher = pattern.matcher(newForm);
-                if (!matcher.find()) {
-                    lemma.put(finalText(newForm), splitText.get(key));
+                if(!matcher.find()){
+                    String t = finalText(newForm);
+                    lemma.put(t, countLemmas(lemma, t));
                 }
             } catch (Exception ex) {
-                String newForm = lemmaEnglish(key, pattern);
-                if(newForm != null){
-                    lemma.put(newForm, splitText.get(key));
+                String newForm = lemmaEnglish(text, pattern);
+                if (newForm != null){
+                    lemma.put(newForm, countLemmas(lemma, newForm));
                 }
             }
         }
@@ -48,14 +49,14 @@ public class LemmaAnalyze {
     }
 
 
-    private String lemmaEnglish(String key, Pattern pattern) {
+    private String lemmaEnglish(String text, Pattern pattern) {
         try {
-            Logger.getLogger(WriteLemmaTable.class.getName()).info("text - " + key);
-            String newForm = morphologyEng.getMorphInfo(key).get(0);
-            Logger.getLogger(WriteLemmaTable.class.getName()).info("English lemma find - " + newForm);
+            Logger.getLogger(WriteLemmaTableImpl.class.getName()).info("text - " + text);
+            String newForm = morphologyEng.getMorphInfo(text).get(0);
+            Logger.getLogger(WriteLemmaTableImpl.class.getName()).info("English lemma find - " + newForm);
             Matcher matcher = pattern.matcher(newForm);
             if (!matcher.find()) {
-                return key;
+                return text;
             }
         } catch (Exception ex) {
             Logger.getLogger(LemmaAnalyze.class.getName()).warning(ex.getMessage());
@@ -65,6 +66,13 @@ public class LemmaAnalyze {
 
     private String finalText(String text) {
         return text.replaceAll("\\|.*", "");
+    }
+    private int countLemmas(Map<String, Integer> list, String text) {
+        int count = 1;
+        if (list.containsKey(text)) {
+            count = list.get(text) + 1;
+        }
+        return count;
     }
     @SneakyThrows
     private static void init(){

@@ -7,13 +7,13 @@ import searchengine.model.SQL.SiteInfo;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 
 @Getter
 @Setter
 public class SiteDTO {
   private int idSite;
-  private int countLemma;
   private Status status;
   private String url;
   private String name;
@@ -21,4 +21,5 @@ public class SiteDTO {
   private LocalDateTime time;
   private List<PageDTO> pageDTO;
   private SiteInfo siteInfo;
+  private Map<String, Integer> frequencyLemmas;
 }

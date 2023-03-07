@@ -9,7 +9,7 @@ import searchengine.repository.SQL.PageRepository;
 import searchengine.repository.SQL.SiteRepository;
 import searchengine.services.deleteData.nosql.DeleteCashService;
 import searchengine.services.indexing.IndexingImpl;
-import searchengine.services.writeDB.SQL.WriteSiteTable;
+import searchengine.services.writeDB.SQL.WriteSiteTableImpl;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class DeleteDataImpl implements DeleteDataService {
     @Autowired
     private DeleteCashService deleteCashService;
     @Autowired
-    private WriteSiteTable writeSiteTable;
+    private WriteSiteTableImpl writeSiteTable;
 
     @Override
     public void delete(SiteDTO siteDTO) {
