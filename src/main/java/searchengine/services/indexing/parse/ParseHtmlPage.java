@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>> {
     private final Set<PageDTO> finalWebStructure = new HashSet<>();
-    //private static final HashSet<String> urlAll = new HashSet<>();// TODO: не удаляет данные при повторной индексации исправить.
 
     @NonNull
     private String url;
@@ -25,7 +24,6 @@ public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>> {
     @SneakyThrows
     @Override
     protected Set<PageDTO> compute() {
-        url = insertUrl(url);
         if (checkUrl(url) && IndexingImpl.isAliveThread()) {
             Document doc = Jsoup.connect(url).userAgent("Mozilla/5.0 (Windows; U; WindowsNT" +
                             "5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
@@ -33,7 +31,6 @@ public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>> {
             addNewPage(doc);
             List<String> listAllRef = doc.select("a").eachAttr("abs:href");
             TreeSet<String> checkRef = filterSite(listAllRef);
-            //urlAll.add(url);
             ArrayList<ParseHtmlPage> pages = fork(checkRef);
             join(pages);
             Logger.getLogger(ParseHtmlPage.class.getName()).info(Thread.currentThread().isAlive() + " - "
@@ -84,14 +81,7 @@ public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>> {
         return filterList;
     }
 
-    private String insertUrl(String url) {
-        Pattern pattern = Pattern.compile(".+/");
-        Matcher matcher = pattern.matcher(url);
-        if (!matcher.matches()) {
-            url = url + "/";
-        }
-        return url.trim().replace("www.", "");
-    }
+
 
     private void addNewPage(Document doc) {
         PageDTO pageDTO = new PageDTO();

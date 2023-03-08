@@ -1,4 +1,4 @@
-package searchengine.services.deleteData.sql;
+package searchengine.services.deleteDataInDB.sql;
 
 import searchengine.dto.sites.SiteDTO;
 

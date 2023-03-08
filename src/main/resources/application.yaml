@@ -12,22 +12,20 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
   main:
     allow-bean-definition-overriding: true
 indexing-settings:
   sites:
-#    - url: https://www.lenta.ru/
-#      name: Лента.ру
+    - url: https://www.lenta.ru/
+      name: Лента.ру
 #    - url: https://www.skillbox.ru
 #      name: Skillbox
-    - url: https://www.playback.ru
-      name: PlayBack.Ru
+#    - url: https://www.playback.ru
+#      name: PlayBack.Ru
 #    - url: http://radiomv.ru/
 #      name: Милицейская волна
 #    - url: https://dimonvideo.ru/
 #      name: DIMON VIDEO
-#    - url: https://leroymerlin.ru/
-#      name: ЛеруаМерлен
 

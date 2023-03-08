@@ -7,7 +7,7 @@ import org.apache.lucene.morphology.LuceneMorphology;
 import org.apache.lucene.morphology.english.EnglishLuceneMorphology;
 import org.apache.lucene.morphology.russian.RussianLuceneMorphology;
 import org.springframework.stereotype.Service;
-import searchengine.services.writeDB.SQL.WriteLemmaTableImpl;
+import searchengine.services.writeDataInDB.SQL.lemmaTable.WriteLemmaTableImpl;
 
 import java.util.Map;
 import java.util.TreeMap;

@@ -16,7 +16,7 @@ public class Index {
   @OneToOne
   @JoinColumn(name = "page_id")
   private PageInfo pageId;
-  @ManyToOne
+  @OneToOne
   @JoinColumn(name = "lemma_id", nullable = false)
   private Lemma lemmaId;
   @Column(name = "\"rank\"", nullable = false)

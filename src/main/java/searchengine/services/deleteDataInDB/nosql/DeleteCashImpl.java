@@ -1,4 +1,4 @@
-package searchengine.services.deleteData.nosql;
+package searchengine.services.deleteDataInDB.nosql;
 
 
 import org.springframework.beans.factory.annotation.Autowired;

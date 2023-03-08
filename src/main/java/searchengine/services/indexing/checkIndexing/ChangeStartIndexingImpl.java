@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import searchengine.config.status.Status;
 import searchengine.model.SQL.SiteInfo;
 import searchengine.repository.SQL.SiteRepository;
+import searchengine.services.indexing.IndexingImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +18,9 @@ public class ChangeStartIndexingImpl implements ChangeStartIndexingService{
 
 
     @Override
-    public boolean change(ArrayList<Thread> threadList) {
+    public boolean change() {
         List<SiteInfo> list = repository.findAll();
-        if(threadList.size() > 0){
+        if(IndexingImpl.isAliveThread()){
             for (SiteInfo site:list) {
                 Status status = site.getStatus();
                 if(Status.INDEXING.equals(status)){
