@@ -11,6 +11,6 @@ import java.util.List;
 
 @Repository
 public interface LemmaRepository extends JpaRepository<Lemma, Integer> {
-  @Query(value = "SELECT * FROM lemma WHERE site_id = :site_id", nativeQuery = true)
-  List<Lemma> getListLemma(@Param("site_id") int siteId);
+  @Query(value = "SELECT id FROM lemma WHERE site_id = :site_id", nativeQuery = true)
+  List<Integer> getId(@Param("site_id") int siteId);
 }

@@ -10,6 +10,6 @@ import java.util.Collection;
 
 @Repository
 public interface SiteRepository extends JpaRepository<SiteInfo, Integer> {
-  @Query(value = "SELECT * FROM site WHERE url = :url", nativeQuery = true)
-  SiteInfo getSiteInfo(@Param("url") String url);
+  @Query(value = "SELECT id FROM site WHERE url = :url", nativeQuery = true)
+  Integer getId(@Param("url") String url);
 }
