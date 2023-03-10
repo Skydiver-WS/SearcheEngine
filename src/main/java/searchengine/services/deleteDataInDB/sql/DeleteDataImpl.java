@@ -42,15 +42,19 @@ public class DeleteDataImpl implements DeleteDataService {
     private SiteRepository siteRepository;
 
     @Override
-    public void delete(SiteDTO siteDTO) {
-        int siteId = siteRepository.getId("https://www.playback.ru");
-        List<Integer> listPageId = pageRepository.getListId(siteId);
-        List<Integer> listLemmaId = lemmaRepository.getId(siteId);
-        List<Integer> listIndexId = getIdIndexTable(listLemmaId);
-        changeSite(siteId);
-        deleteIndex(listIndexId);
-        deleteLemma(listLemmaId);
-        deletePage(listPageId);
+    public SiteDTO delete(SiteDTO siteDTO) {
+        Integer siteId = siteRepository.getId(siteDTO.getUrl());
+        if (siteId != null){
+            List<Integer> listPageId = pageRepository.getListId(siteId);
+            List<Integer> listLemmaId = lemmaRepository.getId(siteId);
+            List<Integer> listIndexId = getIdIndexTable(listLemmaId);
+            changeSite(siteId);
+            deleteIndex(listIndexId);
+            deleteLemma(listLemmaId);
+            deletePage(listPageId);
+            siteDTO.setId(siteId);
+        }
+        return siteDTO;
     }
 
     private List<Integer> getIdIndexTable(List<Integer> lemmaList) {

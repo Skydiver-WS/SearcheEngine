@@ -7,12 +7,12 @@ import searchengine.config.site.SitesList;
 import searchengine.dto.sites.SiteDTO;
 import searchengine.services.indexing.checkIndexing.ChangeStartIndexingService;
 import searchengine.services.deleteDataInDB.sql.DeleteDataService;
+import searchengine.services.indexing.parse.ParseService;
 import searchengine.services.indexing.stopIndexing.StopIndexingService;
+import searchengine.services.writeDataInDB.SQL.WriteSqlDbService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class IndexingImpl implements IndexingService {
@@ -21,10 +21,15 @@ public class IndexingImpl implements IndexingService {
   @Autowired
   private DeleteDataService deleteSite;
   @Autowired
+  private WriteSqlDbService writeSqlDbService;
+  @Autowired
   private ChangeStartIndexingService changeStartIndexing;
   @Autowired
   private StopIndexingService stopIndexing;
+  @Autowired
+  private ParseService parseService;
   private static final ArrayList<Thread> threadList = new ArrayList<>();
+  private final SiteDTO siteDTO = new SiteDTO();
 
   @Override
   public HashMap<String, Object> startIndexing() {
@@ -57,22 +62,18 @@ public class IndexingImpl implements IndexingService {
   private void indexing() {
     for (Site site : sitesList.getSites()) {
       new Thread(() -> {
-        SiteDTO siteDTO = new SiteDTO();
-        siteDTO.setUrl(uniformFormUrl(site.getUrl()));
+        threadList.add(Thread.currentThread());
+        siteDTO.setUrl(site.getUrl());
         siteDTO.setName(site.getName());
         deleteSite.delete(siteDTO);
+        writeSqlDbService.writeSiteTable(siteDTO);
+        parseService.getListPageDto(siteDTO);
+        writeSqlDbService.writePageTable(siteDTO);
         threadList.remove(Thread.currentThread());
       }).start();
     }
   }
-  private String uniformFormUrl(String url) {
-    Pattern pattern = Pattern.compile(".+/");
-    Matcher matcher = pattern.matcher(url);
-    if (!matcher.matches()) {
-      url = url + "/";
-    }
-    return url.trim().replace("www.", "");
-  }
+
 
   public static boolean isAliveThread() {
     return threadList.size() > 0;

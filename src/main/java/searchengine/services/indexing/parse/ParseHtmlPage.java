@@ -15,7 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
-public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>> {
+public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>>{
     private final Set<PageDTO> finalWebStructure = new HashSet<>();
 
     @NonNull
@@ -96,4 +96,6 @@ public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>> {
          }
          return true;
      }
+
+
 }

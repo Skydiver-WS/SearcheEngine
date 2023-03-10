@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import searchengine.model.SQL.SiteInfo;
 
 import java.util.Collection;
+import java.util.List;
 
 @Repository
 public interface SiteRepository extends JpaRepository<SiteInfo, Integer> {
