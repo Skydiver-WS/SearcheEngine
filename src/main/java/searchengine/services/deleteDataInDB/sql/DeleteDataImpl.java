@@ -1,34 +1,19 @@
 package searchengine.services.deleteDataInDB.sql;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
+import searchengine.config.site.Site;
 import searchengine.config.status.Status;
-import searchengine.dto.sites.IndexDTO;
-import searchengine.dto.sites.LemmaDTO;
-import searchengine.dto.sites.PageDTO;
-import searchengine.dto.sites.SiteDTO;
-import searchengine.model.SQL.Index;
-import searchengine.model.SQL.Lemma;
-import searchengine.model.SQL.PageInfo;
 import searchengine.model.SQL.SiteInfo;
 import searchengine.repository.SQL.IndexRepository;
 import searchengine.repository.SQL.LemmaRepository;
 import searchengine.repository.SQL.PageRepository;
 import searchengine.repository.SQL.SiteRepository;
-import searchengine.services.indexing.IndexingService;
-import searchengine.services.indexing.lemmaAnalyze.LemmaService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-
-import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.ignoreCase;
 
 @Service
 public class DeleteDataImpl implements DeleteDataService {
@@ -42,9 +27,10 @@ public class DeleteDataImpl implements DeleteDataService {
     private SiteRepository siteRepository;
 
     @Override
-    public SiteDTO delete(SiteDTO siteDTO) {
-        Integer siteId = siteRepository.getId(siteDTO.getUrl());
-        if (siteId != null){
+    public void delete(Site site) {
+        Optional<SiteInfo> siteInfo = siteRepository.getSiteInfo(site.getUrl());
+        if (siteInfo.isPresent()){
+            int siteId = siteInfo.get().getId();
             List<Integer> listPageId = pageRepository.getListId(siteId);
             List<Integer> listLemmaId = lemmaRepository.getId(siteId);
             List<Integer> listIndexId = getIdIndexTable(listLemmaId);
@@ -52,9 +38,7 @@ public class DeleteDataImpl implements DeleteDataService {
             deleteIndex(listIndexId);
             deleteLemma(listLemmaId);
             deletePage(listPageId);
-            siteDTO.setId(siteId);
         }
-        return siteDTO;
     }
 
     private List<Integer> getIdIndexTable(List<Integer> lemmaList) {

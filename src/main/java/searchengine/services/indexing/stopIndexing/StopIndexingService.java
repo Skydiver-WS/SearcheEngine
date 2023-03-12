@@ -1,7 +1,8 @@
 package searchengine.services.indexing.stopIndexing;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface StopIndexingService {
-    boolean stop(ArrayList<Thread> threadList);
+    boolean stop(List<Thread> threadList);
 }

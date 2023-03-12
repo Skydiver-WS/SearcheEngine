@@ -8,9 +8,10 @@ import searchengine.model.SQL.SiteInfo;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SiteRepository extends JpaRepository<SiteInfo, Integer> {
-  @Query(value = "SELECT id FROM site WHERE url = :url", nativeQuery = true)
-  Integer getId(@Param("url") String url);
+  @Query(value = "SELECT * FROM site WHERE url = :url", nativeQuery = true)
+  Optional<SiteInfo> getSiteInfo(@Param("url") String url);
 }

@@ -13,10 +13,10 @@ public class Index {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
-  @OneToOne
-  @JoinColumn(name = "page_id")
+  @ManyToOne
+  @JoinColumn(name = "page_id", nullable = false)
   private PageInfo pageId;
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "lemma_id", nullable = false)
   private Lemma lemmaId;
   @Column(name = "\"rank\"", nullable = false)

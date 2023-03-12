@@ -4,15 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import searchengine.config.site.Site;
 import searchengine.config.site.SitesList;
+import searchengine.dto.sites.LemmaDTO;
 import searchengine.dto.sites.SiteDTO;
 import searchengine.services.indexing.checkIndexing.ChangeStartIndexingService;
 import searchengine.services.deleteDataInDB.sql.DeleteDataService;
+import searchengine.services.indexing.lemmaAnalyze.LemmaService;
 import searchengine.services.indexing.parse.ParseService;
 import searchengine.services.indexing.stopIndexing.StopIndexingService;
 import searchengine.services.writeDataInDB.SQL.WriteSqlDbService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 @Service
 public class IndexingImpl implements IndexingService {
@@ -28,8 +29,10 @@ public class IndexingImpl implements IndexingService {
   private StopIndexingService stopIndexing;
   @Autowired
   private ParseService parseService;
-  private static final ArrayList<Thread> threadList = new ArrayList<>();
-  private final SiteDTO siteDTO = new SiteDTO();
+  @Autowired
+  private LemmaService lemmaService;
+  private static final List<Thread> threadList = Collections.synchronizedList(new ArrayList<>());
+
 
   @Override
   public HashMap<String, Object> startIndexing() {
@@ -63,12 +66,15 @@ public class IndexingImpl implements IndexingService {
     for (Site site : sitesList.getSites()) {
       new Thread(() -> {
         threadList.add(Thread.currentThread());
-        siteDTO.setUrl(site.getUrl());
-        siteDTO.setName(site.getName());
-        deleteSite.delete(siteDTO);
-        writeSqlDbService.writeSiteTable(siteDTO);
+        SiteDTO siteDTO = new SiteDTO();
+        deleteSite.delete(site);
+        writeSqlDbService.writeSiteTable(site);
+        siteDTO.setSiteInfo(writeSqlDbService.getSiteInfo(site));
         parseService.getListPageDto(siteDTO);
         writeSqlDbService.writePageTable(siteDTO);
+        TreeMap<Integer, List<LemmaDTO>> lemmas = lemmaService.getListLemmas(siteDTO.getSiteInfo().getId());
+        writeSqlDbService.writeLemmaTable(siteDTO.getSiteInfo(), lemmas);
+//        writeSqlDbService.writeIndexTable(siteDTO.getSiteInfo(), lemmas);
         threadList.remove(Thread.currentThread());
       }).start();
     }

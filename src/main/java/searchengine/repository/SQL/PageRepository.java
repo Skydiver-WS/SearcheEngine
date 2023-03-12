@@ -12,4 +12,6 @@ import java.util.List;
 public interface PageRepository extends JpaRepository<PageInfo, Integer> {
     @Query(value = "SELECT id FROM page WHERE site_id = :site_id", nativeQuery = true)
     List<Integer> getListId(@Param("site_id") int siteId);
+    @Query(value = "SELECT * FROM page WHERE site_id = :site_id", nativeQuery = true)
+    List<PageInfo> getContent(@Param("site_id") int siteId);
 }

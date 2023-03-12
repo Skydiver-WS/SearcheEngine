@@ -1,7 +1,7 @@
 package searchengine.services.deleteDataInDB.sql;
 
-import searchengine.dto.sites.SiteDTO;
+import searchengine.config.site.Site;
 
 public interface DeleteDataService {
-  SiteDTO delete(SiteDTO siteDTO);
+  void delete(Site site);
 }

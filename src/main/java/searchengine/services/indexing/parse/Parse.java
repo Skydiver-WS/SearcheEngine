@@ -13,7 +13,7 @@ public class Parse implements ParseService {
 
     @Override
     public SiteDTO getListPageDto(SiteDTO siteDTO) {
-        ParseHtmlPage parse = new ParseHtmlPage(siteDTO.getUrl());
+        ParseHtmlPage parse = new ParseHtmlPage(siteDTO.getSiteInfo().getUrl());
         List<PageDTO> list = parse.invoke().stream().toList();
         CheckDuplicateRef duplicateRef = new CheckDuplicateRef(list);
         siteDTO.setPageDTOList(duplicateRef.getList());

@@ -1,14 +1,20 @@
 package searchengine.services.writeDataInDB.SQL;
 
+import searchengine.config.site.Site;
 import searchengine.dto.sites.LemmaDTO;
-import searchengine.dto.sites.PageDTO;
 import searchengine.dto.sites.SiteDTO;
+import searchengine.model.SQL.SiteInfo;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 public interface WriteSqlDbService {
-  void writeSiteTable(SiteDTO siteDTO);
+  void writeSiteTable(Site site);
+  SiteInfo getSiteInfo(Site site);
   void writePageTable(SiteDTO siteDTO);
-  void writeLemmaTable(List<LemmaDTO> lemmaDTOList);
+  void writeLemmaTable(SiteInfo siteInfo, TreeMap<Integer, List<LemmaDTO>> lemmas);
+  void writeIndexTable(SiteInfo siteInfo, TreeMap<Integer, List<LemmaDTO>> lemmas);
 
 }

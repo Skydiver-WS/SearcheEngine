@@ -16,7 +16,7 @@ public class StopIndexingImpl implements StopIndexingService {
   @Autowired
   private SiteRepository repository;
   @Override
-  public boolean stop(ArrayList<Thread> threadList) {
+  public boolean stop(List<Thread> threadList) {
     if (threadList.size() > 0) {
       for (Thread thread : threadList) {
         thread.interrupt();

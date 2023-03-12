@@ -28,9 +28,11 @@ public class WritePageTableImpl implements WritePageTableService {
             pageInfo.setPath(pageDTO.getUrl());
             pageInfo.setContent(pageDTO.getContent());
             pageInfo.setCode(pageDTO.getCodeResponse());
-            pageInfo.setSiteId(siteRepository.findById(siteDTO.getId()).get());
+            pageInfo.setSiteId(siteDTO.getSiteInfo());
             list.add(pageInfo);
         }
-        pageRepository.saveAll(list);
+        synchronized (pageRepository){
+            pageRepository.saveAll(list);
+        }
     }
 }
