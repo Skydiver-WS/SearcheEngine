@@ -3,6 +3,7 @@ package searchengine.services.writeDataInDB.SQL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import searchengine.config.site.Site;
+import searchengine.config.status.Status;
 import searchengine.dto.sites.IndexDTO;
 import searchengine.dto.sites.LemmaDTO;
 import searchengine.dto.sites.SiteDTO;
@@ -44,6 +45,10 @@ public class WriteSqlDbImpl implements WriteSqlDbService {
         return writeSite.getSiteInfo(site);
     }
 
+    @Override
+    public void setStatus(SiteInfo siteInfo, Status status, String error) {
+        writeSite.setStatus(siteInfo, status, error);
+    }
 
     @Override
     public void writePageTable(SiteDTO siteDTO) {
@@ -59,18 +64,19 @@ public class WriteSqlDbImpl implements WriteSqlDbService {
     @Override
     public void writeIndexTable(SiteInfo siteInfo, TreeMap<Integer, List<LemmaDTO>> lemmas) {
         List<Lemma> lemmaList = lemmaRepository.getLemmaTable(siteInfo.getId());
-        List<PageInfo> pagesList = pageRepository.getContent(siteInfo.getId());
-
+        List<PageInfo> pageList = pageRepository.getContent(siteInfo.getId());
+        List<IndexDTO> list = createIndexDTO(lemmas, pageList, lemmaList);
+        writeIndexTableService.write(list);
     }
 
-    private Map<String, Integer> frequencyLemmas(TreeMap<Integer, List<LemmaDTO>> listLemmas){
+    private Map<String, Integer> frequencyLemmas(TreeMap<Integer, List<LemmaDTO>> listLemmas) {
         HashSet<LemmaDTO> list = new HashSet<>();
         Map<String, Integer> lemmas = new TreeMap<>();
-        for (Integer key: listLemmas.keySet()) {
+        for (Integer key : listLemmas.keySet()) {
             list.addAll(listLemmas.get(key));
         }
-        for (LemmaDTO lemmaDTO: list){
-            if (!lemmas.containsKey(lemmaDTO.getLemma())){
+        for (LemmaDTO lemmaDTO : list) {
+            if (!lemmas.containsKey(lemmaDTO.getLemma())) {
                 lemmas.put(lemmaDTO.getLemma(), 1);
             } else {
                 int count = lemmas.get(lemmaDTO.getLemma()) + 1;
@@ -80,18 +86,40 @@ public class WriteSqlDbImpl implements WriteSqlDbService {
         return lemmas;
     }
 
-    private List<IndexDTO> createIndexDTO(List<PageInfo> pagesList, TreeMap<Integer, List<LemmaDTO>> lemmas, SiteInfo siteInfo){
-        int siteId = siteInfo.getId();
-        for (Integer key: lemmas.keySet()) {
-
+    private List<IndexDTO> createIndexDTO(TreeMap<Integer, List<LemmaDTO>> lemmas,
+                                          List<PageInfo> pageList,
+                                          List<Lemma> lemmaList) {
+        List<IndexDTO> indexDTOList = new ArrayList<>();
+        for (Integer key : lemmas.keySet()) {
+            Optional<PageInfo> optional = pageList.stream().filter(id -> id.getId() == key).findAny();
+            if (optional.isPresent()) {
+                List<IndexDTO> list = getLemma(lemmas.get(key), lemmaList);
+                indexDTOList.addAll(listIndexDTO(optional.get(), list));
+            }
         }
-
-        return null;
-    }
-    private Lemma getLemma(List<LemmaDTO> lemmaDTOList, int siteId){
-
-        return null;
+        return indexDTOList;
     }
 
+    private List<IndexDTO> getLemma(List<LemmaDTO> lemmaDTOList, List<Lemma> lemmaList) {
+        List<IndexDTO> list = new ArrayList<>();
+        for (LemmaDTO lemmaDTO : lemmaDTOList) {
+            Optional<Lemma> optional = lemmaList.stream().filter(c -> c.getLemma().equals(lemmaDTO.getLemma())).findAny();
+            if (optional.isPresent()) {
+                IndexDTO indexDTO = new IndexDTO();
+                indexDTO.setLemma(optional.get());
+                indexDTO.setRank(lemmaDTO.getCount());
+                list.add(indexDTO);
+            }
+        }
+        return list;
+    }
 
+    private List<IndexDTO> listIndexDTO(PageInfo pageInfo, List<IndexDTO> lemmaList) {
+        List<IndexDTO> list = new ArrayList<>();
+        for (IndexDTO indexDTO : lemmaList) {
+            indexDTO.setPageInfo(pageInfo);
+            list.add(indexDTO);
+        }
+        return list;
+    }
 }

@@ -4,8 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import searchengine.config.site.Site;
 import searchengine.config.site.SitesList;
+import searchengine.config.status.Status;
 import searchengine.dto.sites.LemmaDTO;
 import searchengine.dto.sites.SiteDTO;
+import searchengine.model.SQL.Lemma;
+import searchengine.model.SQL.PageInfo;
+import searchengine.repository.SQL.IndexRepository;
+import searchengine.repository.SQL.LemmaRepository;
+import searchengine.repository.SQL.PageRepository;
 import searchengine.services.indexing.checkIndexing.ChangeStartIndexingService;
 import searchengine.services.deleteDataInDB.sql.DeleteDataService;
 import searchengine.services.indexing.lemmaAnalyze.LemmaService;
@@ -74,7 +80,8 @@ public class IndexingImpl implements IndexingService {
         writeSqlDbService.writePageTable(siteDTO);
         TreeMap<Integer, List<LemmaDTO>> lemmas = lemmaService.getListLemmas(siteDTO.getSiteInfo().getId());
         writeSqlDbService.writeLemmaTable(siteDTO.getSiteInfo(), lemmas);
-//        writeSqlDbService.writeIndexTable(siteDTO.getSiteInfo(), lemmas);
+        writeSqlDbService.writeIndexTable(siteDTO.getSiteInfo(), lemmas);
+        writeSqlDbService.setStatus(siteDTO.getSiteInfo(), Status.INDEXED, null);
         threadList.remove(Thread.currentThread());
       }).start();
     }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import searchengine.config.site.Site;
 import searchengine.config.status.Status;
+import searchengine.model.SQL.Index;
 import searchengine.model.SQL.SiteInfo;
 import searchengine.repository.SQL.IndexRepository;
 import searchengine.repository.SQL.LemmaRepository;
@@ -29,11 +30,11 @@ public class DeleteDataImpl implements DeleteDataService {
     @Override
     public void delete(Site site) {
         Optional<SiteInfo> siteInfo = siteRepository.getSiteInfo(site.getUrl());
-        if (siteInfo.isPresent()){
+        if (siteInfo.isPresent()) {
             int siteId = siteInfo.get().getId();
             List<Integer> listPageId = pageRepository.getListId(siteId);
             List<Integer> listLemmaId = lemmaRepository.getId(siteId);
-            List<Integer> listIndexId = getIdIndexTable(listLemmaId);
+            List<Integer> listIndexId = getIdIndexTable(listPageId);
             changeSite(siteId);
             deleteIndex(listIndexId);
             deleteLemma(listLemmaId);
@@ -41,10 +42,14 @@ public class DeleteDataImpl implements DeleteDataService {
         }
     }
 
-    private List<Integer> getIdIndexTable(List<Integer> lemmaList) {
-        ArrayList<Integer> listId = new ArrayList<>();
-        for (Integer indexId : lemmaList) {
-            listId.add(indexRepository.getId(indexId));
+    private List<Integer> getIdIndexTable(List<Integer> listPageId) {
+        ArrayList<Index> listIndex = new ArrayList<>();
+        List<Integer> listId = new ArrayList<>();
+        for (Integer id : listPageId) {
+            listIndex.addAll(indexRepository.getIndex(id));
+        }
+        for (Index index : listIndex) {
+            listId.add(index.getId());
         }
         return listId;
     }
@@ -66,9 +71,10 @@ public class DeleteDataImpl implements DeleteDataService {
             pageRepository.deleteAllByIdInBatch(listPageId);
         }
     }
-    private void changeSite(Integer siteId){
+
+    private void changeSite(Integer siteId) {
         Optional<SiteInfo> site = siteRepository.findById(siteId);
-        if(site.isPresent()){
+        if (site.isPresent()) {
             SiteInfo siteInfo = site.get();
             siteInfo.setStatus(Status.INDEXING);
             siteInfo.setStatusTime(LocalDateTime.now());

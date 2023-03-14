@@ -37,4 +37,12 @@ public class WriteSiteTableImpl implements WriteSiteTableService {
     return siteRepository.getSiteInfo(site.getUrl()).get();
   }
 
+  @Override
+  public void setStatus(SiteInfo siteInfo, Status status, String error) {
+    siteInfo.setStatus(status);
+    siteInfo.setLastError(error);
+    siteInfo.setStatusTime(LocalDateTime.now());
+    siteRepository.save(siteInfo);
+  }
+
 }

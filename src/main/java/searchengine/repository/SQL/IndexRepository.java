@@ -11,6 +11,6 @@ import java.util.List;
 
 @Repository
 public interface IndexRepository extends JpaRepository<Index, Integer> {
-  @Query(value = "SELECT id FROM search_engine.index WHERE lemma_id = :lemma_id", nativeQuery = true)
-  Integer getId(@Param("lemma_id") int lemmaId);
+  @Query(value = "SELECT * FROM search_engine.index WHERE page_id = :page_id", nativeQuery = true)
+  List<Index> getIndex(@Param("page_id") int pageId);
 }
