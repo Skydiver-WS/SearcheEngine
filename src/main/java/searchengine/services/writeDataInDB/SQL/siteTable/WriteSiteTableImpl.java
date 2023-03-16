@@ -7,6 +7,7 @@ import searchengine.config.status.Status;
 import searchengine.dto.sites.SiteDTO;
 import searchengine.model.SQL.SiteInfo;
 import searchengine.repository.SQL.SiteRepository;
+import searchengine.services.indexing.IndexingImpl;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -38,11 +39,8 @@ public class WriteSiteTableImpl implements WriteSiteTableService {
   }
 
   @Override
-  public void setStatus(SiteInfo siteInfo, Status status, String error) {
-    siteInfo.setStatus(status);
-    siteInfo.setLastError(error);
-    siteInfo.setStatusTime(LocalDateTime.now());
-    siteRepository.save(siteInfo);
+  public void setStatus(String url, Status status, String error) {
+    Optional<SiteInfo> siteInfo = siteRepository.getSiteInfo(url);
+    siteInfo.ifPresent(info -> siteRepository.updateStatus(info.getId(), LocalDateTime.now(), status.toString(), error));
   }
-
 }

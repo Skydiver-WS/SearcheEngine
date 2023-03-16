@@ -46,8 +46,8 @@ public class WriteSqlDbImpl implements WriteSqlDbService {
     }
 
     @Override
-    public void setStatus(SiteInfo siteInfo, Status status, String error) {
-        writeSite.setStatus(siteInfo, status, error);
+    public void setStatus(String url, Status status, String error) {
+        writeSite.setStatus(url, status, error);
     }
 
     @Override

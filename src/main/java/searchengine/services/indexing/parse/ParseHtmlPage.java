@@ -5,8 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import searchengine.dto.sites.PageDTO;
 import searchengine.services.indexing.IndexingImpl;
+import searchengine.services.indexing.stopIndexing.StopIndexingService;
 
 import java.util.*;
 import java.util.concurrent.RecursiveTask;
@@ -15,7 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
-public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>>{
+public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>> {
     private final Set<PageDTO> finalWebStructure = new HashSet<>();
 
     @NonNull
@@ -24,7 +27,8 @@ public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>>{
     @SneakyThrows
     @Override
     protected Set<PageDTO> compute() {
-        if (checkUrl(url) && IndexingImpl.isAliveThread()) {
+        if (checkUrl(url)) {
+            Thread.currentThread().setName(url);
             Document doc = Jsoup.connect(url).userAgent("Mozilla/5.0 (Windows; U; WindowsNT" +
                             "5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
                     .referrer("http://www.google.com").get(); // TODO: вынести в конфигурацию
@@ -71,7 +75,8 @@ public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>>{
 
     private TreeSet<String> filterSite(List<String> list) {
         TreeSet<String> filterList = new TreeSet<>();
-        Pattern pattern = Pattern.compile("^" + url);
+        Pattern pattern = Pattern.compile("^" + url + ".+[^#]$");
+        //Pattern pattern = Pattern.compile("^" + url);
         for (String ref : list) {
             Matcher matcher = pattern.matcher(ref);
             if (matcher.find() && checkUrl(ref)) {
@@ -82,7 +87,6 @@ public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>>{
     }
 
 
-
     private void addNewPage(Document doc) {
         PageDTO pageDTO = new PageDTO();
         pageDTO.setUrl(url);
@@ -90,12 +94,11 @@ public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>>{
         pageDTO.setContent(doc.html());
         finalWebStructure.add(pageDTO);
     }
-     private boolean checkUrl(String url){
-         for (PageDTO page:finalWebStructure) {
-             return !page.getUrl().equals(url);
-         }
-         return true;
-     }
 
-
+    private boolean checkUrl(String url) {
+        for (PageDTO page : finalWebStructure) {
+            return !page.getUrl().equals(url);
+        }
+        return true;
+    }
 }

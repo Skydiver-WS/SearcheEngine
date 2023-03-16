@@ -1,6 +1,5 @@
 package searchengine.services.indexing.parse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import searchengine.dto.sites.PageDTO;
 import searchengine.dto.sites.SiteDTO;

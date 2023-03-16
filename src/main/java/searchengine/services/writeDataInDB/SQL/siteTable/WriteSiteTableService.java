@@ -9,5 +9,5 @@ public interface WriteSiteTableService {
   void write(Site site);
   SiteInfo getSiteInfo(Site site);
 
-  void setStatus(SiteInfo siteInfo, Status status, String error);
+  void setStatus(String url, Status status, String error);
 }

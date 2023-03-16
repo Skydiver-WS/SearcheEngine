@@ -82,4 +82,5 @@ public class DeleteDataImpl implements DeleteDataService {
             siteRepository.save(siteInfo);
         }
     }
+
 }

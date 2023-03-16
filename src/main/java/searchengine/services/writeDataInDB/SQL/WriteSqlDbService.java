@@ -14,7 +14,7 @@ import java.util.TreeMap;
 public interface WriteSqlDbService {
   void writeSiteTable(Site site);
   SiteInfo getSiteInfo(Site site);
-  void setStatus(SiteInfo siteInfo, Status status, String error);
+  void setStatus(String url, Status status, String error);
   void writePageTable(SiteDTO siteDTO);
   void writeLemmaTable(SiteInfo siteInfo, TreeMap<Integer, List<LemmaDTO>> lemmas);
   void writeIndexTable(SiteInfo siteInfo, TreeMap<Integer, List<LemmaDTO>> lemmas);

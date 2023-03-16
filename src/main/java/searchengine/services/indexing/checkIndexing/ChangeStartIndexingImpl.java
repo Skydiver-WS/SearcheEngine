@@ -20,14 +20,14 @@ public class ChangeStartIndexingImpl implements ChangeStartIndexingService{
     @Override
     public boolean change() {
         List<SiteInfo> list = repository.findAll();
-        if(IndexingImpl.isAliveThread()){
-            for (SiteInfo site:list) {
-                Status status = site.getStatus();
-                if(Status.INDEXING.equals(status)){
-                    return true;
-                }
-            }
-        }
+//        if(IndexingImpl.isAliveThread()){
+//            for (SiteInfo site:list) {
+//                Status status = site.getStatus();
+//                if(Status.INDEXING.equals(status)){
+//                    return true;
+//                }
+//            }
+//        }
         return false;
     }
 }

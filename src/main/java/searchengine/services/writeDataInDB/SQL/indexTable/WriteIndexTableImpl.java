@@ -9,6 +9,7 @@ import searchengine.model.SQL.SiteInfo;
 import searchengine.repository.SQL.IndexRepository;
 import searchengine.repository.SQL.LemmaRepository;
 import searchengine.repository.SQL.PageRepository;
+import searchengine.services.indexing.IndexingImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +30,8 @@ public class WriteIndexTableImpl implements WriteIndexTableService {
             index.setRank(indexDTO.getRank());
             list.add(index);
         }
-        synchronized (indexRepository){
-          indexRepository.saveAll(list);
+        synchronized (indexRepository) {
+            indexRepository.saveAll(list);
         }
     }
 }

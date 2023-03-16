@@ -15,8 +15,8 @@ public class Site {
     public void setUrl(String url) {
         Pattern pattern = Pattern.compile(".+/");
         Matcher matcher = pattern.matcher(url);
-        if (matcher.matches()) {
-            url = url.substring(0, url.length() - 1);
+        if (!matcher.matches()) {
+            url = url + "/";
         }
         this.url = url.trim().replace("www.", "");
     }

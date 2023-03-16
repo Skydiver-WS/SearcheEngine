@@ -9,6 +9,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 import searchengine.dto.sites.LemmaDTO;
 import searchengine.model.SQL.PageInfo;
+import searchengine.services.indexing.IndexingImpl;
 import searchengine.services.indexing.lemmaAnalyze.lemma.LemmaAnalyze;
 
 import java.util.*;
