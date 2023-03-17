@@ -1,16 +1,14 @@
-package searchengine.services.indexing.lemmaAnalyze.injectText;
+package searchengine.services.indexing.coreIndexing.lemmaAnalyze.injectText;
 
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 import searchengine.dto.sites.LemmaDTO;
 import searchengine.model.SQL.PageInfo;
-import searchengine.services.indexing.IndexingImpl;
-import searchengine.services.indexing.lemmaAnalyze.lemma.LemmaAnalyze;
+import searchengine.services.indexing.coreIndexing.lemmaAnalyze.lemma.LemmaAnalyze;
 
 import java.util.*;
 import java.util.concurrent.RecursiveTask;

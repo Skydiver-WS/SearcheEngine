@@ -1,4 +1,4 @@
-package searchengine.services.indexing.lemmaAnalyze.lemma;
+package searchengine.services.indexing.coreIndexing.lemmaAnalyze.lemma;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +7,6 @@ import org.apache.lucene.morphology.LuceneMorphology;
 import org.apache.lucene.morphology.english.EnglishLuceneMorphology;
 import org.apache.lucene.morphology.russian.RussianLuceneMorphology;
 import org.springframework.stereotype.Service;
-import searchengine.services.indexing.IndexingImpl;
 import searchengine.services.writeDataInDB.SQL.lemmaTable.WriteLemmaTableImpl;
 
 import java.util.Map;

@@ -3,17 +3,11 @@ package searchengine.services.writeDataInDB.SQL.indexTable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import searchengine.dto.sites.IndexDTO;
-import searchengine.dto.sites.LemmaDTO;
 import searchengine.model.SQL.Index;
-import searchengine.model.SQL.SiteInfo;
 import searchengine.repository.SQL.IndexRepository;
-import searchengine.repository.SQL.LemmaRepository;
-import searchengine.repository.SQL.PageRepository;
-import searchengine.services.indexing.IndexingImpl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class WriteIndexTableImpl implements WriteIndexTableService {

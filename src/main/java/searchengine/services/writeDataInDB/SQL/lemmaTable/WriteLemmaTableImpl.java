@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import searchengine.model.SQL.Lemma;
 import searchengine.model.SQL.SiteInfo;
 import searchengine.repository.SQL.LemmaRepository;
-import searchengine.services.indexing.IndexingImpl;
 
 
 import java.util.ArrayList;

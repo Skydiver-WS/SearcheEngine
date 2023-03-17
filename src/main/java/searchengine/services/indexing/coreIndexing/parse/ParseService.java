@@ -1,4 +1,4 @@
-package searchengine.services.indexing.parse;
+package searchengine.services.indexing.coreIndexing.parse;
 
 import searchengine.dto.sites.PageDTO;
 import searchengine.dto.sites.SiteDTO;

@@ -1,9 +1,9 @@
-package searchengine.services.indexing.parse;
+package searchengine.services.indexing.coreIndexing.parse;
 
 import org.springframework.stereotype.Component;
 import searchengine.dto.sites.PageDTO;
 import searchengine.dto.sites.SiteDTO;
-import searchengine.services.indexing.checkDuplicateUrl.CheckDuplicateRef;
+import searchengine.services.indexing.coreIndexing.checkDuplicateUrl.CheckDuplicateRef;
 
 import java.util.List;
 

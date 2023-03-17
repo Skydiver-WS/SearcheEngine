@@ -7,7 +7,6 @@ import searchengine.dto.sites.SiteDTO;
 import searchengine.model.SQL.PageInfo;
 import searchengine.repository.SQL.PageRepository;
 import searchengine.repository.SQL.SiteRepository;
-import searchengine.services.indexing.IndexingImpl;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;

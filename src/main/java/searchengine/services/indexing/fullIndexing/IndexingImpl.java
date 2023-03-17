@@ -1,7 +1,6 @@
-package searchengine.services.indexing;
+package searchengine.services.indexing.fullIndexing;
 
 import lombok.SneakyThrows;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import searchengine.config.site.Site;
@@ -9,20 +8,15 @@ import searchengine.config.site.SitesList;
 import searchengine.config.status.Status;
 import searchengine.dto.sites.LemmaDTO;
 import searchengine.dto.sites.SiteDTO;
-import searchengine.model.SQL.Lemma;
-import searchengine.model.SQL.PageInfo;
-import searchengine.repository.SQL.IndexRepository;
-import searchengine.repository.SQL.LemmaRepository;
-import searchengine.repository.SQL.PageRepository;
-import searchengine.services.indexing.checkIndexing.ChangeStartIndexingService;
+import searchengine.services.indexing.coreIndexing.checkIndexing.ChangeStartIndexingService;
 import searchengine.services.deleteDataInDB.sql.DeleteDataService;
-import searchengine.services.indexing.lemmaAnalyze.LemmaService;
-import searchengine.services.indexing.parse.ParseService;
-import searchengine.services.indexing.stopIndexing.StopIndexingService;
+import searchengine.services.indexing.coreIndexing.lemmaAnalyze.LemmaService;
+import searchengine.services.indexing.coreIndexing.parse.ParseService;
+import searchengine.services.indexing.coreIndexing.stopIndexing.StopIndexingImpl;
+import searchengine.services.indexing.coreIndexing.stopIndexing.StopIndexingService;
 import searchengine.services.writeDataInDB.SQL.WriteSqlDbService;
 
 import java.util.*;
-import java.util.logging.Logger;
 
 @Service
 public class IndexingImpl implements IndexingService {
@@ -40,8 +34,6 @@ public class IndexingImpl implements IndexingService {
     private ParseService parseService;
     @Autowired
     private LemmaService lemmaService;
-    private final List<Thread> threadList = Collections.synchronizedList(new ArrayList<>());
-
 
     @Override
     public HashMap<String, Object> startIndexing() {
@@ -51,35 +43,8 @@ public class IndexingImpl implements IndexingService {
             response.put("error", "Индексация уже запущена");
             return response;
         }
-        threadList.clear();
         indexing();
         response.put("result", true);
-        return response;
-    }
-
-    @Override
-    public HashMap<String, Object> stopIndexing() {
-        HashMap<String, Object> response = new HashMap<>();
-        if (stopIndexing.check()) {
-            for (Thread thread : threadList) {
-                thread.interrupt();
-            }
-            for (Thread thread : threadList) {
-                try {
-
-
-                    thread.join();
-                    Logger.getLogger(IndexingImpl.class.getName()).info(thread.getName() + " stop");
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-            }
-            response.put("result", true);
-            threadList.clear();
-            return response;
-        }
-        response.put("result", false);
-        response.put("error", "Индексация не запущена");
         return response;
     }
 
@@ -87,8 +52,8 @@ public class IndexingImpl implements IndexingService {
     private void indexing() {
         for (Site site : sitesList.getSites()) {
             new Thread(() -> {
+                StopIndexingImpl.addThread(Thread.currentThread());
                 Thread.currentThread().setName(site.getName());
-                threadList.add(Thread.currentThread());
                 SiteDTO siteDTO = new SiteDTO();
                 writeSqlDbService.setStatus(site.getUrl(), Status.INDEXING, null);
                 deleteSite.delete(site);
@@ -99,14 +64,9 @@ public class IndexingImpl implements IndexingService {
                 TreeMap<Integer, List<LemmaDTO>> lemmas = lemmaService.getListLemmas(siteDTO.getSiteInfo().getId());
                 writeSqlDbService.writeLemmaTable(siteDTO.getSiteInfo(), lemmas);
                 writeSqlDbService.writeIndexTable(siteDTO.getSiteInfo(), lemmas);
-                threadList.remove(Thread.currentThread());
                 writeSqlDbService.setStatus(site.getUrl(), Status.INDEXED, null);
+                StopIndexingImpl.removeThread(Thread.currentThread());
             }).start();
         }
     }
-
-    public boolean isAliveThread() {
-        return threadList.size() > 0;
-    }
-
 }

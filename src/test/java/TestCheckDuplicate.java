@@ -2,7 +2,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import searchengine.dto.sites.PageDTO;
-import searchengine.services.indexing.checkDuplicateUrl.CheckDuplicateRef;
+import searchengine.services.indexing.coreIndexing.checkDuplicateUrl.CheckDuplicateRef;
 
 import java.util.ArrayList;
 import java.util.List;

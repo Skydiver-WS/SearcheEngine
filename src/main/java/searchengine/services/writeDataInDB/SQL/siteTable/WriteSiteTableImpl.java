@@ -4,10 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import searchengine.config.site.Site;
 import searchengine.config.status.Status;
-import searchengine.dto.sites.SiteDTO;
 import searchengine.model.SQL.SiteInfo;
 import searchengine.repository.SQL.SiteRepository;
-import searchengine.services.indexing.IndexingImpl;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

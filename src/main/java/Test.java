@@ -1,7 +1,6 @@
 import lombok.SneakyThrows;
 import org.apache.lucene.morphology.LuceneMorphology;
 import org.apache.lucene.morphology.english.EnglishLuceneMorphology;
-import searchengine.services.indexing.lemmaAnalyze.lemma.LemmaAnalyze;
 
 public class Test {
     @SneakyThrows

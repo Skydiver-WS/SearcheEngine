@@ -1,15 +1,11 @@
-package searchengine.services.indexing.parse;
+package searchengine.services.indexing.coreIndexing.parse;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import searchengine.dto.sites.PageDTO;
-import searchengine.services.indexing.IndexingImpl;
-import searchengine.services.indexing.stopIndexing.StopIndexingService;
 
 import java.util.*;
 import java.util.concurrent.RecursiveTask;
