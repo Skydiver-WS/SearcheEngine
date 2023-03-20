@@ -1,17 +1,16 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import searchengine.dto.sites.PageDTO;
-import searchengine.services.indexing.coreIndexing.checkDuplicateUrl.CheckDuplicateRef;
+import searchengine.services.indexing.core.checkDuplicateUrl.CheckDuplicateRef;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@SpringBootTest(classes = CheckDuplicateRef.class)
 public class TestCheckDuplicate {
     private final List<PageDTO> list = addNewPageDto();
     private final CheckDuplicateRef check = new CheckDuplicateRef(list);
-
-
 
     @Test
     @DisplayName("Проверка на отсутсвие дубликотов url в List<PageDTO>")

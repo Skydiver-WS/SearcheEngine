@@ -8,13 +8,13 @@ import searchengine.config.site.SitesList;
 import searchengine.config.status.Status;
 import searchengine.dto.sites.LemmaDTO;
 import searchengine.dto.sites.SiteDTO;
-import searchengine.services.indexing.coreIndexing.checkIndexing.ChangeStartIndexingService;
+import searchengine.services.indexing.core.checkIndexing.ChangeStartIndexingService;
 import searchengine.services.deleteDataInDB.sql.DeleteDataService;
-import searchengine.services.indexing.coreIndexing.lemmaAnalyze.LemmaService;
-import searchengine.services.indexing.coreIndexing.parse.ParseService;
-import searchengine.services.indexing.coreIndexing.stopIndexing.StopIndexingImpl;
-import searchengine.services.indexing.coreIndexing.stopIndexing.StopIndexingService;
-import searchengine.services.writeDataInDB.SQL.WriteSqlDbService;
+import searchengine.services.indexing.core.lemmaAnalyze.LemmaService;
+import searchengine.services.indexing.core.parse.ParseService;
+import searchengine.services.indexing.core.stopIndexing.StopIndexingImpl;
+import searchengine.services.indexing.core.stopIndexing.StopIndexingService;
+import searchengine.services.writeDataDB.SQL.WriteSqlDbService;
 
 import java.util.*;
 

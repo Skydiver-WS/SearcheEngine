@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import searchengine.dto.statistics.StatisticsResponse;
 import searchengine.repository.noSQL.CashStatisticsRepository;
 import searchengine.services.indexing.fullIndexing.IndexingService;
-import searchengine.services.indexing.coreIndexing.stopIndexing.StopIndexingService;
+import searchengine.services.indexing.core.stopIndexing.StopIndexingService;
 import searchengine.services.statistics.StatisticsService;
 
 import java.util.HashMap;
