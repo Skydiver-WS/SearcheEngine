@@ -7,6 +7,7 @@ import searchengine.dto.statistics.StatisticsResponse;
 import searchengine.repository.noSQL.CashStatisticsRepository;
 import searchengine.services.indexing.fullIndexing.IndexingService;
 import searchengine.services.indexing.core.stopIndexing.StopIndexingService;
+import searchengine.services.indexing.singleIndexing.IndexPageService;
 import searchengine.services.statistics.StatisticsService;
 
 import java.util.HashMap;
@@ -20,6 +21,8 @@ public class ApiController {
     private IndexingService indexingService;
     @Autowired
     private StopIndexingService stopIndexing;
+    @Autowired
+    private IndexPageService indexPageService;
     @Autowired
     CashStatisticsRepository st;
 
@@ -40,11 +43,7 @@ public class ApiController {
 
     @PostMapping("/indexPage")
     public HashMap<String, Object> indexPage(@RequestParam String url) {
-        HashMap<String, Object> test = new HashMap<>();
-        test.put("result", false);
-        test.put("error", "Данная страница находится за пределами сайтов," +
-                "указанных в конфигурационном файле");
-        return test;
+        return indexPageService.indexPage(url);
     }
 
 }
