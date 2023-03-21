@@ -1,4 +1,4 @@
-package searchengine.services.indexing.core.lemmaAnalyze.lemma;
+package searchengine.services.indexing.core.lemma.analyzer;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

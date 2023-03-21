@@ -1,4 +1,4 @@
-package searchengine.services.indexing.core.lemmaAnalyze;
+package searchengine.services.indexing.core.lemma;
 
 
 import lombok.SneakyThrows;

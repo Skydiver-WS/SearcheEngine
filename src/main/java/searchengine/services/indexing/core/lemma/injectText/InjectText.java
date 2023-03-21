@@ -1,4 +1,4 @@
-package searchengine.services.indexing.core.lemmaAnalyze.injectText;
+package searchengine.services.indexing.core.lemma.injectText;
 
 
 import lombok.NonNull;
@@ -8,7 +8,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 import searchengine.dto.sites.LemmaDTO;
 import searchengine.model.SQL.PageInfo;
-import searchengine.services.indexing.core.lemmaAnalyze.lemma.LemmaAnalyze;
+import searchengine.services.indexing.core.lemma.analyzer.LemmaAnalyze;
 
 import java.util.*;
 import java.util.concurrent.RecursiveTask;

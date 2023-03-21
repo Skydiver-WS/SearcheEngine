@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import searchengine.config.status.Status;
 import searchengine.model.SQL.SiteInfo;
 import searchengine.repository.SQL.SiteRepository;
+import searchengine.services.indexing.core.check.lifeThread.LifeThread;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,18 +13,20 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import static searchengine.services.indexing.core.check.lifeThread.LifeThread.*;
+
 @Service
 public class StopIndexingImpl implements StopIndexingService {
     @Autowired
     private SiteRepository repository;
-    private static final List<Thread> threadList = Collections.synchronizedList(new ArrayList<>());
+
 
     @Override
     public HashMap<String, Object> stopIndexing() {
         HashMap<String, Object> response = new HashMap<>();
-        if (threadList.size() > 0) {
-            threadList.forEach(Thread::interrupt);
-            threadList.forEach(thread -> {
+        if (isAliveThread()) {
+            getThreadList().forEach(Thread::interrupt);
+            getThreadList().forEach(thread -> {
                 try {
                     thread.join();
                 } catch (InterruptedException e) {
@@ -31,7 +34,7 @@ public class StopIndexingImpl implements StopIndexingService {
                 }
             });
             setStatusFailed();
-            threadList.clear();
+            clearAllThread();
             response.put("result", true);
             return response;
         }
@@ -52,11 +55,5 @@ public class StopIndexingImpl implements StopIndexingService {
         }
     }
 
-    public static void addThread (Thread thread){
-        threadList.add(thread);
-    }
 
-    public static void removeThread (Thread thread){
-        threadList.remove(thread);
-    }
 }

@@ -10,13 +10,16 @@ import searchengine.dto.sites.LemmaDTO;
 import searchengine.dto.sites.SiteDTO;
 import searchengine.services.indexing.core.check.indexing.ChangeStartIndexingService;
 import searchengine.services.deleteDataInDB.sql.DeleteDataService;
-import searchengine.services.indexing.core.lemmaAnalyze.LemmaService;
+import searchengine.services.indexing.core.lemma.LemmaService;
 import searchengine.services.indexing.core.parse.ParseService;
 import searchengine.services.indexing.core.stopIndexing.StopIndexingImpl;
 import searchengine.services.indexing.core.stopIndexing.StopIndexingService;
 import searchengine.services.writeDataDB.SQL.WriteSqlDbService;
 
 import java.util.*;
+
+import static searchengine.services.indexing.core.check.lifeThread.LifeThread.addThread;
+import static searchengine.services.indexing.core.check.lifeThread.LifeThread.removeThread;
 
 @Service
 public class IndexingImpl implements IndexingService {
@@ -52,7 +55,7 @@ public class IndexingImpl implements IndexingService {
     private void indexing() {
         for (Site site : sitesList.getSites()) {
             new Thread(() -> {
-                StopIndexingImpl.addThread(Thread.currentThread());
+               addThread(Thread.currentThread());
                 Thread.currentThread().setName(site.getName());
                 SiteDTO siteDTO = new SiteDTO();
                 writeSqlDbService.setStatus(site.getUrl(), Status.INDEXING, null);
@@ -65,7 +68,7 @@ public class IndexingImpl implements IndexingService {
                 writeSqlDbService.writeLemmaTable(siteDTO.getSiteInfo(), lemmas);
                 writeSqlDbService.writeIndexTable(siteDTO.getSiteInfo(), lemmas);
                 writeSqlDbService.setStatus(site.getUrl(), Status.INDEXED, null);
-                StopIndexingImpl.removeThread(Thread.currentThread());
+                removeThread(Thread.currentThread());
             }).start();
         }
     }

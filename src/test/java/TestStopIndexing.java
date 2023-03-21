@@ -9,6 +9,9 @@ import searchengine.services.indexing.core.stopIndexing.StopIndexingImpl;
 import searchengine.services.indexing.core.stopIndexing.StopIndexingService;
 
 import java.util.HashMap;
+
+import static searchengine.services.indexing.core.check.lifeThread.LifeThread.addThread;
+
 @SpringBootTest(classes = StopIndexingImpl.class)
 public class TestStopIndexing {
     @MockBean
@@ -50,7 +53,7 @@ public class TestStopIndexing {
                 }catch (InterruptedException ignored){
                 }
             });
-            StopIndexingImpl.addThread(thread);
+            addThread(thread);
             thread.start();
         }
     }

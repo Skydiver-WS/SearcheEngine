@@ -1,4 +1,4 @@
-package searchengine.services.indexing.core.lemmaAnalyze;
+package searchengine.services.indexing.core.lemma;
 
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import searchengine.dto.sites.LemmaDTO;
 import searchengine.model.SQL.PageInfo;
 import searchengine.repository.SQL.PageRepository;
-import searchengine.services.indexing.core.lemmaAnalyze.injectText.InjectText;
+import searchengine.services.indexing.core.lemma.injectText.InjectText;
 
 import java.util.*;
 import java.util.concurrent.ForkJoinTask;
