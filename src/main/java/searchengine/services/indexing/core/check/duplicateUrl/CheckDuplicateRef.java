@@ -1,4 +1,4 @@
-package searchengine.services.indexing.core.checkDuplicateUrl;
+package searchengine.services.indexing.core.check.duplicateUrl;
 
 import lombok.Getter;
 import searchengine.dto.sites.PageDTO;

@@ -8,7 +8,7 @@ import searchengine.config.site.SitesList;
 import searchengine.config.status.Status;
 import searchengine.dto.sites.LemmaDTO;
 import searchengine.dto.sites.SiteDTO;
-import searchengine.services.indexing.core.checkIndexing.ChangeStartIndexingService;
+import searchengine.services.indexing.core.check.indexing.ChangeStartIndexingService;
 import searchengine.services.deleteDataInDB.sql.DeleteDataService;
 import searchengine.services.indexing.core.lemmaAnalyze.LemmaService;
 import searchengine.services.indexing.core.parse.ParseService;
