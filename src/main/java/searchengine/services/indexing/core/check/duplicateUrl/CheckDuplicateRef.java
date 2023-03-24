@@ -5,31 +5,24 @@ import searchengine.dto.sites.PageDTO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class CheckDuplicateRef {
     @Getter
-    private List<PageDTO> list;
+    private List<PageDTO> list = new ArrayList<>();
 
     public CheckDuplicateRef(List<PageDTO> list) {
         removeDuplicate(list);
     }
 
     private void removeDuplicate(List<PageDTO> list) {
-        List<PageDTO> newList = new ArrayList<>();
-        for (PageDTO page: list) {
-            if (checkNewList(newList, page.getUrl())) {
-                newList.add(page);
-            }
+        Map<String, PageDTO> clearDuplicate = new TreeMap<>();
+        for (PageDTO pageDTO : list) {
+            clearDuplicate.put(pageDTO.getUrl(), pageDTO);
         }
-        this.list = newList;
-    }
-
-    private boolean checkNewList(List<PageDTO> newList, String url) {
-        for (PageDTO page: newList) {
-            if(page.getUrl().equals(url)){
-                return false;
-            }
+        for (String key:clearDuplicate.keySet()) {
+            this.list.add(clearDuplicate.get(key));
         }
-        return true;
     }
 }

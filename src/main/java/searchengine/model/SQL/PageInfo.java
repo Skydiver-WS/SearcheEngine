@@ -2,6 +2,8 @@ package searchengine.model.SQL;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -17,6 +19,7 @@ public class PageInfo {
   private int id;
   @ManyToOne
   @JoinColumn(name = "site_id", nullable = false)
+  @OnDelete(action = OnDeleteAction.CASCADE)
   private SiteInfo siteId;
   @Column(columnDefinition = "TEXT NOT NULL, UNIQUE KEY (path(512))")
   private String path;

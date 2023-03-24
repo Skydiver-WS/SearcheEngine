@@ -19,68 +19,20 @@ import java.util.Optional;
 @Service
 public class DeleteDataImpl implements DeleteDataService {
     @Autowired
-    private IndexRepository indexRepository;
-    @Autowired
-    private LemmaRepository lemmaRepository;
+    private SiteRepository siteRepository;
     @Autowired
     private PageRepository pageRepository;
-    @Autowired
-    private SiteRepository siteRepository;
 
     @Override
     public void delete(Site site) {
-        Optional<SiteInfo> siteInfo = siteRepository.getSiteInfo(site.getUrl());
-        if (siteInfo.isPresent()) {
-            int siteId = siteInfo.get().getId();
-            List<Integer> listPageId = pageRepository.getListId(siteId);
-            List<Integer> listLemmaId = lemmaRepository.getId(siteId);
-            List<Integer> listIndexId = getIdIndexTable(listPageId);
-            changeSite(siteId);
-            deleteIndex(listIndexId);
-            deleteLemma(listLemmaId);
-            deletePage(listPageId);
+        synchronized (siteRepository){
+            siteRepository.delete(site.getUrl());
+            siteRepository.garbageClear(site.getUrl());
         }
     }
 
-    private List<Integer> getIdIndexTable(List<Integer> listPageId) {
-        ArrayList<Index> listIndex = new ArrayList<>();
-        List<Integer> listId = new ArrayList<>();
-        for (Integer id : listPageId) {
-            listIndex.addAll(indexRepository.getIndex(id));
-        }
-        for (Index index : listIndex) {
-            listId.add(index.getId());
-        }
-        return listId;
+    @Override
+    public void delete(int id) {
+        pageRepository.delete(id);
     }
-
-    private void deleteIndex(List<Integer> listIndexId) {
-        if (listIndexId.size() > 0) {
-            indexRepository.deleteAllByIdInBatch(listIndexId);
-        }
-    }
-
-    private void deleteLemma(List<Integer> listLemmaId) {
-        if (listLemmaId.size() > 0) {
-            lemmaRepository.deleteAllByIdInBatch(listLemmaId);
-        }
-    }
-
-    private void deletePage(List<Integer> listPageId) {
-        if (listPageId.size() > 0) {
-            pageRepository.deleteAllByIdInBatch(listPageId);
-        }
-    }
-
-    private void changeSite(Integer siteId) {
-        Optional<SiteInfo> site = siteRepository.findById(siteId);
-        if (site.isPresent()) {
-            SiteInfo siteInfo = site.get();
-            siteInfo.setStatus(Status.INDEXING);
-            siteInfo.setStatusTime(LocalDateTime.now());
-            siteInfo.setLastError(null);
-            siteRepository.save(siteInfo);
-        }
-    }
-
 }

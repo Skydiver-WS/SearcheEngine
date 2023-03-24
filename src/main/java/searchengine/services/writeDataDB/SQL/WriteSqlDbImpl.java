@@ -6,6 +6,7 @@ import searchengine.config.site.Site;
 import searchengine.config.status.Status;
 import searchengine.dto.sites.IndexDTO;
 import searchengine.dto.sites.LemmaDTO;
+import searchengine.dto.sites.PageDTO;
 import searchengine.dto.sites.SiteDTO;
 import searchengine.model.SQL.Lemma;
 import searchengine.model.SQL.PageInfo;
@@ -51,7 +52,7 @@ public class WriteSqlDbImpl implements WriteSqlDbService {
 
     @Override
     public void writePageTable(SiteDTO siteDTO) {
-        writePage.write(siteDTO);
+            writePage.write(siteDTO);
     }
 
     @Override

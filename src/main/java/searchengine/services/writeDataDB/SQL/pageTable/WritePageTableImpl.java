@@ -9,7 +9,10 @@ import searchengine.repository.SQL.PageRepository;
 import searchengine.repository.SQL.SiteRepository;
 
 import javax.transaction.Transactional;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
+import java.util.SimpleTimeZone;
 
 
 @Service
@@ -23,7 +26,11 @@ public class WritePageTableImpl implements WritePageTableService {
     @Override
     public void write(SiteDTO siteDTO) {
         ArrayList<PageInfo> list = new ArrayList<>();
-        for (PageDTO pageDTO:siteDTO.getPageDTOList()) {
+        for (PageDTO pageDTO : siteDTO.getPageDTOList()) {
+            if(pageDTO.getId() != null){
+                update(pageDTO);
+                continue;
+            }
             PageInfo pageInfo = new PageInfo();
             pageInfo.setPath(pageDTO.getUrl());
             pageInfo.setContent(pageDTO.getContent());
@@ -31,8 +38,17 @@ public class WritePageTableImpl implements WritePageTableService {
             pageInfo.setSiteId(siteDTO.getSiteInfo());
             list.add(pageInfo);
         }
-        synchronized (pageRepository){
-            pageRepository.saveAll(list);
+        synchronized (pageRepository) {
+            try {
+                pageRepository.saveAll(list);
+            }catch (Exception ex){
+                //TODO: прописать здесь логгирование
+            }
         }
+    }
+
+    @Override
+    public void update(PageDTO pageDTO) {
+        pageRepository.updatePage(pageDTO.getUrl(), pageDTO.getContent());
     }
 }

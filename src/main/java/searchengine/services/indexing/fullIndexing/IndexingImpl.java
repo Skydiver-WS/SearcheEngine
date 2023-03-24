@@ -55,7 +55,7 @@ public class IndexingImpl implements IndexingService {
     private void indexing() {
         for (Site site : sitesList.getSites()) {
             new Thread(() -> {
-               addThread(Thread.currentThread());
+                addThread(Thread.currentThread());
                 Thread.currentThread().setName(site.getName());
                 SiteDTO siteDTO = new SiteDTO();
                 writeSqlDbService.setStatus(site.getUrl(), Status.INDEXING, null);
