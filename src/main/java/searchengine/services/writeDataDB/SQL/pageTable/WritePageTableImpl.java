@@ -6,29 +6,22 @@ import searchengine.dto.sites.PageDTO;
 import searchengine.dto.sites.SiteDTO;
 import searchengine.model.SQL.PageInfo;
 import searchengine.repository.SQL.PageRepository;
-import searchengine.repository.SQL.SiteRepository;
 
-import javax.transaction.Transactional;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
-import java.util.SimpleTimeZone;
 
 
 @Service
-@Transactional
+
 public class WritePageTableImpl implements WritePageTableService {
     @Autowired
     private PageRepository pageRepository;
-    @Autowired
-    private SiteRepository siteRepository;
 
     @Override
     public void write(SiteDTO siteDTO) {
         ArrayList<PageInfo> list = new ArrayList<>();
         for (PageDTO pageDTO : siteDTO.getPageDTOList()) {
             if(pageDTO.getId() != null){
-                update(pageDTO);
+                updatePage(pageDTO);
                 continue;
             }
             PageInfo pageInfo = new PageInfo();
@@ -48,7 +41,7 @@ public class WritePageTableImpl implements WritePageTableService {
     }
 
     @Override
-    public void update(PageDTO pageDTO) {
+    public void updatePage(PageDTO pageDTO) {
         pageRepository.updatePage(pageDTO.getUrl(), pageDTO.getContent());
     }
 }

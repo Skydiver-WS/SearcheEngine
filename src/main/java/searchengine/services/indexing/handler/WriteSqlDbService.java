@@ -1,4 +1,4 @@
-package searchengine.services.writeDataDB.SQL;
+package searchengine.services.indexing.handler;
 
 import searchengine.config.site.Site;
 import searchengine.config.status.Status;
@@ -15,6 +15,7 @@ public interface WriteSqlDbService {
   void setStatus(String url, Status status, String error);
   void writePageTable(SiteDTO siteDTO);
   void writeLemmaTable(SiteInfo siteInfo, TreeMap<Integer, List<LemmaDTO>> lemmas);
+  void updateLemmaTable(SiteDTO siteDTO, TreeMap<Integer, List<LemmaDTO>> lemmas);
   void writeIndexTable(SiteInfo siteInfo, TreeMap<Integer, List<LemmaDTO>> lemmas);
 
 }

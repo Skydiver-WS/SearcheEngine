@@ -15,15 +15,11 @@ import java.util.Optional;
 public interface PageRepository extends JpaRepository<PageInfo, Integer> {
     @Query(value = "SELECT * FROM page WHERE site_id = :site_id", nativeQuery = true)
     List<PageInfo> getContent(@Param("site_id") int siteId);
+    @Query(value = "SELECT * FROM page WHERE id = :id", nativeQuery = true)
+    List<PageInfo> getContentById(@Param("id") int id);
 
     @Query(value = "SELECT * FROM page WHERE path = :url", nativeQuery = true)
     Optional<PageInfo> findPage(@Param("url") String url);
-
-    @Modifying
-    @Transactional
-    @Query(value = "DELETE FROM search_engine.index i " +
-            "WHERE i.page_id = :id", nativeQuery = true)
-    void delete(@Param("id") int id);
 
     @Modifying
     @Transactional

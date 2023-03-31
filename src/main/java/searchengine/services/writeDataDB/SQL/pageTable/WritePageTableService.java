@@ -4,5 +4,5 @@ import searchengine.dto.sites.SiteDTO;
 
 public interface WritePageTableService {
   void write(SiteDTO siteDTO);
-  void update(PageDTO pageDTO);
+  void updatePage(PageDTO pageDTO);
 }

@@ -8,6 +8,7 @@ import searchengine.repository.SQL.LemmaRepository;
 
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -29,5 +30,10 @@ public class WriteLemmaTableImpl implements WriteLemmaTableService {
         synchronized (lemmaRepository){
             lemmaRepository.saveAll(list);
         }
+    }
+
+    @Override
+    public void updateLemmaTable(List<Lemma> lemmaList) {
+        lemmaRepository.saveAll(lemmaList);
     }
 }
