@@ -26,15 +26,12 @@ public class DeleteDataImpl implements DeleteDataService {
 
     @Override
     public void delete(Site site) {
-        synchronized (siteRepository) {
-            siteRepository.delete(site.getUrl());
-            siteRepository.garbageClear(site.getUrl());
-        }
+        siteRepository.delete(site.getUrl());
+        siteRepository.garbageClear(site.getUrl());
     }
 
     @Override
     public void delete(SiteDTO siteDTO) {
-        //TODO попробовать оптимизировать обновление
         List<Lemma> list = new ArrayList<>();
         for (PageDTO pageDTO : siteDTO.getPageDTOList()) {
             Optional<List<Lemma>> index = lemmaRepository.getLemmaJoin(pageDTO.getId());

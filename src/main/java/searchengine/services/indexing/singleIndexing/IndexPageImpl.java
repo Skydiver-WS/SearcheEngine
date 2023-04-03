@@ -33,7 +33,6 @@ public class IndexPageImpl implements IndexPageService {
     @Autowired
     private DeleteDataService deleteDataService;
     private final SiteDTO siteDTO = new SiteDTO();
-//TODO: добавить обработчик, при отсутсвии необходимой страницы
     @Override
     public HashMap<String, Object> indexPage(String url) {
         //TODO: сделать запуск разных ссылок в разных потоках
@@ -41,11 +40,11 @@ public class IndexPageImpl implements IndexPageService {
         if (checkUrl.check(url)) {
             List<PageDTO> list = new ArrayList<>();
             PageDTO pageDTO = findElementService.find(url);
-            parseService.parsePage(pageDTO);
-            list.add(pageDTO);
-            siteDTO.setPageDTOList(list);
             siteDTO.setSiteInfo(pageDTO.getSiteInfo());
-            writeSqlDbService.setStatus(siteDTO.getSiteInfo().getUrl(), Status.INDEXING, null);//TODO при siteInfo = null вылетает ошибка
+            writeSqlDbService.setStatus(siteDTO.getSiteInfo().getUrl(), Status.INDEXING, null);
+            list.add(pageDTO);
+            parseService.parsePage(pageDTO);
+            siteDTO.setPageDTOList(list);
             deleteDataService.delete(siteDTO);
             writeSqlDbService.writePageTable(siteDTO);
             TreeMap<Integer, List<LemmaDTO>> lemmas = lemmaService.getListLemmas(siteDTO.getPageDTOList());
