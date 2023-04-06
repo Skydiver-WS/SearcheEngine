@@ -13,7 +13,7 @@ import searchengine.services.deleteDataDB.sql.DeleteDataService;
 import searchengine.services.indexing.core.lemma.LemmaService;
 import searchengine.services.indexing.core.parse.ParseService;
 import searchengine.services.indexing.core.stopIndexing.StopIndexingService;
-import searchengine.services.indexing.handler.WriteSqlDbService;
+import searchengine.services.indexing.core.handler.WriteDbService;
 
 import java.util.*;
 
@@ -27,7 +27,7 @@ public class IndexingImpl implements IndexingService {
     @Autowired
     private DeleteDataService deleteSite;
     @Autowired
-    private WriteSqlDbService writeSqlDbService;
+    private WriteDbService writeSqlDbService;
     @Autowired
     private ChangeStartIndexingService changeStartIndexing;
     @Autowired
@@ -36,7 +36,7 @@ public class IndexingImpl implements IndexingService {
     private ParseService parseService;
     @Autowired
     private LemmaService lemmaService;
-
+//TODO есть баг со сбросом количества активных потоков т.е. при обрыве соединения вылетает исключение и повторно индексацию нельзя запустить. Исправить.
     @Override
     public HashMap<String, Object> startIndexing() {
         HashMap<String, Object> response = new HashMap<>();

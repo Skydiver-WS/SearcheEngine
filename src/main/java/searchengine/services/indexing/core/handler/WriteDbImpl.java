@@ -1,4 +1,4 @@
-package searchengine.services.indexing.handler;
+package searchengine.services.indexing.core.handler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,19 +10,21 @@ import searchengine.dto.sites.SiteDTO;
 import searchengine.model.SQL.Lemma;
 import searchengine.model.SQL.PageInfo;
 import searchengine.model.SQL.SiteInfo;
+import searchengine.repository.SQL.IndexRepository;
 import searchengine.repository.SQL.LemmaRepository;
 import searchengine.repository.SQL.PageRepository;
-import searchengine.services.indexing.handler.lemmaTable.HandlerDataLemmaService;
-import searchengine.services.indexing.handler.indexTable.HandlerDataIndexService;
+import searchengine.services.indexing.core.handler.lemmaTable.HandlerDataLemmaService;
+import searchengine.services.indexing.core.handler.indexTable.HandlerDataIndexService;
 import searchengine.services.writeDataDB.SQL.indexTable.WriteIndexTableService;
 import searchengine.services.writeDataDB.SQL.lemmaTable.WriteLemmaTableService;
 import searchengine.services.writeDataDB.SQL.pageTable.WritePageTableService;
 import searchengine.services.writeDataDB.SQL.siteTable.WriteSiteTableService;
+import searchengine.services.writeDataDB.noSQL.CashStatisticsService;
 
 import java.util.*;
 
 @Component
-public class WriteSqlDbImpl implements WriteSqlDbService {
+public class WriteDbImpl implements WriteDbService {
     @Autowired
     private WriteSiteTableService writeSite;
     @Autowired
@@ -40,9 +42,13 @@ public class WriteSqlDbImpl implements WriteSqlDbService {
     @Autowired
     private HandlerDataLemmaService handlerDataLemma;
 
+    @Autowired
+    private CashStatisticsService cashStatisticsService;
+
     @Override
     public void writeSiteTable(Site site) {
         writeSite.write(site);
+        //cashStatisticsService.setSiteStatistics(getSiteInfo(site));
     }
 
     @Override
@@ -58,6 +64,7 @@ public class WriteSqlDbImpl implements WriteSqlDbService {
     @Override
     public void writePageTable(SiteDTO siteDTO) {
         writePage.write(siteDTO);
+        //cashStatisticsService.setPageStatistics(siteDTO);
     }
 
     @Override
@@ -67,18 +74,19 @@ public class WriteSqlDbImpl implements WriteSqlDbService {
     }
 
     @Override
-    public void updateLemmaTable(SiteDTO siteDTO, TreeMap<Integer, List<LemmaDTO>> lemmas) {
-        List<String> lemmasListNew = handlerDataLemma.frequencyLemmas(lemmas).keySet().stream().toList();
-        List<Lemma> lemmaList = lemmaRepository.getLemmaTable(siteDTO.getSiteInfo().getId());
-        List<Lemma> list = handlerDataLemma.checkNewLemmas(siteDTO.getSiteInfo(), lemmasListNew, lemmaList);
-        writeLemmaTableService.updateLemmaTable(list);
-    }
-
-    @Override
     public void writeIndexTable(SiteInfo siteInfo, TreeMap<Integer, List<LemmaDTO>> lemmas) {
         List<Lemma> lemmaList = lemmaRepository.getLemmaTable(siteInfo.getId());
         List<PageInfo> pageList = pageRepository.getContent(siteInfo.getId());
         List<IndexDTO> list = handlerDataIndex.createIndexDTO(lemmas, pageList, lemmaList);
         writeIndexTableService.write(list);
+        //cashStatisticsService.setLemmasStatistics(siteInfo);
+    }
+
+    @Override
+    public void updateLemmaTable(SiteDTO siteDTO, TreeMap<Integer, List<LemmaDTO>> lemmas) {
+        List<String> lemmasListNew = handlerDataLemma.frequencyLemmas(lemmas).keySet().stream().toList();
+        List<Lemma> lemmaList = lemmaRepository.getLemmaTable(siteDTO.getSiteInfo().getId());
+        List<Lemma> list = handlerDataLemma.checkNewLemmas(siteDTO.getSiteInfo(), lemmasListNew, lemmaList);
+        writeLemmaTableService.updateLemmaTable(list);
     }
 }

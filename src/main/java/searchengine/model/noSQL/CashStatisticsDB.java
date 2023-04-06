@@ -16,6 +16,6 @@ public class CashStatisticsDB {
     private String status;
     private LocalDateTime statusTime;
     private String error;
-    private int pages;
-    private int lemmas;
+    private Integer pages;
+    private Integer lemmas;
 }

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import searchengine.dto.statistics.PageStatisticsDTO;
 import searchengine.model.SQL.PageInfo;
 
 import java.util.List;
@@ -25,4 +26,8 @@ public interface PageRepository extends JpaRepository<PageInfo, Integer> {
     @Transactional
     @Query(value = "UPDATE page SET content = :content WHERE path = :path", nativeQuery = true)
     void updatePage(@Param("path") String path, @Param("content") String content);
+
+    @Query(value = "SELECT id FROM page WHERE site_id = :site_id", nativeQuery = true)
+    List<Integer> getListId(@Param("site_id") int siteId);
+
 }

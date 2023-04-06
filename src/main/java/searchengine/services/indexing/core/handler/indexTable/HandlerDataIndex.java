@@ -1,4 +1,4 @@
-package searchengine.services.indexing.handler.indexTable;
+package searchengine.services.indexing.core.handler.indexTable;
 
 import org.springframework.stereotype.Component;
 import searchengine.dto.sites.IndexDTO;

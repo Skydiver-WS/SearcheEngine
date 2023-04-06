@@ -1,4 +1,4 @@
-package searchengine.services.indexing.handler;
+package searchengine.services.indexing.core.handler;
 
 import searchengine.config.site.Site;
 import searchengine.config.status.Status;
@@ -9,7 +9,7 @@ import searchengine.model.SQL.SiteInfo;
 import java.util.List;
 import java.util.TreeMap;
 
-public interface WriteSqlDbService {
+public interface WriteDbService {
   void writeSiteTable(Site site);
   SiteInfo getSiteInfo(Site site);
   void setStatus(String url, Status status, String error);

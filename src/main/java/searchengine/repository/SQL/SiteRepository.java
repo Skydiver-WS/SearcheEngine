@@ -6,15 +6,20 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import searchengine.dto.statistics.PageStatisticsDTO;
 import searchengine.model.SQL.SiteInfo;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface SiteRepository extends JpaRepository<SiteInfo, Integer> {
     @Query(value = "SELECT * FROM site WHERE url = :url", nativeQuery = true)
     Optional<SiteInfo> getSiteInfo(@Param("url") String url);
+
+    @Query(value = "SELECT * FROM site WHERE id = :id", nativeQuery = true)
+    SiteInfo getSiteInfo(@Param("id") int id);
 
     @Modifying
     @Query(value = "UPDATE site SET status_time = :date, status = :status, last_error = :error WHERE id = :id", nativeQuery = true)
@@ -38,4 +43,16 @@ public interface SiteRepository extends JpaRepository<SiteInfo, Integer> {
             "WHERE s.url = :url",
             nativeQuery = true)
     void garbageClear(@Param("url") String url);
+
+        @Query("SELECT new searchengine.dto.statistics.PageStatisticsDTO(s.id, COUNT(p)) " +
+            "FROM SiteInfo s " +
+            "JOIN PageInfo p ON p.siteId = s.id " +
+            "WHERE s.id = :id " +
+            "GROUP BY s.id")
+    PageStatisticsDTO getPageStatisticsHQLQuery(@Param("id") int id);
+//    @Query("SELECT new searchengine.dto.statistics.PageStatisticsDTO(s.id, COUNT(p)) " +
+//            "FROM SiteInfo s " +
+//            "JOIN PageInfo p ON p.siteId = s.id " +
+//            "GROUP BY s.id")
+//    List<PageStatisticsDTO> getPageStatisticsHQLQuery();
 }

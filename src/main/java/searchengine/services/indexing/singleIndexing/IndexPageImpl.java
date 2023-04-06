@@ -11,7 +11,7 @@ import searchengine.services.indexing.core.check.url.CheckUrlService;
 import searchengine.services.indexing.core.find.FindElementService;
 import searchengine.services.indexing.core.lemma.LemmaService;
 import searchengine.services.indexing.core.parse.ParseService;
-import searchengine.services.indexing.handler.WriteSqlDbService;
+import searchengine.services.indexing.core.handler.WriteDbService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ public class IndexPageImpl implements IndexPageService {
     @Autowired
     private ParseService parseService;
     @Autowired
-    private WriteSqlDbService writeSqlDbService;
+    private WriteDbService writeSqlDbService;
     @Autowired
     private LemmaService lemmaService;
     @Autowired

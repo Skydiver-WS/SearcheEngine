@@ -8,7 +8,7 @@ import searchengine.config.status.Status;
 import searchengine.dto.sites.PageDTO;
 import searchengine.dto.sites.SiteDTO;
 import searchengine.services.indexing.core.check.duplicateUrl.CheckDuplicateRef;
-import searchengine.services.indexing.handler.WriteSqlDbService;
+import searchengine.services.indexing.core.handler.WriteDbService;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
 @Component
 public class Parse implements ParseService {
     @Autowired
-    private WriteSqlDbService writeSqlDbService;
+    private WriteDbService writeSqlDbService;
 
     @Override
     public SiteDTO getListPageDto(SiteDTO siteDTO) {

@@ -1,4 +1,4 @@
-package searchengine.services.indexing.handler.lemmaTable;
+package searchengine.services.indexing.core.handler.lemmaTable;
 
 import searchengine.dto.sites.LemmaDTO;
 import searchengine.model.SQL.Lemma;
