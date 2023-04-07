@@ -19,7 +19,7 @@ public interface SiteRepository extends JpaRepository<SiteInfo, Integer> {
     Optional<SiteInfo> getSiteInfo(@Param("url") String url);
 
     @Query(value = "SELECT * FROM site WHERE id = :id", nativeQuery = true)
-    SiteInfo getSiteInfo(@Param("id") int id);
+    Optional<SiteInfo> getSiteInfo(@Param("id") int id);
 
     @Modifying
     @Query(value = "UPDATE site SET status_time = :date, status = :status, last_error = :error WHERE id = :id", nativeQuery = true)

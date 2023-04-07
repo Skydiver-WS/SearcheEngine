@@ -10,9 +10,10 @@ import searchengine.dto.sites.SiteDTO;
 import searchengine.model.SQL.Lemma;
 import searchengine.model.SQL.PageInfo;
 import searchengine.model.SQL.SiteInfo;
-import searchengine.repository.SQL.IndexRepository;
+import searchengine.model.noSQL.CashStatisticsDB;
 import searchengine.repository.SQL.LemmaRepository;
 import searchengine.repository.SQL.PageRepository;
+import searchengine.repository.noSQL.CashStatisticsRepository;
 import searchengine.services.indexing.core.handler.lemmaTable.HandlerDataLemmaService;
 import searchengine.services.indexing.core.handler.indexTable.HandlerDataIndexService;
 import searchengine.services.writeDataDB.SQL.indexTable.WriteIndexTableService;
@@ -44,11 +45,13 @@ public class WriteDbImpl implements WriteDbService {
 
     @Autowired
     private CashStatisticsService cashStatisticsService;
+    @Autowired
+    private CashStatisticsRepository cashStatisticsRepository;
 
     @Override
     public void writeSiteTable(Site site) {
         writeSite.write(site);
-        //cashStatisticsService.setSiteStatistics(getSiteInfo(site));
+        cashStatisticsService.setSiteStatistics(getSiteInfo(site));
     }
 
     @Override
@@ -59,12 +62,13 @@ public class WriteDbImpl implements WriteDbService {
     @Override
     public void setStatus(String url, Status status, String error) {
         writeSite.setStatus(url, status, error);
+        //CashStatisticsDB cash = cashStatisticsRepository.findBy(url);
     }
 
     @Override
     public void writePageTable(SiteDTO siteDTO) {
         writePage.write(siteDTO);
-        //cashStatisticsService.setPageStatistics(siteDTO);
+        //cashStatisticsService.setPageStatistics(siteDTO.getSiteInfo().getId());
     }
 
     @Override
@@ -79,7 +83,7 @@ public class WriteDbImpl implements WriteDbService {
         List<PageInfo> pageList = pageRepository.getContent(siteInfo.getId());
         List<IndexDTO> list = handlerDataIndex.createIndexDTO(lemmas, pageList, lemmaList);
         writeIndexTableService.write(list);
-        //cashStatisticsService.setLemmasStatistics(siteInfo);
+        //cashStatisticsService.setLemmasStatistics(siteInfo.getId());
     }
 
     @Override

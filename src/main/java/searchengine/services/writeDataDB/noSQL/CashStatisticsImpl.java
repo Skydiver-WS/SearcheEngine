@@ -6,6 +6,7 @@ import searchengine.dto.sites.SiteDTO;
 import searchengine.model.SQL.SiteInfo;
 import searchengine.model.noSQL.CashStatisticsDB;
 import searchengine.repository.SQL.IndexRepository;
+import searchengine.repository.SQL.PageRepository;
 import searchengine.repository.noSQL.CashStatisticsRepository;
 
 import java.util.List;
@@ -16,6 +17,8 @@ public class CashStatisticsImpl implements CashStatisticsService {
     private CashStatisticsRepository cashRepository;
     @Autowired
     private IndexRepository indexRepository;
+    @Autowired
+    private PageRepository pageRepository;
 
 
     @Override
@@ -30,23 +33,30 @@ public class CashStatisticsImpl implements CashStatisticsService {
     }
 
     @Override
-    public void setPageStatistics(SiteDTO siteDTO) {
-        var cash = cashRepository.findById(siteDTO.getSiteInfo().getId()).orElse(null);
-        if (cash != null) {
-            cash.setPages(siteDTO.getPageDTOList().size());
-            cashRepository.save(cash);
-        }
+    public void write(CashStatisticsDB cash) {
+        cashRepository.deleteById(cash.getId());
+        cashRepository.save(cash);
     }
 
-    @Override
-    public void setLemmasStatistics(SiteInfo siteInfo) {
-        var cash = cashRepository.findById(siteInfo.getId()).orElse(null);
-        if (cash != null) {
-            Integer countLemmas = indexRepository.getCountLemmas(siteInfo.getId());
-            cash.setLemmas(countLemmas);
-            cashRepository.save(cash);
-        }
-    }
+
+//    @Override
+//    public void setPageStatistics(int siteId) {
+//        var cash = cashRepository.findById(siteId).orElse(null);
+//        if (cash != null) {
+//            cash.setPages(pageRepository.countPage(siteId));
+//            cashRepository.save(cash);
+//        }
+//    }
+//
+//    @Override
+//    public void setLemmasStatistics(int siteId) {
+//        var cash = cashRepository.findById(siteId).orElse(null);
+//        if (cash != null) {
+//            Integer countLemmas = indexRepository.getCountLemmas(siteId);
+//            cash.setLemmas(countLemmas);
+//            cashRepository.save(cash);
+//        }
+//    }
 
     @Override
     public List<CashStatisticsDB> getStatistics() {

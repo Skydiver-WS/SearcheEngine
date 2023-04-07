@@ -41,14 +41,19 @@ public class DeleteDataImpl implements DeleteDataService {
         Optional<SiteInfo> siteInfo = siteRepository.getSiteInfo(site.getUrl());
         if (siteInfo.isPresent()) {
             siteId = siteInfo.get().getId();
-            //cash = getCashStatistics();
             List<Integer> listPageId = pageRepository.getListId(siteId);
             List<Integer> listLemmaId = lemmaRepository.getId(siteId);
             List<Integer> listIndexId = getIdIndexTable(listPageId);
+            //cash = getCashStatistics();
             changeSite(siteId);
             deleteIndex(listIndexId);
+//            cash.setPages(indexRepository.getCountLemmas(siteId));
+//            cashStatisticsRepository.save(cash);
             deleteLemma(listLemmaId);
             deletePage(listPageId);
+//            cash = getCashStatistics();
+//            cash.setPages(pageRepository.countPage(siteId));
+//            cashStatisticsRepository.save(cash);
         }
     }
 

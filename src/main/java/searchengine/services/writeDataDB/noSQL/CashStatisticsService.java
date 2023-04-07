@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface CashStatisticsService {
     void setSiteStatistics(SiteInfo siteInfo);
-    void setPageStatistics(SiteDTO siteDTO);
-    void setLemmasStatistics(SiteInfo siteInfo);
+    void write(CashStatisticsDB cash);
+
     List<CashStatisticsDB> getStatistics();
 }
