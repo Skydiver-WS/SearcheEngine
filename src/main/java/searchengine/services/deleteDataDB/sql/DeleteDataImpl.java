@@ -85,19 +85,19 @@ public class DeleteDataImpl implements DeleteDataService {
         return listId;
     }
 
-    private void deleteIndex(List<Integer> listIndexId) {
+    private synchronized void deleteIndex(List<Integer> listIndexId) {
         if (listIndexId.size() > 0) {
             indexRepository.deleteAllByIdInBatch(listIndexId);
         }
     }
 
-    private void deleteLemma(List<Integer> listLemmaId) {
+    private synchronized void deleteLemma(List<Integer> listLemmaId) {
         if (listLemmaId.size() > 0) {
             lemmaRepository.deleteAllByIdInBatch(listLemmaId);
         }
     }
 
-    private void deletePage(List<Integer> listPageId) {
+    private synchronized void deletePage(List<Integer> listPageId) {
         if (listPageId.size() > 0) {
             pageRepository.deleteAllByIdInBatch(listPageId);
         }

@@ -50,23 +50,27 @@ public class IndexingImpl implements IndexingService {
         return response;
     }
 
-    @SneakyThrows
     private void indexing() {
         for (Site site : sitesList.getSites()) {
             new Thread(() -> {
                 addThread(Thread.currentThread());
                 Thread.currentThread().setName(site.getName());
-                SiteDTO siteDTO = new SiteDTO();
-                writeSqlDbService.setStatus(site.getUrl(), Status.INDEXING, null);
-                deleteSite.delete(site);
-                writeSqlDbService.writeSiteTable(site);
-                siteDTO.setSiteInfo(writeSqlDbService.getSiteInfo(site));
-                parseService.getListPageDto(siteDTO);
-                writeSqlDbService.writePageTable(siteDTO);
-                TreeMap<Integer, List<LemmaDTO>> lemmas = lemmaService.getListLemmas(siteDTO.getSiteInfo().getId());
-                writeSqlDbService.writeLemmaTable(siteDTO.getSiteInfo(), lemmas);
-                writeSqlDbService.writeIndexTable(siteDTO.getSiteInfo(), lemmas);
-                writeSqlDbService.setStatus(site.getUrl(), Status.INDEXED, null);
+                try{
+                    SiteDTO siteDTO = new SiteDTO();
+                    writeSqlDbService.setStatus(site.getUrl(), Status.INDEXING, null);
+                    deleteSite.delete(site);
+                    writeSqlDbService.writeSiteTable(site);
+                    siteDTO.setSiteInfo(writeSqlDbService.getSiteInfo(site));
+                    parseService.getListPageDto(siteDTO);
+                    writeSqlDbService.writePageTable(siteDTO);
+                    TreeMap<Integer, List<LemmaDTO>> lemmas = lemmaService.getListLemmas(siteDTO.getSiteInfo().getId());
+                    writeSqlDbService.writeLemmaTable(siteDTO.getSiteInfo(), lemmas);
+                    writeSqlDbService.writeIndexTable(siteDTO.getSiteInfo(), lemmas);
+                    writeSqlDbService.setStatus(site.getUrl(), Status.INDEXED, null);
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                    writeSqlDbService.setStatus(site.getUrl(), Status.FAILED, ex.getMessage() );
+                }
                 removeThread(Thread.currentThread());
             }).start();
         }
