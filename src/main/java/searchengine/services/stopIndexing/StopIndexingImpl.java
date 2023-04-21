@@ -1,15 +1,12 @@
-package searchengine.services.indexing.core.stopIndexing;
+package searchengine.services.stopIndexing;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import searchengine.config.status.Status;
 import searchengine.model.SQL.SiteInfo;
 import searchengine.repository.SQL.SiteRepository;
-import searchengine.services.indexing.core.check.lifeThread.LifeThread;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 

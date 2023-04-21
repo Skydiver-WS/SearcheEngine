@@ -28,6 +28,7 @@ public class FindElementImpl implements FindElementService {
 
     @Override
     public PageDTO find(String url) {
+        url = convertUrl(url);
         Optional<PageInfo> page = pageRepository.findPage(url);
         PageDTO pageDTO = new PageDTO();
         if (page.isPresent()) {
@@ -37,26 +38,25 @@ public class FindElementImpl implements FindElementService {
             pageDTO.setUrl(url);
             return pageDTO;
         }else {
-//            List<SiteInfo> list = siteRepository.findAll();
-//            for (SiteInfo site:list) {
-//                Pattern pattern = Pattern.compile(site.getUrl());
-//                Matcher matcher = pattern.matcher(url);
-//                if(matcher.find()){
-//                    pageDTO.setUrl(url);
-//                    pageDTO.setSiteInfo(site);
-//                }
-//            }
-//            return pageDTO;
             List<SiteInfo> list = siteRepository.findAll();
+            String finalUrl = url;
             return list.stream()
-                    .filter(site -> Pattern.compile(site.getUrl()).matcher(url).find())
+                    .filter(site -> Pattern.compile(site.getUrl()).matcher(finalUrl).find())
                     .map(site -> {
-                        pageDTO.setUrl(url);
+                        pageDTO.setUrl(finalUrl);
                         pageDTO.setSiteInfo(site);
                         return pageDTO;
                     })
                     .findFirst()
                     .orElse(null);
         }
+    }
+    private String convertUrl(String url){
+        Pattern pattern = Pattern.compile("^.+://.+?/");
+        Matcher matcher = pattern.matcher(url);
+        if(matcher.find()){
+            url = "/" + url.replaceFirst(pattern.pattern(), "");
+        }
+        return url;
     }
 }

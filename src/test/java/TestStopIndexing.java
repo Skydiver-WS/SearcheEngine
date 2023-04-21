@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import searchengine.repository.SQL.SiteRepository;
-import searchengine.services.indexing.core.stopIndexing.StopIndexingImpl;
-import searchengine.services.indexing.core.stopIndexing.StopIndexingService;
+import searchengine.services.stopIndexing.StopIndexingImpl;
+import searchengine.services.stopIndexing.StopIndexingService;
 
 import java.util.HashMap;
 

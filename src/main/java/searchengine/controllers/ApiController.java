@@ -3,11 +3,13 @@ package searchengine.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import searchengine.dto.search.ResponseSearch;
 import searchengine.dto.statistics.StatisticsResponse;
 import searchengine.repository.noSQL.CashStatisticsRepository;
 import searchengine.services.indexing.fullIndexing.IndexingService;
-import searchengine.services.indexing.core.stopIndexing.StopIndexingService;
+import searchengine.services.stopIndexing.StopIndexingService;
 import searchengine.services.indexing.singleIndexing.IndexPageService;
+import searchengine.services.search.SearchService;
 import searchengine.services.statistics.StatisticsService;
 
 import java.util.HashMap;
@@ -24,7 +26,9 @@ public class ApiController {
     @Autowired
     private IndexPageService indexPageService;
     @Autowired
-    CashStatisticsRepository st;
+    private CashStatisticsRepository st;
+    @Autowired
+    private SearchService searchService;
 
     @GetMapping("/statistics")
     public ResponseEntity<StatisticsResponse> statistics() {
@@ -45,5 +49,15 @@ public class ApiController {
     public HashMap<String, Object> indexPage(@RequestParam String url) {
         return indexPageService.indexPage(url);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<ResponseSearch> search(@RequestParam String query, @RequestParam(required = false) String site,
+                                 @RequestParam int offset, @RequestParam int limit){
+        return ResponseEntity.ok(searchService.search(query, site, offset, limit));
+    }
+//    @GetMapping("/search")
+//    public ResponseEntity<ResponseSearch> search(@RequestParam String query){
+//        return ResponseEntity.ok(searchService.search(query));
+//    }
 
 }

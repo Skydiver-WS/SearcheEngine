@@ -13,11 +13,6 @@ public class Site {
     private String name;
 
     public void setUrl(String url) {
-        Pattern pattern = Pattern.compile(".+/");
-        Matcher matcher = pattern.matcher(url);
-        if (!matcher.matches()) {
-            url = url + "/";
-        }
-        this.url = url.trim().replace("www.", "");
+        this.url = url.trim().replace("www.", "").replaceFirst("/$", "");
     }
 }

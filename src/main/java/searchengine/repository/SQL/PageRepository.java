@@ -15,8 +15,10 @@ import java.util.Optional;
 
 @Repository
 public interface PageRepository extends JpaRepository<PageInfo, Integer> {
-    @Query("select count(p) from PageInfo p where p.siteId.id = :id")
+    @Query("SELECT COUNT(p) FROM PageInfo p WHERE p.siteId.id = :id")
     int countPage(@Param("id") int id);
+    @Query("SELECT p FROM PageInfo p WHERE p.id = :id")
+    PageInfo getPageInfo(@Param("id") int id);
 
     @Query(value = "SELECT * FROM page WHERE site_id = :site_id", nativeQuery = true)
     List<PageInfo> getContent(@Param("site_id") int siteId);
