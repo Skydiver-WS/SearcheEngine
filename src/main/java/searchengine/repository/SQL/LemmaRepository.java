@@ -43,7 +43,6 @@ public interface LemmaRepository extends JpaRepository<Lemma, Integer> {
           "JOIN PageInfo p ON p.id = i.pageId.id " +
           "JOIN SiteInfo s ON s.id = l.siteId.id " +
           "WHERE l.lemma = :lemma " +
-          "AND p.id = :page_id " +
           "AND s.url = :path")
   List<SearchObjectDTO> searchMatchingLemmas(@Param("lemma") String lemma, @Param("path") String path);
 }

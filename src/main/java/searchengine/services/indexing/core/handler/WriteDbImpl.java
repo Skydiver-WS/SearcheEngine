@@ -20,6 +20,7 @@ import searchengine.services.writeDataDB.SQL.indexTable.WriteIndexTableService;
 import searchengine.services.writeDataDB.SQL.lemmaTable.WriteLemmaTableService;
 import searchengine.services.writeDataDB.SQL.pageTable.WritePageTableService;
 import searchengine.services.writeDataDB.SQL.siteTable.WriteSiteTableService;
+import searchengine.services.writeDataDB.noSQL.CashLemmasService;
 import searchengine.services.writeDataDB.noSQL.CashStatisticsService;
 
 import java.util.*;
@@ -47,6 +48,8 @@ public class WriteDbImpl implements WriteDbService {
     private CashStatisticsService cashStatisticsService;
     @Autowired
     private CashStatisticsRepository cashStatisticsRepository;
+    @Autowired
+    CashLemmasService cashLemmasService;
 
     @Override
     public void writeSiteTable(Site site) {
@@ -75,6 +78,8 @@ public class WriteDbImpl implements WriteDbService {
     public void writeLemmaTable(SiteInfo siteInfo, TreeMap<Integer, List<LemmaDTO>> lemmas) {
         Map<String, Integer> lemmasList = handlerDataLemma.frequencyLemmas(lemmas);
         writeLemmaTableService.write(siteInfo, lemmasList);
+        List<Lemma> lemmaList = lemmaRepository.findAll();
+        cashLemmasService.writeLemmas(lemmaList);
     }
 
     @Override

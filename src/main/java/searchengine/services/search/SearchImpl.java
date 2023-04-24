@@ -26,7 +26,7 @@ public class SearchImpl implements SearchService {
     public ResponseSearch search(String query, String site, int offset, int limit) {
         FrequencyLemmaDTO[] lemmas = searchLemmas.getFindLemmasSort(query);
         if (lemmas.length > 0) {
-            List<FrequencyLemmaDTO> pages = site != null ? searchPages.searchPages(lemmas, site) : searchPages.searchPages(lemmas);//TODO здесь баг при выборе сайта для поиска
+            List<FrequencyLemmaDTO> pages = (site != null) ? searchPages.searchPages(lemmas, site) : searchPages.searchPages(lemmas);
             RelevanceDTO[] dtoList = relevanceService.getList(pages);
             ResultDTO[] resultDTO = resultService.getResult(dtoList);
             ResponseSearch response = new ResponseSearch();

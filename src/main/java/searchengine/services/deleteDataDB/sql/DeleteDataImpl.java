@@ -14,6 +14,7 @@ import searchengine.repository.SQL.IndexRepository;
 import searchengine.repository.SQL.LemmaRepository;
 import searchengine.repository.SQL.PageRepository;
 import searchengine.repository.SQL.SiteRepository;
+import searchengine.repository.noSQL.CashLemmasRepository;
 import searchengine.repository.noSQL.CashStatisticsRepository;
 
 import java.time.LocalDateTime;
@@ -34,7 +35,7 @@ public class DeleteDataImpl implements DeleteDataService {
     private int siteId;
     private CashStatisticsDB cash;
     @Autowired
-    private CashStatisticsRepository cashStatisticsRepository;
+    private CashLemmasRepository cashLemmasRepository;
 
     @Override
     public void delete(Site site) {
@@ -44,16 +45,11 @@ public class DeleteDataImpl implements DeleteDataService {
             List<Integer> listPageId = pageRepository.getListId(siteId);
             List<Integer> listLemmaId = lemmaRepository.getId(siteId);
             List<Integer> listIndexId = getIdIndexTable(listPageId);
-            //cash = getCashStatistics();
             changeSite(siteId);
             deleteIndex(listIndexId);
-//            cash.setPages(indexRepository.getCountLemmas(siteId));
-//            cashStatisticsRepository.save(cash);
             deleteLemma(listLemmaId);
             deletePage(listPageId);
-//            cash = getCashStatistics();
-//            cash.setPages(pageRepository.countPage(siteId));
-//            cashStatisticsRepository.save(cash);
+            cashLemmasRepository.deleteAll();
         }
     }
 
@@ -71,6 +67,7 @@ public class DeleteDataImpl implements DeleteDataService {
         }
         lemmaRepository.saveAll(list);
         siteDTO.getPageDTOList().forEach(p -> indexRepository.delete(p.getId()));
+        cashLemmasRepository.deleteAll();
     }
 
     private List<Integer> getIdIndexTable(List<Integer> listPageId) {
@@ -113,8 +110,4 @@ public class DeleteDataImpl implements DeleteDataService {
             siteRepository.save(siteInfo);
         }
     }
-     private CashStatisticsDB getCashStatistics(){
-        return cashStatisticsRepository.findById(siteId).orElse(null);
-     }
-
 }
