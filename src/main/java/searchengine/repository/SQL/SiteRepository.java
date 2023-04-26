@@ -35,10 +35,4 @@ public interface SiteRepository extends JpaRepository<SiteInfo, Integer> {
             "WHERE s.url = :url",
             nativeQuery = true)
     void delete(@Param("url") String url);
-
-//    @Query("SELECT new searchengine.dto.statistics.PageStatisticsDTO(s.id, COUNT(p)) " +
-//            "FROM SiteInfo s " +
-//            "JOIN PageInfo p ON p.siteId = s.id " +
-//            "GROUP BY s.id")
-//    List<PageStatisticsDTO> getPageStatisticsHQLQuery();
 }

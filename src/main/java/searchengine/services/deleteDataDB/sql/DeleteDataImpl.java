@@ -33,9 +33,6 @@ public class DeleteDataImpl implements DeleteDataService {
     @Autowired
     private SiteRepository siteRepository;
     private int siteId;
-    private CashStatisticsDB cash;
-    @Autowired
-    private CashLemmasRepository cashLemmasRepository;
 
     @Override
     public void delete(Site site) {
@@ -49,7 +46,6 @@ public class DeleteDataImpl implements DeleteDataService {
             deleteIndex(listIndexId);
             deleteLemma(listLemmaId);
             deletePage(listPageId);
-            cashLemmasRepository.deleteAll();
         }
     }
 
@@ -67,7 +63,7 @@ public class DeleteDataImpl implements DeleteDataService {
         }
         lemmaRepository.saveAll(list);
         siteDTO.getPageDTOList().forEach(p -> indexRepository.delete(p.getId()));
-        cashLemmasRepository.deleteAll();
+
     }
 
     private List<Integer> getIdIndexTable(List<Integer> listPageId) {

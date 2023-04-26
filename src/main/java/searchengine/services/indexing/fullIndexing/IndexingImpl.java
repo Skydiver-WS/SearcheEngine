@@ -7,6 +7,7 @@ import searchengine.config.site.SitesList;
 import searchengine.config.status.Status;
 import searchengine.dto.sites.LemmaDTO;
 import searchengine.dto.sites.SiteDTO;
+import searchengine.repository.noSQL.CashLemmasRepository;
 import searchengine.services.indexing.core.check.indexing.ChangeStartIndexingService;
 import searchengine.services.deleteDataDB.sql.DeleteDataService;
 import searchengine.services.indexing.core.lemma.LemmaService;
@@ -35,10 +36,13 @@ public class IndexingImpl implements IndexingService {
     private ParseService parseService;
     @Autowired
     private LemmaService lemmaService;
+    @Autowired
+    private CashLemmasRepository cashLemmasRepository;
 //TODO есть баг со сбросом количества активных потоков т.е. при обрыве соединения вылетает исключение и повторно индексацию нельзя запустить. Исправить.
     @Override
     public HashMap<String, Object> startIndexing() {
         HashMap<String, Object> response = new HashMap<>();
+        cashLemmasRepository.deleteAll();
         if (changeStartIndexing.change()) {
             response.put("result", false);
             response.put("error", "Индексация уже запущена");

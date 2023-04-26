@@ -47,9 +47,7 @@ public class WriteDbImpl implements WriteDbService {
     @Autowired
     private CashStatisticsService cashStatisticsService;
     @Autowired
-    private CashStatisticsRepository cashStatisticsRepository;
-    @Autowired
-    CashLemmasService cashLemmasService;
+    private CashLemmasService cashLemmasService;
 
     @Override
     public void writeSiteTable(Site site) {
@@ -65,21 +63,17 @@ public class WriteDbImpl implements WriteDbService {
     @Override
     public void setStatus(String url, Status status, String error) {
         writeSite.setStatus(url, status, error);
-        //CashStatisticsDB cash = cashStatisticsRepository.findBy(url);
     }
 
     @Override
     public void writePageTable(SiteDTO siteDTO) {
         writePage.write(siteDTO);
-        //cashStatisticsService.setPageStatistics(siteDTO.getSiteInfo().getId());
     }
 
     @Override
     public void writeLemmaTable(SiteInfo siteInfo, TreeMap<Integer, List<LemmaDTO>> lemmas) {
         Map<String, Integer> lemmasList = handlerDataLemma.frequencyLemmas(lemmas);
         writeLemmaTableService.write(siteInfo, lemmasList);
-        List<Lemma> lemmaList = lemmaRepository.findAll();
-        cashLemmasService.writeLemmas(lemmaList);
     }
 
     @Override
@@ -88,7 +82,8 @@ public class WriteDbImpl implements WriteDbService {
         List<PageInfo> pageList = pageRepository.getContent(siteInfo.getId());
         List<IndexDTO> list = handlerDataIndex.createIndexDTO(lemmas, pageList, lemmaList);
         writeIndexTableService.write(list);
-        //cashStatisticsService.setLemmasStatistics(siteInfo.getId());
+        List<String> listLemmas = lemmaRepository.getLemmas(siteInfo.getId());
+        cashLemmasService.writeLemmas(listLemmas);
     }
 
     @Override

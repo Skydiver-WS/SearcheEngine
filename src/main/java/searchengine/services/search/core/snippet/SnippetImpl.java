@@ -31,7 +31,7 @@ public class SnippetImpl implements SnippetService {
         for (int i = 0; i < lemma.length(); i++) {
             Matcher matcher = patternMatcher(str + ".+?\\b", content);
             if (matcher.find()) {
-                String match = matcher.group().trim().replaceAll("[().,!?:;]", "");
+                String match = matcher.group().trim().replaceAll("[{}().,!?:;]", "");
                 try {
                     return content.replaceAll(match, " <b>" + match + "</b>");
                 }catch (Exception ex){

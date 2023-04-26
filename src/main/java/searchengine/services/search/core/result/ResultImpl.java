@@ -10,7 +10,9 @@ import searchengine.model.SQL.PageInfo;
 import searchengine.repository.SQL.PageRepository;
 import searchengine.services.search.core.snippet.SnippetService;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 @Component
@@ -21,8 +23,12 @@ public class ResultImpl implements ResultService{
     private SnippetService snippetService;
     @Override
     public ResultDTO[] getResult(RelevanceDTO[] dto) {
+        List<Integer> listId = new ArrayList<>();
+        Arrays.stream(dto).map(RelevanceDTO::getPageId).forEach(listId :: add);
+        List<PageInfo> pageInfoList = pageRepository.findAllById(listId);
         return Arrays.stream(dto).map(o -> {
-            PageInfo pageInfo = pageRepository.getPageInfo(o.getPageId());
+            //PageInfo pageInfo = pageRepository.getPageInfo(o.getPageId());
+            PageInfo pageInfo = pageInfoList.stream().filter(id -> o.getPageId() == id.getId()).findFirst().orElse(null);
             ResultDTO resultDTO = new ResultDTO();
             resultDTO.setSite(pageInfo.getSiteId().getUrl());
             resultDTO.setSiteName(pageInfo.getSiteId().getName());
