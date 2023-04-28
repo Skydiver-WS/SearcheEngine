@@ -55,4 +55,9 @@ public interface SiteRepository extends JpaRepository<SiteInfo, Integer> {
 //            "JOIN PageInfo p ON p.siteId = s.id " +
 //            "GROUP BY s.id")
 //    List<PageStatisticsDTO> getPageStatisticsHQLQuery();
+
+    @Transactional
+    @Modifying
+    @Query(value = "SET GLOBAL max_allowed_packet=1073741824", nativeQuery = true)
+    void setSQLMaxAllowedPacket();
 }

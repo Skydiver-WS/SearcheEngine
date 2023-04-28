@@ -22,7 +22,7 @@ public class LemmaImpl implements LemmaService {
   @SneakyThrows
   @Override
   public  TreeMap<Integer, List<LemmaDTO>> getListLemmas(int siteId) {
-    List<PageInfo> listContent = pageRepository.getContent(siteId);
+    List<PageInfo> listContent = pageRepository.getListPageTable(siteId);
     return getList(listContent);
   }
 

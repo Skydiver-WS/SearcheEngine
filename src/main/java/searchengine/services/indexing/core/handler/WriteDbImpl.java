@@ -80,7 +80,7 @@ public class WriteDbImpl implements WriteDbService {
     @Override
     public void writeIndexTable(SiteInfo siteInfo, TreeMap<Integer, List<LemmaDTO>> lemmas) {
         List<Lemma> lemmaList = lemmaRepository.getLemmaTable(siteInfo.getId());
-        List<PageInfo> pageList = pageRepository.getContent(siteInfo.getId());
+        List<PageInfo> pageList = pageRepository.getListPageTable(siteInfo.getId());
         List<IndexDTO> list = handlerDataIndex.createIndexDTO(lemmas, pageList, lemmaList);
         writeIndexTableService.write(list);
         //cashStatisticsService.setLemmasStatistics(siteInfo.getId());

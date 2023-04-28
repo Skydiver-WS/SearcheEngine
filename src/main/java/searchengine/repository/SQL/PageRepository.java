@@ -19,7 +19,9 @@ public interface PageRepository extends JpaRepository<PageInfo, Integer> {
     int countPage(@Param("id") int id);
 
     @Query(value = "SELECT * FROM page WHERE site_id = :site_id", nativeQuery = true)
-    List<PageInfo> getContent(@Param("site_id") int siteId);
+    List<PageInfo> getListPageTable(@Param("site_id") int siteId);
+    @Query(value = "SELECT * FROM page WHERE site_id = :site_id", nativeQuery = true)
+    List<Integer> getListIdPageTable(@Param("site_id") int siteId);
 
     @Query(value = "SELECT * FROM page WHERE id = :id", nativeQuery = true)
     List<PageInfo> getContentById(@Param("id") int id);
@@ -32,7 +34,7 @@ public interface PageRepository extends JpaRepository<PageInfo, Integer> {
     @Query(value = "UPDATE page SET content = :content WHERE path = :path", nativeQuery = true)
     void updatePage(@Param("path") String path, @Param("content") String content);
 
-    @Query(value = "SELECT id FROM page WHERE site_id = :site_id", nativeQuery = true)
-    List<Integer> getListId(@Param("site_id") int siteId);
+//    @Query(value = "SELECT id FROM page WHERE site_id = :site_id", nativeQuery = true)
+//    List<Integer> getListId(@Param("site_id") int siteId);
 
 }
