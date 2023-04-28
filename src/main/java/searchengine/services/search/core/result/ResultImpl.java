@@ -27,7 +27,6 @@ public class ResultImpl implements ResultService{
         Arrays.stream(dto).map(RelevanceDTO::getPageId).forEach(listId :: add);
         List<PageInfo> pageInfoList = pageRepository.findAllById(listId);
         return Arrays.stream(dto).map(o -> {
-            //PageInfo pageInfo = pageRepository.getPageInfo(o.getPageId());
             PageInfo pageInfo = pageInfoList.stream().filter(id -> o.getPageId() == id.getId()).findFirst().orElse(null);
             ResultDTO resultDTO = new ResultDTO();
             resultDTO.setSite(pageInfo.getSiteId().getUrl());

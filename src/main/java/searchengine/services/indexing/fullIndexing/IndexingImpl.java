@@ -42,7 +42,7 @@ public class IndexingImpl implements IndexingService {
     @Override
     public HashMap<String, Object> startIndexing() {
         HashMap<String, Object> response = new HashMap<>();
-        cashLemmasRepository.deleteAll();
+        cashLemmasRepository.deleteAll();//TODO переработать удаление, тупит
         if (changeStartIndexing.change()) {
             response.put("result", false);
             response.put("error", "Индексация уже запущена");

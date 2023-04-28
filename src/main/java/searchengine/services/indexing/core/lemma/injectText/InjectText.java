@@ -53,7 +53,7 @@ public class InjectText extends RecursiveTask<TreeMap<Integer, List<LemmaDTO>>> 
     }
 
     private String[] textSplit() {
-        return clearText().split("\\s+");
+        return clearText().split("[\\s-,.:]");
     }
 
     private String clearText() {
