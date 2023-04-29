@@ -1,9 +1,8 @@
 package searchengine.services.indexing.core.lemma.injectText;
 
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
+import lombok.*;
+import org.apache.lucene.morphology.LuceneMorphology;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 import searchengine.dto.sites.LemmaDTO;
@@ -14,20 +13,31 @@ import java.util.*;
 import java.util.concurrent.RecursiveTask;
 import java.util.logging.Logger;
 
-@RequiredArgsConstructor
-public class InjectText extends RecursiveTask< TreeMap<Integer, List<LemmaDTO>>> {
-    @NonNull
+
+public class InjectText extends RecursiveTask<TreeMap<Integer, List<LemmaDTO>>> {
     private PageInfo pageInfo;
+    private final LuceneMorphology[] morphologies;
+    private String query;
+
+    public InjectText(PageInfo pageInfo, LuceneMorphology[] morphologies) {
+        this.pageInfo = pageInfo;
+        this.morphologies = morphologies;
+    }
+
+    public InjectText(String query, LuceneMorphology[] morphologies) {
+        this.morphologies = morphologies;
+        this.query = query;
+    }
 
     @Override
     @SneakyThrows
     protected TreeMap<Integer, List<LemmaDTO>> compute() {
         Logger.getLogger(InjectText.class.getName()).info(Thread.currentThread().getName() + " - start");
-        LemmaAnalyze analyze = new LemmaAnalyze(textSplit());
+        LemmaAnalyze analyze = new LemmaAnalyze(textSplit(), morphologies);
         Map<String, Integer> lemmas = analyze.runAnalyze();
         List<LemmaDTO> listLemmas = new ArrayList<>();
         TreeMap<Integer, List<LemmaDTO>> map = new TreeMap<>();
-        for (String lemma:lemmas.keySet()) {
+        for (String lemma : lemmas.keySet()) {
             LemmaDTO lemmaDTO = new LemmaDTO();
             lemmaDTO.setLemma(lemma);
             lemmaDTO.setCount(lemmas.get(lemma));
@@ -37,12 +47,18 @@ public class InjectText extends RecursiveTask< TreeMap<Integer, List<LemmaDTO>>>
         return map;
     }
 
+    public Map<String, Integer> getLemmas() {
+        LemmaAnalyze analyze = new LemmaAnalyze(textSplit(), morphologies);
+        return analyze.runAnalyze();
+    }
+
     private String[] textSplit() {
-        return clearText().split("\\s+");
+        return clearText().split("[\\s-,.:]");
     }
 
     private String clearText() {
-        String content = Jsoup.clean(pageInfo.getContent(), Safelist.simpleText());
+        String text = pageInfo != null ? pageInfo.getContent() : query;
+        String content = Jsoup.clean(text, Safelist.simpleText());
         content = content.replaceAll("[,:\\-.!?\"();\\[\\]{}/& \\d<>|«»©◄]", " ").toLowerCase().trim();
         return content;
     }

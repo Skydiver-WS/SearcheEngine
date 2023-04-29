@@ -1457,7 +1457,7 @@ var API = function(){
             }
         });
     }
-    
+
     var send = {
         startIndexing:{
             address: '/startIndexing',

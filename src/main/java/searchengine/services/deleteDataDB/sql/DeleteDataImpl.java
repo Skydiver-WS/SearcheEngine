@@ -72,10 +72,6 @@ public class DeleteDataImpl implements DeleteDataService {
     siteDTO.getPageDTOList().forEach(p -> indexRepository.delete(p.getId()));
   }
 
-  private void setSQLMaxAllowedPacket() {
-    siteRepository.setSQLMaxAllowedPacket();
-  }
-
   private void delete(List<Integer> listId, JpaRepository<?, Integer> repository) {
     try {
       int sizeArray = 10000;

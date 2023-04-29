@@ -20,6 +20,7 @@ import searchengine.services.writeDataDB.SQL.indexTable.WriteIndexTableService;
 import searchengine.services.writeDataDB.SQL.lemmaTable.WriteLemmaTableService;
 import searchengine.services.writeDataDB.SQL.pageTable.WritePageTableService;
 import searchengine.services.writeDataDB.SQL.siteTable.WriteSiteTableService;
+import searchengine.services.writeDataDB.noSQL.CashLemmasService;
 import searchengine.services.writeDataDB.noSQL.CashStatisticsService;
 
 import java.util.*;
@@ -46,7 +47,7 @@ public class WriteDbImpl implements WriteDbService {
     @Autowired
     private CashStatisticsService cashStatisticsService;
     @Autowired
-    private CashStatisticsRepository cashStatisticsRepository;
+    private CashLemmasService cashLemmasService;
 
     @Override
     public void writeSiteTable(Site site) {
@@ -62,13 +63,11 @@ public class WriteDbImpl implements WriteDbService {
     @Override
     public void setStatus(String url, Status status, String error) {
         writeSite.setStatus(url, status, error);
-        //CashStatisticsDB cash = cashStatisticsRepository.findBy(url);
     }
 
     @Override
     public void writePageTable(SiteDTO siteDTO) {
         writePage.write(siteDTO);
-        //cashStatisticsService.setPageStatistics(siteDTO.getSiteInfo().getId());
     }
 
     @Override
@@ -83,7 +82,8 @@ public class WriteDbImpl implements WriteDbService {
         List<PageInfo> pageList = pageRepository.getListPageTable(siteInfo.getId());
         List<IndexDTO> list = handlerDataIndex.createIndexDTO(lemmas, pageList, lemmaList);
         writeIndexTableService.write(list);
-        //cashStatisticsService.setLemmasStatistics(siteInfo.getId());
+        List<String> listLemmas = lemmaRepository.getLemmas(siteInfo.getId());
+        cashLemmasService.writeLemmas(listLemmas);
     }
 
     @Override

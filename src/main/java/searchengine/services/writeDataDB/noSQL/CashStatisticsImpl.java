@@ -38,26 +38,6 @@ public class CashStatisticsImpl implements CashStatisticsService {
         cashRepository.save(cash);
     }
 
-
-//    @Override
-//    public void setPageStatistics(int siteId) {
-//        var cash = cashRepository.findById(siteId).orElse(null);
-//        if (cash != null) {
-//            cash.setPages(pageRepository.countPage(siteId));
-//            cashRepository.save(cash);
-//        }
-//    }
-//
-//    @Override
-//    public void setLemmasStatistics(int siteId) {
-//        var cash = cashRepository.findById(siteId).orElse(null);
-//        if (cash != null) {
-//            Integer countLemmas = indexRepository.getCountLemmas(siteId);
-//            cash.setLemmas(countLemmas);
-//            cashRepository.save(cash);
-//        }
-//    }
-
     @Override
     public List<CashStatisticsDB> getStatistics() {
         return cashRepository.findAll();

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import searchengine.dto.search.SearchObjectDTO;
 import searchengine.model.SQL.Index;
 import searchengine.model.SQL.Lemma;
 import searchengine.model.SQL.PageInfo;
@@ -34,4 +35,12 @@ public interface IndexRepository extends JpaRepository<Index, Integer> {
             "JOIN lemma l ON l.id = i.lemma_id " +
             "WHERE l.site_id = :site_id", nativeQuery = true)
     Integer getCountLemmas(@Param("site_id") int siteId);
+
+    @Query("SELECT new searchengine.dto.search.SearchObjectDTO(i.id, l.id, l.lemma, l.frequency, i.rank, p.id, l.siteId.id) " +
+            "FROM Index i " +
+            "JOIN Lemma l ON l.id = i.lemmaId.id " +
+            "JOIN PageInfo p ON p.id = i.pageId.id " +
+            "JOIN SiteInfo s ON s.id = l.siteId.id " +
+            "WHERE l.lemma = :lemma")
+    List<SearchObjectDTO> searchMatchingLemmas(@Param("lemma") String lemma);
 }

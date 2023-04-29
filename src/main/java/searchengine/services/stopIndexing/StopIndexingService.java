@@ -1,4 +1,4 @@
-package searchengine.services.indexing.core.stopIndexing;
+package searchengine.services.stopIndexing;
 
 import java.util.HashMap;
 

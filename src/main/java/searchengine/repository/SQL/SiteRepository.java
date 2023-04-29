@@ -35,29 +35,4 @@ public interface SiteRepository extends JpaRepository<SiteInfo, Integer> {
             "WHERE s.url = :url",
             nativeQuery = true)
     void delete(@Param("url") String url);
-
-    @Modifying
-    @Transactional
-    @Query(value = "DELETE p FROM page p " +
-            "JOIN site s ON p.site_id = s.id " +
-            "WHERE s.url = :url",
-            nativeQuery = true)
-    void garbageClear(@Param("url") String url);
-
-        @Query("SELECT new searchengine.dto.statistics.PageStatisticsDTO(s.id, COUNT(p)) " +
-            "FROM SiteInfo s " +
-            "JOIN PageInfo p ON p.siteId = s.id " +
-            "WHERE s.id = :id " +
-            "GROUP BY s.id")
-    PageStatisticsDTO getPageStatisticsHQLQuery(@Param("id") int id);
-//    @Query("SELECT new searchengine.dto.statistics.PageStatisticsDTO(s.id, COUNT(p)) " +
-//            "FROM SiteInfo s " +
-//            "JOIN PageInfo p ON p.siteId = s.id " +
-//            "GROUP BY s.id")
-//    List<PageStatisticsDTO> getPageStatisticsHQLQuery();
-
-    @Transactional
-    @Modifying
-    @Query(value = "SET GLOBAL max_allowed_packet=1073741824", nativeQuery = true)
-    void setSQLMaxAllowedPacket();
 }

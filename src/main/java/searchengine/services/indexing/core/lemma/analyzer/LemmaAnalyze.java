@@ -1,5 +1,6 @@
 package searchengine.services.indexing.core.lemma.analyzer;
 
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -16,31 +17,27 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class LemmaAnalyze {
-    @NonNull
     private String[] splitText;
-    private static LuceneMorphology morphologyRus;
-    private static LuceneMorphology morphologyEng;
-
+    private LuceneMorphology[] morphologies;
 
     public Map<String, Integer> runAnalyze() {
         Map<String, Integer> lemma = new TreeMap<>();
         Pattern pattern = Pattern.compile("СОЮЗ|МЕЖД|ПРЕДЛ|ARTICLE|CONJ|VBE|PN|PN_ADJ|PREP");
-        init();
         for (String text : splitText) {
             try {
                 Logger.getLogger(WriteLemmaTableImpl.class.getName()).info("text  - " + text);
-                String newForm = morphologyRus.getMorphInfo(text).get(0);
+                String newForm = morphologies[0].getMorphInfo(text).get(0);
                 Logger.getLogger(WriteLemmaTableImpl.class.getName()).info("Russian lemma find - " + newForm);
                 Matcher matcher = pattern.matcher(newForm);
-                if(!matcher.find()){
+                if (!matcher.find()) {
                     String t = finalText(newForm);
                     lemma.put(t, countLemmas(lemma, t));
                 }
             } catch (Exception ex) {
                 String newForm = lemmaEnglish(text, pattern);
-                if (newForm != null){
+                if (newForm != null) {
                     lemma.put(newForm, countLemmas(lemma, newForm));
                 }
             }
@@ -52,7 +49,7 @@ public class LemmaAnalyze {
     private String lemmaEnglish(String text, Pattern pattern) {
         try {
             Logger.getLogger(WriteLemmaTableImpl.class.getName()).info("text - " + text);
-            String newForm = morphologyEng.getMorphInfo(text).get(0);
+            String newForm = morphologies[1].getMorphInfo(text).get(0);
             Logger.getLogger(WriteLemmaTableImpl.class.getName()).info("English lemma find - " + newForm);
             Matcher matcher = pattern.matcher(newForm);
             if (!matcher.find()) {
@@ -67,6 +64,7 @@ public class LemmaAnalyze {
     private String finalText(String text) {
         return text.replaceAll("\\|.*", "");
     }
+
     private int countLemmas(Map<String, Integer> list, String text) {
         int count = 1;
         if (list.containsKey(text)) {
@@ -74,9 +72,5 @@ public class LemmaAnalyze {
         }
         return count;
     }
-    @SneakyThrows
-    private static void init(){
-        morphologyRus = new RussianLuceneMorphology();
-        morphologyEng = new EnglishLuceneMorphology();
-    }
+
 }

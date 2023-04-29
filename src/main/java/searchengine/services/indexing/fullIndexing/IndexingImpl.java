@@ -1,6 +1,5 @@
 package searchengine.services.indexing.fullIndexing;
 
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import searchengine.config.site.Site;
@@ -8,11 +7,12 @@ import searchengine.config.site.SitesList;
 import searchengine.config.status.Status;
 import searchengine.dto.sites.LemmaDTO;
 import searchengine.dto.sites.SiteDTO;
+import searchengine.repository.noSQL.CashLemmasRepository;
 import searchengine.services.indexing.core.check.indexing.ChangeStartIndexingService;
 import searchengine.services.deleteDataDB.sql.DeleteDataService;
 import searchengine.services.indexing.core.lemma.LemmaService;
 import searchengine.services.indexing.core.parse.ParseService;
-import searchengine.services.indexing.core.stopIndexing.StopIndexingService;
+import searchengine.services.stopIndexing.StopIndexingService;
 import searchengine.services.indexing.core.handler.WriteDbService;
 
 import java.util.*;
@@ -36,10 +36,13 @@ public class IndexingImpl implements IndexingService {
     private ParseService parseService;
     @Autowired
     private LemmaService lemmaService;
+    @Autowired
+    private CashLemmasRepository cashLemmasRepository;
 //TODO есть баг со сбросом количества активных потоков т.е. при обрыве соединения вылетает исключение и повторно индексацию нельзя запустить. Исправить.
     @Override
     public HashMap<String, Object> startIndexing() {
         HashMap<String, Object> response = new HashMap<>();
+        cashLemmasRepository.deleteAll();//TODO переработать удаление, тупит
         if (changeStartIndexing.change()) {
             response.put("result", false);
             response.put("error", "Индексация уже запущена");
@@ -69,7 +72,7 @@ public class IndexingImpl implements IndexingService {
                     writeSqlDbService.setStatus(site.getUrl(), Status.INDEXED, null);
                 }catch (Exception ex){
                     ex.printStackTrace();
-                    writeSqlDbService.setStatus(site.getUrl(), Status.FAILED, ex.getMessage() );
+                    writeSqlDbService.setStatus(site.getUrl(), Status.FAILED, ex.getMessage());
                 }
                 removeThread(Thread.currentThread());
             }).start();
