@@ -29,13 +29,13 @@ public class CashStatisticsImpl implements CashStatisticsService {
         cash.setUrl(siteInfo.getUrl());
         cash.setStatus(siteInfo.getStatus().toString());
         cash.setError(siteInfo.getLastError());
-        cashRepository.save(cash);
+        cashRepository.saveAndFlush(cash);
     }
 
     @Override
     public void write(CashStatisticsDB cash) {
         cashRepository.deleteById(cash.getId());
-        cashRepository.save(cash);
+        cashRepository.saveAndFlush(cash);
     }
 
     @Override

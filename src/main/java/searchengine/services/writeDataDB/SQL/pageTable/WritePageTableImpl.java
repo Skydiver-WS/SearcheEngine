@@ -36,7 +36,7 @@ public class WritePageTableImpl implements WritePageTableService {
             list.add(pageInfo);
         }
         synchronized (pageRepository) {
-            pageRepository.saveAll(list);
+            pageRepository.saveAllAndFlush(list);
         }
     }
 

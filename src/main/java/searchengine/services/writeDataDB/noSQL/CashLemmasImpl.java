@@ -42,7 +42,9 @@ public class CashLemmasImpl implements CashLemmasService {
                     return cashLemmas;
                 }
         ).forEach(list::add);
-        cashLemmasRepository.saveAll(list);
-        redisTemplate.opsForValue().set("cashLemmas", list);
+      synchronized (cashLemmasRepository){
+          cashLemmasRepository.saveAllAndFlush(list);
+          redisTemplate.opsForValue().set("cashLemmas", list);
+        }
     }
 }

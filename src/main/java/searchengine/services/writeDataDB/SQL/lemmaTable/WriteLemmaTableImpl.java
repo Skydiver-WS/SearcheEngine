@@ -28,7 +28,7 @@ public class WriteLemmaTableImpl implements WriteLemmaTableService {
             list.add(lemma);
         }
         synchronized (lemmaRepository){
-            lemmaRepository.saveAll(list);
+            lemmaRepository.saveAllAndFlush(list);
         }
     }
 

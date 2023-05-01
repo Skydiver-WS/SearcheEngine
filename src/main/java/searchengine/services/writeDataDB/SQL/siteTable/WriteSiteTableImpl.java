@@ -26,7 +26,7 @@ public class WriteSiteTableImpl implements WriteSiteTableService {
       siteInfo.setName(site.getName());
       siteInfo.setUrl(site.getUrl());
       synchronized (siteRepository){
-        siteRepository.save(siteInfo);
+        siteRepository.saveAndFlush(siteInfo);
       }
     }
   }

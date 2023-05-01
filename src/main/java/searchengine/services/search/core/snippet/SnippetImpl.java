@@ -6,27 +6,45 @@ import org.springframework.stereotype.Service;
 import searchengine.dto.search.FrequencyLemmaDTO;
 import searchengine.model.SQL.PageInfo;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 @Service
 public class SnippetImpl implements SnippetService {
-    @Override
-    public String getSnippet(PageInfo pageInfo, List<FrequencyLemmaDTO> list) {
-        String[] content = Jsoup.clean(pageInfo.getContent(), Safelist.simpleText())
-                .replaceAll("(<.+?>)|(</.+?>)", "")
-                .replaceAll("&nbsp;", " ").split("\\s+");
-//        for (FrequencyLemmaDTO dto : list) {
-//            String lemma = dto.getLemma();
-//            content = searchMath(lemma, content);
-//        }
-//        return selectSnippet(content);
-        return "";
+  @Override
+  public String getSnippet(PageInfo pageInfo, List<FrequencyLemmaDTO> list) {
+    List<Integer> listIndexNumber = new ArrayList<>();
+    String[] content = Jsoup.clean(pageInfo.getContent(), Safelist.simpleText())
+      .replaceAll("(<.+?>)|(</.+?>)", "")
+      .replaceAll("&nbsp;", " ").split("\\s+");
+    for (FrequencyLemmaDTO dto : list) {
+      String lemma = dto.getLemma();
+      listIndexNumber.addAll(searchMath(lemma, content));
     }
+//        return selectSnippet(content);
+    return "";
+  }
+
+  private List<Integer> searchMath(String lemma, String[] content) {
+    List<Integer> list = new ArrayList<>();
+    double percent = 45;
+    int div = lemma.length() - (int) Math.ceil((lemma.length() * percent) / 100);
+    for (int i = 0; i < div; i++) {
+      String finalLemma = lemma;
+      IntStream.range(0, content.length)
+        .filter(j -> patternMatcher(finalLemma, content[j]).find())
+        .forEach(list::add);
+      lemma = lemma.substring(0, lemma.length() - 1);
+    }
+    return list;
+  }
 
 
-//    @Override
+  //    @Override
 //    public String getSnippet(PageInfo pageInfo, List<FrequencyLemmaDTO> list) {
 //        String content = Jsoup.clean(pageInfo.getContent(), Safelist.simpleText())
 //                .replaceAll("(<.+?>)|(</.+?>)", "")
@@ -69,8 +87,8 @@ public class SnippetImpl implements SnippetService {
 //        }
 //        return builder.toString();
 //    }
-//    private Matcher patternMatcher(String regex, String input){
-//        Pattern pattern = Pattern.compile(regex);
-//        return pattern.matcher(input);
-//    }
+  private Matcher patternMatcher(String regex, String input) {
+    Pattern pattern = Pattern.compile(regex);
+    return pattern.matcher(input);
+  }
 }

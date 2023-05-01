@@ -25,7 +25,7 @@ public class WriteIndexTableImpl implements WriteIndexTableService {
             list.add(index);
         }
         synchronized (indexRepository) {
-            indexRepository.saveAll(list);
+            indexRepository.saveAllAndFlush(list);
         }
     }
 }
