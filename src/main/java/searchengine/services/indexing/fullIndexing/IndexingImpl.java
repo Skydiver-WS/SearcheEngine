@@ -8,6 +8,7 @@ import searchengine.config.status.Status;
 import searchengine.dto.sites.LemmaDTO;
 import searchengine.dto.sites.SiteDTO;
 import searchengine.repository.noSQL.CashLemmasRepository;
+import searchengine.services.deleteDataDB.nosql.DeleteCashLemmasService;
 import searchengine.services.indexing.core.check.indexing.ChangeStartIndexingService;
 import searchengine.services.deleteDataDB.sql.DeleteDataService;
 import searchengine.services.indexing.core.lemma.LemmaService;
@@ -37,12 +38,13 @@ public class IndexingImpl implements IndexingService {
     @Autowired
     private LemmaService lemmaService;
     @Autowired
-    private CashLemmasRepository cashLemmasRepository;
-//TODO есть баг со сбросом количества активных потоков т.е. при обрыве соединения вылетает исключение и повторно индексацию нельзя запустить. Исправить.
+    private DeleteCashLemmasService deleteCashLemmasService;
+
+    //TODO есть баг со сбросом количества активных потоков т.е. при обрыве соединения вылетает исключение и повторно индексацию нельзя запустить. Исправить.
     @Override
     public HashMap<String, Object> startIndexing() {
         HashMap<String, Object> response = new HashMap<>();
-        cashLemmasRepository.deleteAll();//TODO переработать удаление, тупит
+        deleteCashLemmasService.delete();
         if (changeStartIndexing.change()) {
             response.put("result", false);
             response.put("error", "Индексация уже запущена");
@@ -58,7 +60,7 @@ public class IndexingImpl implements IndexingService {
             new Thread(() -> {
                 addThread(Thread.currentThread());
                 Thread.currentThread().setName(site.getName());
-                try{
+                try {
                     SiteDTO siteDTO = new SiteDTO();
                     writeSqlDbService.setStatus(site.getUrl(), Status.INDEXING, null);
                     deleteSite.delete(site);
@@ -70,7 +72,7 @@ public class IndexingImpl implements IndexingService {
                     writeSqlDbService.writeLemmaTable(siteDTO.getSiteInfo(), lemmas);
                     writeSqlDbService.writeIndexTable(siteDTO.getSiteInfo(), lemmas);
                     writeSqlDbService.setStatus(site.getUrl(), Status.INDEXED, null);
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
                     writeSqlDbService.setStatus(site.getUrl(), Status.FAILED, ex.getMessage());
                 }

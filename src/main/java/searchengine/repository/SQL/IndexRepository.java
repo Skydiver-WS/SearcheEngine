@@ -30,6 +30,8 @@ public interface IndexRepository extends JpaRepository<Index, Integer> {
       "JOIN lemma l ON l.id = i.lemma_id " +
       "WHERE l.site_id = :site_id", nativeQuery = true)
     List<Integer> getIndex(@Param("site_id") int siteId);
+    @Query(value = "SELECT i.id FROM search_engine.index i", nativeQuery = true)
+    List<Long> getIndex();
 
     @Query(value = "SELECT SUM(i.rank) sum FROM search_engine.index i " +
             "JOIN lemma l ON l.id = i.lemma_id " +

@@ -35,7 +35,7 @@ public class ResultImpl implements ResultService{
             resultDTO.setRelevance(o.getRelRelevance());
             resultDTO.setTitle(getTitlePage(pageInfo));
             resultDTO.setSnippet(snippetService.getSnippet(pageInfo, o.getFrequencyLemmaDTOList()));
-            return resultDTO;
+            return resultDTO.getSnippet().length() == 0 ? null : resultDTO;
         }).toArray(ResultDTO[]::new);
     }
     private String getTitlePage(PageInfo pageInfo){

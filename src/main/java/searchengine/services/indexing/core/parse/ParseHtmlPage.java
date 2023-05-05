@@ -70,8 +70,10 @@ public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>> {
     }
 
     private TreeSet<String> filterSite(List<String> list) {
+        String [] splitUrl = url.split("/+");
         TreeSet<String> filterList = new TreeSet<>();
-        Pattern pattern = Pattern.compile("^" + url + ".+[^#]$");
+       // Pattern pattern = Pattern.compile("^" + url + ".+[^#]$");
+        Pattern pattern = Pattern.compile("^" + splitUrl[0] + "//(w{3}\\.)?" + splitUrl[1]);
         for (String ref : list) {
             Matcher matcher = pattern.matcher(ref);
             if (matcher.find() && checkUrl(ref)) {

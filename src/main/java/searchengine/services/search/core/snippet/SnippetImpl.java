@@ -4,91 +4,90 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 import org.springframework.stereotype.Service;
 import searchengine.dto.search.FrequencyLemmaDTO;
+import searchengine.dto.search.IndexResultDTO;
 import searchengine.model.SQL.PageInfo;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 @Service
 public class SnippetImpl implements SnippetService {
-  @Override
-  public String getSnippet(PageInfo pageInfo, List<FrequencyLemmaDTO> list) {
-    List<Integer> listIndexNumber = new ArrayList<>();
-    String[] content = Jsoup.clean(pageInfo.getContent(), Safelist.simpleText())
-      .replaceAll("(<.+?>)|(</.+?>)", "")
-      .replaceAll("&nbsp;", " ").split("\\s+");
-    for (FrequencyLemmaDTO dto : list) {
-      String lemma = dto.getLemma();
-      listIndexNumber.addAll(searchMath(lemma, content));
+    private final String REGEX = "[()\\[\\]{}&|+^]";
+    @Override
+    public String getSnippet(PageInfo pageInfo, List<FrequencyLemmaDTO> list) {
+        List<Integer> listIndexNumber = new ArrayList<>();
+        String[] content = Jsoup.clean(pageInfo.getContent(), Safelist.simpleText())
+                .replaceAll("(<.+?>)|(</.+?>)", "")
+                .replaceAll("&nbsp;", " ")
+                .replaceAll("-", " - ")
+                .split("\\s+");
+        for (FrequencyLemmaDTO dto : list) {
+            String lemma = dto.getLemma();
+            List<Integer> indices = Arrays.stream(searchMath(lemma, content)).toList();
+            listIndexNumber.addAll(indices);
+        }
+        listIndexNumber.sort(Comparator.naturalOrder());
+        List<IndexResultDTO> queryAccuracy = queryAccuracy(listIndexNumber);
+        return queryAccuracy == null ? "" : selectSnippet(queryAccuracy, content);
     }
-//        return selectSnippet(content);
-    return "";
-  }
 
-  private List<Integer> searchMath(String lemma, String[] content) {
-    List<Integer> list = new ArrayList<>();
-    double percent = 45;
-    int div = lemma.length() - (int) Math.ceil((lemma.length() * percent) / 100);
-    for (int i = 0; i < div; i++) {
-      String finalLemma = lemma;
-      IntStream.range(0, content.length)
-        .filter(j -> patternMatcher(finalLemma, content[j]).find())
-        .forEach(list::add);
-      lemma = lemma.substring(0, lemma.length() - 1);
+    private Integer[] searchMath(String lemma, String[] content) {
+        double percent = 80;
+        int div = lemma.length() - (int) (lemma.length() * percent) / 100;
+        String finalLemma = lemma.substring(0, lemma.length() - div);
+        return IntStream.range(0, content.length)
+                .filter(j -> patternMatcher(finalLemma, content[j].replaceAll(REGEX, "").toLowerCase()).find(0))
+                .boxed()
+                .toArray(Integer[]::new);
     }
-    return list;
-  }
 
+    private List<IndexResultDTO> queryAccuracy(List<Integer> listIndex) {
+        int constCh = 30;
+        List<IndexResultDTO> list = new ArrayList<>();
+        for (int i = 0; i < listIndex.size(); i++) {
+            List<Integer> index = new ArrayList<>();
+            index.add(listIndex.get(i));
+            for (int j = i + 1; j < listIndex.size(); j++) {
+                int interval = Math.abs(listIndex.get(i) - listIndex.get(j));
+                if (interval <= constCh) {
+                    IndexResultDTO resultDTO = new IndexResultDTO();
+                    index.add(listIndex.get(j));
+                    resultDTO.setListIndex(index);
+                    resultDTO.setAccuracy(interval);
+                    list.add(resultDTO);
+                } else {
+                    break;
+                }
+            }
+        }
+        list.sort(Comparator.comparingInt(IndexResultDTO::getAccuracy));
+        return list.size() > 0 ? list.subList(0, 3 > list.size() ? list.size() - 1 : 3) : null;
+    }
 
-  //    @Override
-//    public String getSnippet(PageInfo pageInfo, List<FrequencyLemmaDTO> list) {
-//        String content = Jsoup.clean(pageInfo.getContent(), Safelist.simpleText())
-//                .replaceAll("(<.+?>)|(</.+?>)", "")
-//                .replaceAll("&nbsp;", " ");
-//        for (FrequencyLemmaDTO dto : list) {
-//            String lemma = dto.getLemma();
-//            content = searchMath(lemma, content);
-//        }
-//        return selectSnippet(content);
-//    }
-//
-//    private String searchMath(String lemma, String content) {
-//        double percent = 45;
-//        String str = lemma;
-//        int div = lemma.length() - (int) Math.ceil((lemma.length() * percent) / 100);
-//        for (int i = 0; i < lemma.length(); i++) {
-//            Matcher matcher = patternMatcher(str + ".+?\\b", content);
-//            if (matcher.find()) {
-//                String match = matcher.group().trim().replaceAll("[\\[^{}().,!?:;\\]]", "");
-//                try {
-//                    return content.replaceAll(match, " <b>" + match + "</b>");
-//                }catch (Exception ex){
-//                    ex.printStackTrace();
-//                }
-//            } else if (str.length() > div){
-//                str = str.substring(0, (lemma.length() - 1) - i);
-//            }
-//        }
-//        return "";
-//    }
-//
-//    private String selectSnippet(String content) {
-//        StringBuilder builder = new StringBuilder();
-//        Matcher matcher = patternMatcher("[A-ZА-Я].+?[.!?]", content);
-//        while (matcher.find()){
-//            String text = matcher.group();
-//            if(patternMatcher("<.+?>.+?</.+?>", text).find()){
-//                builder.append(text).append("...").append(" ");
-//            }
-//        }
-//        return builder.toString();
-//    }
-  private Matcher patternMatcher(String regex, String input) {
-    Pattern pattern = Pattern.compile(regex);
-    return pattern.matcher(input);
-  }
+    private String selectSnippet(List<IndexResultDTO> list, String[] content) {
+        List<String> contentList = new ArrayList<>(Arrays.asList(content));
+        StringBuilder builder = new StringBuilder();
+        for (IndexResultDTO result : list) {
+            Integer[] index = result.getListIndex().toArray(new Integer[0]);
+            Arrays.stream(index).forEach(i -> {
+                String text = contentList.get(i).replaceAll(REGEX, " ");
+                text = text.replaceAll(text, " <b>" + text + "</b> ");
+                contentList.set(i, text);
+            });
+            int start = index[0] - 6;
+            int end = index[index.length - 1] + 6;
+            start = Math.max(start, 0);
+            end = Math.min(end, (contentList.size() - 1));
+            List<String> finalList = contentList.subList(start, end);
+            finalList.forEach(i -> builder.append(" ").append(i).append(" "));
+        }
+        return builder.toString();
+    }
+
+    private Matcher patternMatcher(String regex, String input) {
+        Pattern pattern = Pattern.compile(regex);
+        return pattern.matcher(input);
+    }
 }

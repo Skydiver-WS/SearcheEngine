@@ -1,9 +1,7 @@
 package searchengine.services.search;
 
-import searchengine.dto.search.ResponseSearch;
-
-import java.util.HashMap;
+import searchengine.dto.search.ResponseSearchDTO;
 
 public interface SearchService {
-     ResponseSearch search(String query, String site, int offset, int limit);
+     ResponseSearchDTO search(String query, String site, int offset, int limit);
 }

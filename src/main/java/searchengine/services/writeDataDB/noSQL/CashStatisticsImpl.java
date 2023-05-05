@@ -22,20 +22,20 @@ public class CashStatisticsImpl implements CashStatisticsService {
 
 
     @Override
-    public void setSiteStatistics(SiteInfo siteInfo) {
+    public synchronized void setSiteStatistics(SiteInfo siteInfo) {
         var cash = new CashStatisticsDB();
         cash.setId(siteInfo.getId());
         cash.setName(siteInfo.getName());
         cash.setUrl(siteInfo.getUrl());
         cash.setStatus(siteInfo.getStatus().toString());
         cash.setError(siteInfo.getLastError());
-        cashRepository.saveAndFlush(cash);
+        cashRepository.save(cash);
     }
 
     @Override
-    public void write(CashStatisticsDB cash) {
+    public synchronized void write(CashStatisticsDB cash) {
         cashRepository.deleteById(cash.getId());
-        cashRepository.saveAndFlush(cash);
+        cashRepository.save(cash);
     }
 
     @Override

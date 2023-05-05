@@ -29,3 +29,8 @@ indexing-settings:
       name: Милицейская волна
     - url: https://dimonvideo.ru/
       name: DIMON VIDEO
+    - url: https://www.tretyakovgallery.ru/?lang=ru
+      name: Третьяковская галлерея
+    - url: https://ru.wikipedia.org/
+      name: ВикипедиЯ
+
