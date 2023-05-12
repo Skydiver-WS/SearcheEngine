@@ -12,7 +12,6 @@ import searchengine.services.indexing.core.handler.WriteDbService;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.regex.Matcher;
 
 @Component
 public class Parse implements ParseService {
@@ -20,16 +19,15 @@ public class Parse implements ParseService {
     private WriteDbService writeSqlDbService;
 
     @Override
-    public SiteDTO getListPageDto(SiteDTO siteDTO) {
+    public void getListPageDto(SiteDTO siteDTO) {
         ParseHtmlPage parse = new ParseHtmlPage(siteDTO.getSiteInfo().getUrl());
         List<PageDTO> list = parse.invoke().stream().toList();
         CheckDuplicateRef duplicateRef = new CheckDuplicateRef(list);
         siteDTO.setPageDTOList(duplicateRef.getList());
-        return siteDTO;
     }
 
     @Override
-    public PageDTO parsePage(PageDTO pageDTO) {
+    public void parsePage(PageDTO pageDTO) {
         try {
             String site = pageDTO.getSiteInfo().getUrl();
             String path = pageDTO.getUrl();
@@ -43,6 +41,5 @@ public class Parse implements ParseService {
         } catch (IOException ex) {
             writeSqlDbService.setStatus(pageDTO.getSiteInfo().getUrl(), Status.FAILED, pageDTO.getUrl() + " - " + ex.getMessage());
         }
-        return pageDTO;
     }
 }

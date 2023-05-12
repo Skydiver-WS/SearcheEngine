@@ -4,6 +4,6 @@ import searchengine.dto.sites.PageDTO;
 import searchengine.dto.sites.SiteDTO;
 
 public interface ParseService {
-    SiteDTO getListPageDto(SiteDTO siteDTO);
-    PageDTO parsePage(PageDTO pageDTO);
+    void getListPageDto(SiteDTO siteDTO);
+    void parsePage(PageDTO pageDTO);
 }

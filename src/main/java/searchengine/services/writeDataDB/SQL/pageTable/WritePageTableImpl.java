@@ -28,12 +28,15 @@ public class WritePageTableImpl implements WritePageTableService {
                 updatePage(pageDTO);
                 continue;
             }
-            PageInfo pageInfo = new PageInfo();
-            pageInfo.setPath(convertUrl(pageDTO.getUrl()));
-            pageInfo.setContent(pageDTO.getContent());
-            pageInfo.setCode(pageDTO.getCodeResponse());
-            pageInfo.setSiteId(siteDTO.getSiteInfo());
-            list.add(pageInfo);
+            String convertUrl = convertUrl(pageDTO.getUrl());
+            if(convertUrl != null){
+                PageInfo pageInfo = new PageInfo();
+                pageInfo.setPath(convertUrl);
+                pageInfo.setContent(pageDTO.getContent());
+                pageInfo.setCode(pageDTO.getCodeResponse());
+                pageInfo.setSiteId(siteDTO.getSiteInfo());
+                list.add(pageInfo);
+            }
         }
         synchronized (pageRepository) {
             pageRepository.saveAllAndFlush(list);
@@ -50,7 +53,8 @@ public class WritePageTableImpl implements WritePageTableService {
         Matcher matcher = pattern.matcher(url);
         if (matcher.find()) {
             url = "/" + url.replaceFirst(pattern.pattern(), "");
+            return url;
         }
-        return url;
+        return null;
     }
 }

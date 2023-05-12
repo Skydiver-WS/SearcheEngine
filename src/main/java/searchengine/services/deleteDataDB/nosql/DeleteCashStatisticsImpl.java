@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import searchengine.repository.noSQL.CashStatisticsRepository;
 
 @Service
-public class DeleteCashImpl implements DeleteCashService{
+public class DeleteCashStatisticsImpl implements DeleteCashStatisticsService {
     @Autowired
     private CashStatisticsRepository repository;
     @Override

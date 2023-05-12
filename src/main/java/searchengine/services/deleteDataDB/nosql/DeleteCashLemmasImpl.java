@@ -15,8 +15,8 @@ public class DeleteCashLemmasImpl implements DeleteCashLemmasService{
     private CashLemmasRepository cashLemmasRepository;
 
     @Override
-    public void delete() {
-        List<Long> listIndexId = indexRepository.getIndex();
+    public void delete(String url) {
+        List<Long> listIndexId = indexRepository.getIndex(url);
         listIndexId.forEach(id -> cashLemmasRepository.deleteById(Math.toIntExact(id)));
         cashLemmasRepository.deleteAll();
     }

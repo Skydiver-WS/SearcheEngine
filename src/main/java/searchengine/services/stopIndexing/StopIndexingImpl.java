@@ -23,13 +23,13 @@ public class StopIndexingImpl implements StopIndexingService {
         HashMap<String, Object> response = new HashMap<>();
         if (isAliveThread()) {
             getThreadList().forEach(Thread::interrupt);
-            getThreadList().forEach(thread -> {
-                try {
-                    thread.join();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+//            getThreadList().forEach(thread -> {
+//                try {
+//                    thread.join();
+//                } catch (InterruptedException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            });
             setStatusFailed();
             clearAllThread();
             response.put("result", true);

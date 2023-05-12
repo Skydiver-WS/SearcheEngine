@@ -13,6 +13,8 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static searchengine.services.indexing.core.check.lifeThread.LifeThread.isAliveThread;
+
 @RequiredArgsConstructor
 public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>> {
     private final Set<PageDTO> finalWebStructure = new HashSet<>();
@@ -23,7 +25,7 @@ public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>> {
     @SneakyThrows
     @Override
     protected Set<PageDTO> compute() {
-        if (checkUrl(url)) {
+        if (checkUrl(url) && isAliveThread()) {
             Thread.currentThread().setName(url);
             Document doc = Jsoup.connect(url).userAgent("Mozilla/5.0 (Windows; U; WindowsNT" +
                             "5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
@@ -70,7 +72,7 @@ public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>> {
     }
 
     private TreeSet<String> filterSite(List<String> list) {
-        String [] splitUrl = url.split("/+");
+        String [] splitUrl = url.split("/+", 2);
         TreeSet<String> filterList = new TreeSet<>();
        // Pattern pattern = Pattern.compile("^" + url + ".+[^#]$");
         Pattern pattern = Pattern.compile("^" + splitUrl[0] + "//(w{3}\\.)?" + splitUrl[1]);

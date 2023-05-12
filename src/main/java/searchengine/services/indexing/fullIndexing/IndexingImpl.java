@@ -44,7 +44,7 @@ public class IndexingImpl implements IndexingService {
     @Override
     public HashMap<String, Object> startIndexing() {
         HashMap<String, Object> response = new HashMap<>();
-        deleteCashLemmasService.delete();
+
         if (changeStartIndexing.change()) {
             response.put("result", false);
             response.put("error", "Индексация уже запущена");
@@ -63,6 +63,7 @@ public class IndexingImpl implements IndexingService {
                 try {
                     SiteDTO siteDTO = new SiteDTO();
                     writeSqlDbService.setStatus(site.getUrl(), Status.INDEXING, null);
+                    deleteCashLemmasService.delete(site.getUrl());
                     deleteSite.delete(site);
                     writeSqlDbService.writeSiteTable(site);
                     siteDTO.setSiteInfo(writeSqlDbService.getSiteInfo(site));

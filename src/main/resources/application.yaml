@@ -25,12 +25,12 @@ indexing-settings:
       name: Skillbox
     - url: https://www.playback.ru
       name: PlayBack.Ru
-    - url: http://radiomv.ru/
+    - url: https://radiomv.ru/
       name: Милицейская волна
     - url: https://dimonvideo.ru/
       name: DIMON VIDEO
-    - url: https://www.tretyakovgallery.ru/?lang=ru
+    - url: https://www.tretyakovgallery.ru/
       name: Третьяковская галлерея
-    - url: https://ru.wikipedia.org/
-      name: ВикипедиЯ
+#    - url: https://ru.wikipedia.org/
+#      name: ВикипедиЯ
 

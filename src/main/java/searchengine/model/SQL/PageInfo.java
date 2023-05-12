@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "page")
+@Table(name = "page", uniqueConstraints = @UniqueConstraint(columnNames = {"site_id", "path"}))
 @Getter
 @Setter
 @Component
@@ -21,7 +21,8 @@ public class PageInfo {
   @JoinColumn(name = "site_id", nullable = false)
   @OnDelete(action = OnDeleteAction.CASCADE)
   private SiteInfo siteId;
-  @Column(columnDefinition = "TEXT NOT NULL, UNIQUE KEY (path(512))")
+//  @Column(columnDefinition = "TEXT NOT NULL, UNIQUE KEY (path(512))")
+  @Column(nullable = false, length = 512)
   private String path;
   @Column(nullable = false)
   private int code;

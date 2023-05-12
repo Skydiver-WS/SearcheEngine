@@ -1,5 +1,5 @@
 package searchengine.services.deleteDataDB.nosql;
 
-public interface DeleteCashService {
+public interface DeleteCashStatisticsService {
     void delete(int id);
 }
