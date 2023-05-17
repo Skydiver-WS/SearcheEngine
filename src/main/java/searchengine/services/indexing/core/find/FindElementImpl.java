@@ -28,8 +28,12 @@ public class FindElementImpl implements FindElementService {
 
     @Override
     public PageDTO find(String url) {
-        url = convertUrl(url);
-        Optional<PageInfo> page = pageRepository.findPage(url);
+        String[] convertUrl = convertUrl(url);
+        String urlSite = convertUrl[0];
+        String path = convertUrl[1];
+        Optional<SiteInfo> siteInfo = siteRepository.getSiteInfo(urlSite);
+        Integer siteId = siteInfo.orElse(null).getId();
+        Optional<PageInfo> page = pageRepository.findPage(siteId, path);
         PageDTO pageDTO = new PageDTO();
         if (page.isPresent()) {
             PageInfo pageInfo = page.get();
@@ -37,13 +41,13 @@ public class FindElementImpl implements FindElementService {
             pageDTO.setSiteInfo(pageInfo.getSiteId());
             pageDTO.setUrl(url);
             return pageDTO;
-        }else {
+        } else {
             List<SiteInfo> list = siteRepository.findAll();
-            String finalUrl = url;
             return list.stream()
-                    .filter(site -> Pattern.compile(site.getUrl()).matcher(finalUrl).find())
+                    .filter(site -> Pattern.compile(site.getUrl())
+                            .matcher(url).find())
                     .map(site -> {
-                        pageDTO.setUrl(finalUrl);
+                        pageDTO.setUrl(url);
                         pageDTO.setSiteInfo(site);
                         return pageDTO;
                     })
@@ -51,12 +55,19 @@ public class FindElementImpl implements FindElementService {
                     .orElse(null);
         }
     }
-    private String convertUrl(String url){
-        Pattern pattern = Pattern.compile("^.+://.+?/");
-        Matcher matcher = pattern.matcher(url);
-        if(matcher.find()){
-            url = "/" + url.replaceFirst(pattern.pattern(), "");
+
+    private String [] convertUrl(String url) {
+        String [] result = new String[0];
+        char ch = '/';
+        int index = url.indexOf(ch, 8);
+        if (index == -1){
+            url = url + "/";
+            result = convertUrl(url);
+        } else {
+            String part1 = url.substring(0, index);
+            String part2 = url.substring(index);
+            result = new String[]{part1, part2};
         }
-        return url;
+        return result;
     }
 }

@@ -18,6 +18,10 @@ public class DeleteCashLemmasImpl implements DeleteCashLemmasService{
     public void delete(String url) {
         List<Long> listIndexId = indexRepository.getIndex(url);
         listIndexId.forEach(id -> cashLemmasRepository.deleteById(Math.toIntExact(id)));
-        cashLemmasRepository.deleteAll();
+    }
+    @Override
+    public void delete(Integer pageId) {
+        List<Integer> listIndexId = indexRepository.getIndexId(pageId);
+        listIndexId.forEach(id -> cashLemmasRepository.deleteById(Math.toIntExact(id)));
     }
 }

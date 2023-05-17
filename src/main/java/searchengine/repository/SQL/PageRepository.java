@@ -26,17 +26,14 @@ public interface PageRepository extends JpaRepository<PageInfo, Integer> {
     List<Integer> getListIdPageTable(@Param("site_id") int siteId);
 
     @Query(value = "SELECT * FROM page WHERE id = :id", nativeQuery = true)
-    List<PageInfo> getContentById(@Param("id") int id);
+    List<PageInfo> getContentById(@Param("id") Integer id);
 
-    @Query(value = "SELECT * FROM page WHERE path = :url", nativeQuery = true)
-    Optional<PageInfo> findPage(@Param("url") String url);
+    @Query(value = "SELECT * FROM page " +
+            "WHERE site_id = :siteId AND path = :path", nativeQuery = true)
+    Optional<PageInfo> findPage(@Param("siteId") Integer siteId, @Param("path") String path);
 
     @Modifying
     @Transactional
     @Query(value = "UPDATE page SET content = :content WHERE path = :path", nativeQuery = true)
     void updatePage(@Param("path") String path, @Param("content") String content);
-
-//    @Query(value = "SELECT id FROM page WHERE site_id = :site_id", nativeQuery = true)
-//    List<Integer> getListId(@Param("site_id") int siteId);
-
 }

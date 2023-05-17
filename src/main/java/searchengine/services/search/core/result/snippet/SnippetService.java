@@ -1,4 +1,4 @@
-package searchengine.services.search.core.snippet;
+package searchengine.services.search.core.result.snippet;
 
 import searchengine.dto.search.FrequencyLemmaDTO;
 import searchengine.model.SQL.PageInfo;

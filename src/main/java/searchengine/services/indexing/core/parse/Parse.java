@@ -27,19 +27,20 @@ public class Parse implements ParseService {
     }
 
     @Override
-    public void parsePage(PageDTO pageDTO) {
+    public PageDTO parsePage(PageDTO pageDTO) {
         try {
-            String site = pageDTO.getSiteInfo().getUrl();
-            String path = pageDTO.getUrl();
-            String url = site + (path.equals(site) ? "" : path);
+            //String site = pageDTO.getSiteInfo().getUrl();
+            String url = pageDTO.getUrl();
+            //String url = site + (path.equals(site) ? "" : path);
             Document doc = Jsoup.connect(url).userAgent("Mozilla/5.0 (Windows; U; WindowsNT" +
                             "5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
                     .referrer("http://www.google.com").get(); // TODO: вынести в конфигурацию
             pageDTO.setCodeResponse(doc.connection().response().statusCode());
             pageDTO.setContent(doc.html());
-
+            return pageDTO;
         } catch (IOException ex) {
             writeSqlDbService.setStatus(pageDTO.getSiteInfo().getUrl(), Status.FAILED, pageDTO.getUrl() + " - " + ex.getMessage());
         }
+        return null;
     }
 }

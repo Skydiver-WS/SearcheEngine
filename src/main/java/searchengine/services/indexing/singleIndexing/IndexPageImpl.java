@@ -6,6 +6,7 @@ import searchengine.config.status.Status;
 import searchengine.dto.sites.LemmaDTO;
 import searchengine.dto.sites.PageDTO;
 import searchengine.dto.sites.SiteDTO;
+import searchengine.services.deleteDataDB.nosql.DeleteCashLemmasService;
 import searchengine.services.deleteDataDB.sql.DeleteDataService;
 import searchengine.services.indexing.core.check.url.CheckUrlService;
 import searchengine.services.indexing.core.find.FindElementService;
@@ -32,25 +33,30 @@ public class IndexPageImpl implements IndexPageService {
     private LemmaService lemmaService;
     @Autowired
     private DeleteDataService deleteDataService;
+    @Autowired
+    private DeleteCashLemmasService deleteCashLemmasService;
     private final SiteDTO siteDTO = new SiteDTO();
     @Override
     public HashMap<String, Object> indexPage(String url) {
-        //TODO: сделать запуск разных ссылок в разных потоках
         HashMap<String, Object> response = new HashMap<>();
         if (checkUrl.check(url)) {
-            List<PageDTO> list = new ArrayList<>();
-            PageDTO pageDTO = findElementService.find(url);
-            siteDTO.setSiteInfo(pageDTO.getSiteInfo());
-            writeSqlDbService.setStatus(siteDTO.getSiteInfo().getUrl(), Status.INDEXING, null);
-            list.add(pageDTO);
-            parseService.parsePage(pageDTO);
-            siteDTO.setPageDTOList(list);
-            deleteDataService.delete(siteDTO);
-            writeSqlDbService.writePageTable(siteDTO);
-            TreeMap<Integer, List<LemmaDTO>> lemmas = lemmaService.getListLemmas(siteDTO.getPageDTOList());
-            writeSqlDbService.updateLemmaTable(siteDTO, lemmas);
-            writeSqlDbService.writeIndexTable(siteDTO.getSiteInfo(), lemmas);
-            writeSqlDbService.setStatus(siteDTO.getSiteInfo().getUrl(), Status.INDEXED, null);
+            new Thread(()->{
+                List<PageDTO> list = new ArrayList<>();
+                PageDTO pageDTO = findElementService.find(url);
+                siteDTO.setSiteInfo(pageDTO.getSiteInfo());
+                writeSqlDbService.setStatus(siteDTO.getSiteInfo().getUrl(), Status.INDEXING, null);
+                list.add(pageDTO);
+                pageDTO = parseService.parsePage(pageDTO);
+                siteDTO.setPageDTOList(list);
+                deleteCashLemmasService.delete(pageDTO.getId());
+                deleteDataService.delete(siteDTO);
+                writeSqlDbService.writePageTable(siteDTO);
+                TreeMap<Integer, List<LemmaDTO>> lemmas = lemmaService.getListLemmas(siteDTO.getPageDTOList());
+                writeSqlDbService.updateLemmaTable(siteDTO, lemmas);
+                writeSqlDbService.writeIndexTable(siteDTO.getSiteInfo(), lemmas);
+                writeSqlDbService.writeCash(pageDTO.getId());
+                writeSqlDbService.setStatus(siteDTO.getSiteInfo().getUrl(), Status.INDEXED, null);
+            }).start();
             response.put("result", true);
         } else {
             response.put("result", false);

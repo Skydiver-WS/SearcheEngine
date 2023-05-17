@@ -21,10 +21,10 @@ public interface IndexRepository extends JpaRepository<Index, Integer> {
     @Transactional
     @Query(value = "DELETE FROM search_engine.index i " +
             "WHERE i.page_id = :id", nativeQuery = true)
-    void delete(@Param("id") int id);
+    void delete(@Param("id") Integer id);
 
-//    @Query(value = "SELECT * FROM search_engine.index WHERE page_id = :page_id", nativeQuery = true)
-//    List<Index> getIndex(@Param("page_id") int pageId);
+    @Query(value = "SELECT id FROM search_engine.index WHERE page_id = :page_id", nativeQuery = true)
+    List<Integer> getIndexId(@Param("page_id") Integer pageId);
 
     @Query(value = "SELECT i.id, i.rank, i.lemma_id, i.page_id FROM search_engine.index i " +
       "JOIN lemma l ON l.id = i.lemma_id " +
@@ -48,4 +48,11 @@ public interface IndexRepository extends JpaRepository<Index, Integer> {
             "JOIN SiteInfo s ON s.id = l.siteId.id " +
             "WHERE l.lemma = :lemma")
     List<SearchObjectDTO> searchMatchingLemmas(@Param("lemma") String lemma);
+    @Query("SELECT new searchengine.dto.search.SearchObjectDTO(i.id, l.id, l.lemma, l.frequency, i.rank, p.id, l.siteId.id) " +
+            "FROM Index i " +
+            "JOIN Lemma l ON l.id = i.lemmaId.id " +
+            "JOIN PageInfo p ON p.id = i.pageId.id " +
+            "JOIN SiteInfo s ON s.id = l.siteId.id " +
+            "WHERE i.pageId.id = :pageId")
+    List<SearchObjectDTO> searchMatchingLemmas(@Param("pageId") int pageId);
 }

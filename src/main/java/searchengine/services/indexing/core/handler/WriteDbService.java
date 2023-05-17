@@ -17,5 +17,7 @@ public interface WriteDbService {
   void writeLemmaTable(SiteInfo siteInfo, TreeMap<Integer, List<LemmaDTO>> lemmas);
   void updateLemmaTable(SiteDTO siteDTO, TreeMap<Integer, List<LemmaDTO>> lemmas);
   void writeIndexTable(SiteInfo siteInfo, TreeMap<Integer, List<LemmaDTO>> lemmas);
+  void writeCash(SiteInfo siteInfo);
+  void writeCash(int pageId);
 
 }

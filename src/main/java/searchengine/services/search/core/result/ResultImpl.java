@@ -8,7 +8,7 @@ import searchengine.dto.search.RelevanceDTO;
 import searchengine.dto.search.ResultDTO;
 import searchengine.model.SQL.PageInfo;
 import searchengine.repository.SQL.PageRepository;
-import searchengine.services.search.core.snippet.SnippetService;
+import searchengine.services.search.core.result.snippet.SnippetService;
 
 import java.util.ArrayList;
 import java.util.Arrays;

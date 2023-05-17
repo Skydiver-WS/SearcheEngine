@@ -26,9 +26,28 @@ public class CashLemmasImpl implements CashLemmasService {
     public void writeLemmas(List<String> listLemmas) {
         List<SearchObjectDTO> lemmaList = new ArrayList<>();
         for (String lemma : listLemmas) {
-            var test = indexRepository.searchMatchingLemmas(lemma);
-            lemmaList.addAll(test);
+            var getInfoTableList = indexRepository.searchMatchingLemmas(lemma);
+            lemmaList.addAll(getInfoTableList);
         }
+        List<CashLemmas> list = createCashObjList(lemmaList);
+        synchronized (cashLemmasRepository) {
+            cashLemmasRepository.saveAll(list);
+            redisTemplate.opsForValue().set("cashLemmas", list);
+        }
+    }
+
+    @Override
+    public void writeLemmas(int pageId) {
+        var getInfoTableList = indexRepository.searchMatchingLemmas(pageId);
+        List<SearchObjectDTO> lemmaList = new ArrayList<>(getInfoTableList);
+        List<CashLemmas> list = createCashObjList(lemmaList);
+        synchronized (cashLemmasRepository) {
+            cashLemmasRepository.saveAll(list);
+            redisTemplate.opsForValue().set("cashLemmas", list);
+        }
+    }
+
+    private List<CashLemmas> createCashObjList(List<SearchObjectDTO> lemmaList) {
         List<CashLemmas> list = new ArrayList<>();
         lemmaList.stream().map(c -> {
                     CashLemmas cashLemmas = new CashLemmas();
@@ -42,9 +61,6 @@ public class CashLemmasImpl implements CashLemmasService {
                     return cashLemmas;
                 }
         ).forEach(list::add);
-      synchronized (cashLemmasRepository){
-          cashLemmasRepository.saveAll(list);
-          redisTemplate.opsForValue().set("cashLemmas", list);
-        }
+        return list;
     }
 }

@@ -72,6 +72,7 @@ public class IndexingImpl implements IndexingService {
                     TreeMap<Integer, List<LemmaDTO>> lemmas = lemmaService.getListLemmas(siteDTO.getSiteInfo().getId());
                     writeSqlDbService.writeLemmaTable(siteDTO.getSiteInfo(), lemmas);
                     writeSqlDbService.writeIndexTable(siteDTO.getSiteInfo(), lemmas);
+                    writeSqlDbService.writeCash(siteDTO.getSiteInfo());
                     writeSqlDbService.setStatus(site.getUrl(), Status.INDEXED, null);
                 } catch (Exception ex) {
                     ex.printStackTrace();
