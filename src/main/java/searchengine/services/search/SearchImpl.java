@@ -30,7 +30,7 @@ public class SearchImpl implements SearchService {
     private ListLemmasService listLemmasService;
 
     @Override
-    public ResponseSearchDTO search(String query, String site, int offset, int limit) {
+    public ResponseSearchDTO search(int offset, String query, String site,  int limit) {
         Map<String, Integer> listLemma = lemmaService.getListLemmas(query);
         String [] lemmasList = listLemma.keySet().toArray(new String[0]);
         List<SearchObjectDTO> searchObjectDTOList = listLemmasService.getListObject(lemmasList);

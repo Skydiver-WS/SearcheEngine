@@ -15,19 +15,12 @@ import java.util.Objects;
 
 @Service
 public class SearchPagesImpl implements SearchPagesService {
-
-    @Autowired
-    private LemmaRepository lemmaRepository;
-
-    @Autowired
-    private SearchCashLemmasService searchCashLemmasService;
     @Autowired
     private SiteRepository siteRepository;
 
 
     @Override
     public List<FrequencyLemmaDTO> searchPages(FrequencyLemmaDTO[] list, List<SearchObjectDTO> searchObjectDTOList) {
-        //List<SearchObjectDTO> pagesFound = lemmaRepository.searchMatchingLemmas(list[0].getLemma());
         List<SearchObjectDTO> pagesFound = searchObjectDTOList.stream().filter(l -> l.getLemma().equals(list[0].getLemma())).toList();
         return getPages(list, pagesFound, searchObjectDTOList);
     }
@@ -54,19 +47,6 @@ public class SearchPagesImpl implements SearchPagesService {
         }
         return dtoList;
     }
-
-//    private List<FrequencyLemmaDTO> getPages(FrequencyLemmaDTO[] list, List<SearchObjectDTO> pagesFound) {
-//        List<FrequencyLemmaDTO> dtoList = new ArrayList<>();
-//        for (var dto : pagesFound) {
-//            var obj = createNewObj(list[0], dto);
-//            dtoList.add(obj);
-//            Arrays.stream(list, 1, list.length)
-//                    .flatMap(l -> lemmaRepository.searchMatchingLemmas(l.getLemma(), dto.getPageId()).stream()
-//                            .map(s -> createNewObj(l, s)))
-//                    .forEach(dtoList::add);
-//        }
-//        return dtoList;
-//    }
 
     private FrequencyLemmaDTO createNewObj(FrequencyLemmaDTO obj1, SearchObjectDTO obj2) {
         var newObj = new FrequencyLemmaDTO();

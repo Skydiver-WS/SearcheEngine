@@ -7,6 +7,8 @@ import searchengine.services.indexing.core.check.duplicateUrl.CheckDuplicateRef;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
+
 @SpringBootTest(classes = CheckDuplicateRef.class)
 public class TestCheckDuplicate {
     private final List<PageDTO> list = addNewPageDto();
@@ -43,10 +45,10 @@ public class TestCheckDuplicate {
 
     private String[] notDuplicateUrl() {
         return new String[]{"https://lenta.ru/",
-                "https://lenta.ru/news/2023/03/02/secret_of_longevity/",
                 "https://lenta.ru/news/2023/03/02/blinken_lavrov/",
+                "https://lenta.ru/news/2023/03/02/secret_of_longevity/",
                 "https://lenta.ru/news/2023/03/02/uchitel/",
-                "https://lenta.ru/news/2023/03/02/vyborggg/",
-                "https://lenta.ru/news/2023/03/02/vradii/"};
+                "https://lenta.ru/news/2023/03/02/vradii/",
+                "https://lenta.ru/news/2023/03/02/vyborggg/"};
     }
 }

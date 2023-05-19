@@ -1563,7 +1563,6 @@ var API = function(){
                     } else {
                         $('.SearchResult-footer').addClass('SearchResult-footer_hide')
                     }
-                    
                 } else {
                     if ($this.next('.API-error').length) {
                         $this.next('.API-error').text(result.error);
