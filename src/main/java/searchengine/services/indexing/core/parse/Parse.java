@@ -4,6 +4,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import searchengine.config.jsoup.JsoupConf;
 import searchengine.config.status.Status;
 import searchengine.dto.sites.PageDTO;
 import searchengine.dto.sites.SiteDTO;
@@ -17,10 +18,13 @@ import java.util.List;
 public class Parse implements ParseService {
     @Autowired
     private WriteDbService writeSqlDbService;
+    @Autowired
+    private JsoupConf jsoupConf;
 
     @Override
     public void getListPageDto(SiteDTO siteDTO) {
-        ParseHtmlPage parse = new ParseHtmlPage(siteDTO.getSiteInfo().getUrl());
+
+        ParseHtmlPage parse = new ParseHtmlPage(siteDTO.getSiteInfo().getUrl(), jsoupConf(jsoupConf));
         List<PageDTO> list = parse.invoke().stream().toList();
         CheckDuplicateRef duplicateRef = new CheckDuplicateRef(list);
         siteDTO.setPageDTOList(duplicateRef.getList());
@@ -29,12 +33,10 @@ public class Parse implements ParseService {
     @Override
     public PageDTO parsePage(PageDTO pageDTO) {
         try {
-            //String site = pageDTO.getSiteInfo().getUrl();
+            String[] conf = jsoupConf(jsoupConf);
             String url = pageDTO.getUrl();
-            //String url = site + (path.equals(site) ? "" : path);
-            Document doc = Jsoup.connect(url).userAgent("Mozilla/5.0 (Windows; U; WindowsNT" +
-                            "5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
-                    .referrer("http://www.google.com").get(); // TODO: вынести в конфигурацию
+            Document doc = Jsoup.connect(url).userAgent(conf[0])
+                    .referrer(conf[1]).get(); // TODO: вынести в конфигурацию
             pageDTO.setCodeResponse(doc.connection().response().statusCode());
             pageDTO.setContent(doc.html());
             return pageDTO;
@@ -42,5 +44,9 @@ public class Parse implements ParseService {
             writeSqlDbService.setStatus(pageDTO.getSiteInfo().getUrl(), Status.FAILED, pageDTO.getUrl() + " - " + ex.getMessage());
         }
         return null;
+    }
+
+    private String[] jsoupConf (JsoupConf jsoupConf){
+        return new String[]{jsoupConf.getUserAgent(), jsoupConf.getReferrer()};
     }
 }

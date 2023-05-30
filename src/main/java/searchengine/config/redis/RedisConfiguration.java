@@ -1,20 +1,28 @@
 package searchengine.config.redis;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
 import searchengine.model.noSQL.CashLemmas;
 
 import java.util.List;
-
+@Getter
+@Setter
 @Configuration
+@ConfigurationProperties(prefix = "redis-settings")
 public class RedisConfiguration {
+    String host;
+    int port;
     @Bean
     public LettuceConnectionFactory lettuceConnectionFactory() {
-        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration("127.0.0.1", 6379); //TODO: прописать в файле конфигурации номер хоста и порта
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
         return new LettuceConnectionFactory(config);
     }
 

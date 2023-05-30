@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.springframework.beans.factory.annotation.Autowired;
+import searchengine.config.jsoup.JsoupConf;
 import searchengine.dto.sites.PageDTO;
 
 import java.util.*;
@@ -22,14 +24,16 @@ public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>> {
     @NonNull
     private String url;
 
+    @NonNull
+    private String[] jsoupConf;
+
     @SneakyThrows
     @Override
     protected Set<PageDTO> compute() {
         if (checkUrl(url) && isAliveThread()) {
             Thread.currentThread().setName(url);
-            Document doc = Jsoup.connect(url).userAgent("Mozilla/5.0 (Windows; U; WindowsNT" +
-                            "5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
-                    .referrer("http://www.google.com").get(); // TODO: вынести в конфигурацию
+            Document doc = Jsoup.connect(url).userAgent(jsoupConf[0])
+                    .referrer(jsoupConf[1]).get(); // TODO: вынести в конфигурацию
             addNewPage(doc);
             List<String> listAllRef = doc.select("a").eachAttr("abs:href");
             TreeSet<String> checkRef = filterSite(listAllRef);
@@ -48,7 +52,7 @@ public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>> {
         for (String url : checkRef) {
             if (checkUrl(url)) {
                 Thread.sleep(500);
-                ParseHtmlPage htmlPage = new ParseHtmlPage(url);
+                ParseHtmlPage htmlPage = new ParseHtmlPage(url, jsoupConf);
                 htmlPage.fork();
                 pages.add(htmlPage);
                 Thread.currentThread().setName(url);

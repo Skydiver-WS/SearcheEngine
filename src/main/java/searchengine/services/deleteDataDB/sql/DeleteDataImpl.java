@@ -22,76 +22,73 @@ import java.util.Optional;
 
 @Service
 public class DeleteDataImpl implements DeleteDataService {
-  @Autowired
-  private IndexRepository indexRepository;
-  @Autowired
-  private LemmaRepository lemmaRepository;
-  @Autowired
-  private PageRepository pageRepository;
-  @Autowired
-  private SiteRepository siteRepository;
-  private CashStatisticsDB cash;
-  @Autowired
-  private CashStatisticsRepository cashStatisticsRepository;
+    @Autowired
+    private IndexRepository indexRepository;
+    @Autowired
+    private LemmaRepository lemmaRepository;
+    @Autowired
+    private PageRepository pageRepository;
+    @Autowired
+    private SiteRepository siteRepository;
+    private CashStatisticsDB cash;
+    @Autowired
+    private CashStatisticsRepository cashStatisticsRepository;
 
-  @Override
-  public synchronized void delete(Site site) {
-
-    Optional<SiteInfo> siteInfo = siteRepository.getSiteInfo(site.getUrl());
-    if (siteInfo.isPresent()) {
-      int siteId = siteInfo.get().getId();
-      List<Integer> indexList = indexRepository.getIndex(siteId);
-      List<Integer> lemmaList = lemmaRepository.getListIdLemmaTable(siteId);
-      List<Integer> pageInfoList = pageRepository.getListIdPageTable(siteId);
-      try {
-        indexRepository.deleteAllByIdInBatch(indexList);
-        lemmaRepository.deleteAllByIdInBatch(lemmaList);
-        pageRepository.deleteAllByIdInBatch(pageInfoList);
-      }
-      catch (JpaSystemException ex) {
-        delete(indexList, indexRepository);
-        delete(lemmaList, lemmaRepository);
-        delete(pageInfoList, pageRepository);
-      }
-    }
-  }
-
-  @Override
-  public void delete(SiteDTO siteDTO) {
-    List<Lemma> list = new ArrayList<>();
-    for (PageDTO pageDTO : siteDTO.getPageDTOList()) {
-      Optional<List<Lemma>> index = lemmaRepository.getLemmaJoin(pageDTO.getId());
-      if (index.isPresent()) {
-        for (Lemma lemma : index.get()) {
-          lemma.setFrequency(lemma.getFrequency() - 1);
-          list.add(lemma);
-        }
-      }
-    }
-    lemmaRepository.saveAll(list);
-    siteDTO.getPageDTOList().forEach(p -> indexRepository.delete(p.getId()));
-  }
-
-  private void delete(List<Integer> listId, JpaRepository<?, Integer> repository) {
-    try {
-      int sizeArray = 10000;
-      int j = 0;
-      int k = 0;
-      while (true) {
-        k += sizeArray;
-        if (listId.size() > sizeArray) {
-          List<Integer> list = listId.subList(j, k - 1);
-          repository.deleteAllByIdInBatch(list);
-          j += sizeArray;
-        } else {
-          repository.deleteAllByIdInBatch(listId);
-          break;
+    @Override
+    public void delete(Site site) {
+        Optional<SiteInfo> siteInfo = siteRepository.getSiteInfo(site.getUrl());
+        if (siteInfo.isPresent()) {
+            int siteId = siteInfo.get().getId();
+            List<Integer> indexList = indexRepository.getIndex(siteId);
+            List<Integer> lemmaList = lemmaRepository.getListIdLemmaTable(siteId);
+            List<Integer> pageInfoList = pageRepository.getListIdPageTable(siteId);
+            try {
+                indexRepository.deleteAllByIdInBatch(indexList);
+                lemmaRepository.deleteAllByIdInBatch(lemmaList);
+                pageRepository.deleteAllByIdInBatch(pageInfoList);
+            } catch (JpaSystemException ex) {
+                delete(indexList, indexRepository);
+                delete(lemmaList, lemmaRepository);
+                delete(pageInfoList, pageRepository);
+            }
         }
     }
 
-    }catch (Exception e){
-      e.printStackTrace();
+    @Override
+    public void delete(SiteDTO siteDTO) {
+        List<Lemma> list = new ArrayList<>();
+        for (PageDTO pageDTO : siteDTO.getPageDTOList()) {
+            Optional<List<Lemma>> index = lemmaRepository.getLemmaJoin(pageDTO.getId());
+            if (index.isPresent()) {
+                for (Lemma lemma : index.get()) {
+                    lemma.setFrequency(lemma.getFrequency() - 1);
+                    list.add(lemma);
+                }
+            }
+        }
+        lemmaRepository.saveAll(list);
+        siteDTO.getPageDTOList().forEach(p -> indexRepository.delete(p.getId()));
     }
-  }
+
+    private void delete(List<Integer> listId, JpaRepository<?, Integer> repository) {
+        try {
+            int sizeArray = 10000;
+            int j = 0;
+            int k = 0;
+            while (true) {
+                k += sizeArray;
+                if (listId.size() > sizeArray) {
+                    List<Integer> list = listId.subList(j, k - 1);
+                    repository.deleteAllByIdInBatch(list);
+                    j += sizeArray;
+                } else {
+                    repository.deleteAllByIdInBatch(listId);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }
