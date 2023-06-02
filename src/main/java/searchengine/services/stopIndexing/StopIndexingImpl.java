@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import searchengine.config.status.Status;
 import searchengine.model.SQL.SiteInfo;
 import searchengine.repository.SQL.SiteRepository;
+import searchengine.services.indexing.core.check.lifeThread.LifeThread;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -12,24 +13,27 @@ import java.util.List;
 
 import static searchengine.services.indexing.core.check.lifeThread.LifeThread.*;
 
+/**
+ * @see StopIndexingImpl - данный класс предназначен, для принудительной остановки индексации.
+ */
 @Service
 public class StopIndexingImpl implements StopIndexingService {
     @Autowired
     private SiteRepository repository;
 
-
+    /**
+     * @see #stopIndexing() - метод останавливает индексацию и возвращает true если остановка выполнена успешно
+     *                        или false если индексация не была запущена.
+     * Работа метода:
+     * @see  LifeThread#isAliveThread() - статичекский метед проверяет, есть ли живые потоки
+     * @see LifeThread#getThreadList() - статический метод содержащий информацию об актиынвых потоках.
+     * @see LifeThread#clearAllThread() - статический метод производит отчистку списка активных потоков.
+     */
     @Override
     public HashMap<String, Object> stopIndexing() {
         HashMap<String, Object> response = new HashMap<>();
         if (isAliveThread()) {
             getThreadList().forEach(Thread::interrupt);
-//            getThreadList().forEach(thread -> {
-//                try {
-//                    thread.join();
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            });
             setStatusFailed();
             clearAllThread();
             response.put("result", true);

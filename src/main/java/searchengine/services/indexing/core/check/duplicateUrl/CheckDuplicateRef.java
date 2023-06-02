@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * Класс проверяет наличие повторяющихся url в списке
+ */
 public class CheckDuplicateRef {
     @Getter
     private List<PageDTO> list = new ArrayList<>();

@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.springframework.beans.factory.annotation.Autowired;
-import searchengine.config.jsoup.JsoupConf;
 import searchengine.dto.sites.PageDTO;
 
 import java.util.*;

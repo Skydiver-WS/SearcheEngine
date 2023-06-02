@@ -11,7 +11,6 @@ import searchengine.model.SQL.Index;
 import searchengine.model.SQL.Lemma;
 import searchengine.model.SQL.PageInfo;
 import searchengine.model.SQL.SiteInfo;
-import searchengine.repository.noSQL.CashLemmasRepository;
 import searchengine.services.deleteDataDB.nosql.DeleteCashLemmasService;
 import searchengine.services.indexing.core.check.indexing.ChangeStartIndexingService;
 import searchengine.services.deleteDataDB.sql.DeleteDataService;
