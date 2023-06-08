@@ -14,8 +14,15 @@ import searchengine.services.search.core.result.snippet.SnippetService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Logger;
 
+/**
+ * Данный класс преназначен для сбора всех ранее полученных данных в DTO объект {@link ResultDTO}.
+ * Зависимости:
+ * @see PageRepository - репозиторий для совершения опрераций с таблицой {@link PageInfo}.
+ * @see SnippetService - сервис для формирования сниппетов (фрагментов текста, где найдены совпадения).
+ */
 
 @Component
 public class ResultImpl implements ResultService {
@@ -24,12 +31,21 @@ public class ResultImpl implements ResultService {
     @Autowired
     private SnippetService snippetService;
 
+    /**
+     *  Метод преназначен для сбора всех ранее полученных данных в DTO объект {@link ResultDTO}.
+     * @param dto - массив объектов {@link RelevanceDTO}.
+     *  Метод работает следующим образом:
+     * - из массива объектов {@link RelevanceDTO} извлекаются значения pageId;
+     * - далее передаётся в метод {@link #pageInfoList(List)} который с помощью {@link ForkJoinPool}(экспериментальная функция)
+     * извлекает объекты {@link PageInfo} из БД;
+     * - с помощью Stream API происходит создание массива объектов {@link ResultDTO}.
+     */
     @Override
     public ResultDTO[] getResult(RelevanceDTO[] dto) {
         List<Integer> listId = new ArrayList<>();
         Arrays.stream(dto).map(RelevanceDTO::getPageId).forEach(listId::add);
         //List<PageInfo> pageInfoList = pageRepository.findAllById(listId);
-       List<PageInfo> pageInfoList = pageInfoList(listId);
+        List<PageInfo> pageInfoList = pageInfoList(listId);
         return Arrays.stream(dto).map(o -> {
             PageInfo pageInfo = pageInfoList.stream().filter(id -> o.getPageId() == id.getId()).findFirst().orElse(null);
             ResultDTO resultDTO = new ResultDTO();
@@ -38,7 +54,7 @@ public class ResultImpl implements ResultService {
             resultDTO.setUri(pageInfo.getPath());
             resultDTO.setRelevance(o.getRelRelevance());
             resultDTO.setTitle(getTitlePage(pageInfo));
-            resultDTO.setSnippet(snippetService.getSnippet(pageInfo, o.getFrequencyLemmaDTOList()));
+            resultDTO.setSnippet(snippetService.getSnippet(pageInfo, o.getListFrequencyLemmaDTOList()));
             return resultDTO.getSnippet().length() == 0 ? null : resultDTO;
         }).toArray(ResultDTO[]::new);
     }
@@ -47,7 +63,8 @@ public class ResultImpl implements ResultService {
         Document doc = Jsoup.parse(pageInfo.getContent());
         return doc.title();
     }
-        private List<PageInfo> pageInfoList(List<Integer> listId) {
+
+    private List<PageInfo> pageInfoList(List<Integer> listId) {
         List<MultiThreadQuery> listQuery = new ArrayList<>();
         List<PageInfo> pageInfoList = new ArrayList<>();
         for (Integer id : listId) {

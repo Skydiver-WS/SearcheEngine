@@ -7,6 +7,10 @@ import searchengine.model.SQL.SiteInfo;
 
 import java.util.*;
 
+/**
+ * Данный метод возвращает частоту повторения лемм на странице.
+ * @author Aleksandr Isaev
+ */
 @Component
 public class HandlerDataLemma implements HandlerDataLemmaService {
     @Override
@@ -27,6 +31,10 @@ public class HandlerDataLemma implements HandlerDataLemmaService {
         return lemmas;
     }
 
+    /**
+     * Метод работатет при запуске индексации одиночной страницы и
+     * преднаначен для изменении параметра frequency таблицы {@link Lemma} либо добавлении леммы, при её отстутсвии в БД.
+     */
     @Override
     public List<Lemma> checkNewLemmas(SiteInfo siteInfo, List<String> lemmasListNew, List<Lemma> lemmaList) {
         List<Lemma> list = new ArrayList<>(createNewLemma(lemmasListNew));

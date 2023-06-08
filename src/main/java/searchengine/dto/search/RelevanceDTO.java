@@ -12,5 +12,5 @@ public class RelevanceDTO {
     private double absRelevance;
     private double relRelevance;
     private int pageId;
-    private List<FrequencyLemmaDTO> frequencyLemmaDTOList;
+    private List<FrequencyLemmaDTO> listFrequencyLemmaDTOList;
 }

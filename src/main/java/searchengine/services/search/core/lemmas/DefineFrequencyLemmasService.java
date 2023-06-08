@@ -5,6 +5,6 @@ import searchengine.dto.search.SearchObjectDTO;
 
 import java.util.List;
 
-public interface SearchLemmasService {
+public interface DefineFrequencyLemmasService {
     FrequencyLemmaDTO[] getFindLemmasSort(String [] lemmas, List<SearchObjectDTO> searchObjectDTOList);
 }

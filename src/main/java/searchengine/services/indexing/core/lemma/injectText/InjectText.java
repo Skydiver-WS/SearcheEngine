@@ -13,6 +13,10 @@ import java.util.*;
 import java.util.concurrent.RecursiveTask;
 import java.util.logging.Logger;
 
+/**
+ *   Данный класс  на вход получает объект {@link PageInfo} или запрос query
+ * и предназначен для получения лемм и их количества.
+ */
 
 public class InjectText extends RecursiveTask<TreeMap<Integer, List<LemmaDTO>>> {
     private PageInfo pageInfo;
@@ -29,6 +33,10 @@ public class InjectText extends RecursiveTask<TreeMap<Integer, List<LemmaDTO>>> 
         this.query = query;
     }
 
+    /**
+     * Данный метод запускает анализатор {@link LemmaAnalyze} и список объектов {@link LemmaDTO}
+     * сгрупированным по id таблицы {@link PageInfo}
+     */
     @Override
     @SneakyThrows
     protected TreeMap<Integer, List<LemmaDTO>> compute() {

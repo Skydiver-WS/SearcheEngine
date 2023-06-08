@@ -12,10 +12,24 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
+/**
+ * Класс предназначен для формирования сниппетов.
+ * @author Aleksandr Isaev
+ */
 @Service
 public class SnippetImpl implements SnippetService {
     private final String REGEX = "[()\\[\\]{}&|+^?]";
 
+    /**
+     *  Метод предназначен для формирования сниппетов.
+     * @param pageInfo - объект из таблицы {@link PageInfo} предназначен для извлечения контента.
+     * @param list - список DTO объектов {@link FrequencyLemmaDTO}.
+     *  Работа метода:
+     * - из объекта {@link PageInfo} извлекается контент, отчищается от спецсимволов, разделяется по словам
+     * и помещается в массив;
+     * @see #searchMath(String, String[])} - метод ищет в массиве content наиболее близкое совпадение по заданным леммам;
+     * @see #selectSnippet(List, String[]) - метод выделяет из массива content фрагменты текста.
+     */
     @Override
     public String getSnippet(PageInfo pageInfo, List<FrequencyLemmaDTO> list) {
         List<Integer[]> listIndexNumber = new ArrayList<>();
@@ -26,8 +40,8 @@ public class SnippetImpl implements SnippetService {
                 .split("\\s+");
         for (FrequencyLemmaDTO dto : list) {
             String lemma = dto.getLemma();
-            Integer[] indices = Arrays.stream(searchMath(lemma, content)).toList().toArray(new Integer[0]);
-            listIndexNumber.add(indices);
+            Integer[] indexMatchContent = searchMath(lemma, content);
+            listIndexNumber.add(indexMatchContent);
         }
         listIndexNumber.sort(Comparator.comparingInt(i -> i.length));
         List<IndexResultDTO> queryAccuracy = queryAccuracy(listIndexNumber);

@@ -7,6 +7,11 @@ import searchengine.dto.search.SearchObjectDTO;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+/**
+ * Данный класс предназначен для извлечения данных из базы данных Redis.
+ * @author Aleksandr Isaev
+ */
 @Component
 public class ListLemmasImpl implements ListLemmasService{
     @Autowired
