@@ -3,8 +3,8 @@ package searchengine.services.search.core.lemmas;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import searchengine.dto.search.SearchObjectDTO;
-import searchengine.model.noSQL.CashLemmas;
-import searchengine.repository.noSQL.CashLemmasRepository;
+import searchengine.model.nosql.CashLemmas;
+import searchengine.repository.nosql.CashLemmasRepository;
 
 import java.util.ArrayList;
 import java.util.List;

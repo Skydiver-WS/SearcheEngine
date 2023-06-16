@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import searchengine.config.site.SitesList;
 import searchengine.dto.statistics.*;
-import searchengine.model.SQL.SiteInfo;
-import searchengine.model.noSQL.CashStatisticsDB;
-import searchengine.repository.SQL.IndexRepository;
-import searchengine.repository.SQL.PageRepository;
-import searchengine.repository.SQL.SiteRepository;
-import searchengine.services.writeDataDB.noSQL.CashStatisticsService;
+import searchengine.model.sql.SiteInfo;
+import searchengine.model.nosql.CashStatisticsDB;
+import searchengine.repository.sql.IndexRepository;
+import searchengine.repository.sql.PageRepository;
+import searchengine.repository.sql.SiteRepository;
+import searchengine.services.writedatadb.nossql.CashStatisticsService;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

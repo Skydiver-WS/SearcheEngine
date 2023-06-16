@@ -4,7 +4,7 @@ import searchengine.config.site.Site;
 import searchengine.config.status.Status;
 import searchengine.dto.sites.LemmaDTO;
 import searchengine.dto.sites.SiteDTO;
-import searchengine.model.SQL.SiteInfo;
+import searchengine.model.sql.SiteInfo;
 
 import java.util.List;
 import java.util.TreeMap;

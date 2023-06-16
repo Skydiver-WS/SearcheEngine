@@ -5,7 +5,7 @@ import org.jsoup.safety.Safelist;
 import org.springframework.stereotype.Service;
 import searchengine.dto.search.FrequencyLemmaDTO;
 import searchengine.dto.search.IndexResultDTO;
-import searchengine.model.SQL.PageInfo;
+import searchengine.model.sql.PageInfo;
 
 import java.util.*;
 import java.util.regex.Matcher;

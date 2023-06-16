@@ -8,7 +8,7 @@ import searchengine.config.jsoup.JsoupConf;
 import searchengine.config.status.Status;
 import searchengine.dto.sites.PageDTO;
 import searchengine.dto.sites.SiteDTO;
-import searchengine.services.indexing.core.check.duplicateUrl.CheckDuplicateRef;
+import searchengine.services.indexing.core.check.duplicateurl.CheckDuplicateRef;
 import searchengine.services.indexing.core.handler.WriteDbService;
 
 import java.io.IOException;
@@ -36,7 +36,7 @@ public class Parse implements ParseService {
             String[] conf = jsoupConf(jsoupConf);
             String url = pageDTO.getUrl();
             Document doc = Jsoup.connect(url).userAgent(conf[0])
-                    .referrer(conf[1]).get(); // TODO: вынести в конфигурацию
+                    .referrer(conf[1]).get();
             pageDTO.setCodeResponse(doc.connection().response().statusCode());
             pageDTO.setContent(doc.html());
             return pageDTO;

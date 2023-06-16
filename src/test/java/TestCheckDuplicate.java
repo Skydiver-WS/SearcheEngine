@@ -3,11 +3,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import searchengine.dto.sites.PageDTO;
-import searchengine.services.indexing.core.check.duplicateUrl.CheckDuplicateRef;
+import searchengine.services.indexing.core.check.duplicateurl.CheckDuplicateRef;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
 
 @SpringBootTest(classes = CheckDuplicateRef.class)
 public class TestCheckDuplicate {

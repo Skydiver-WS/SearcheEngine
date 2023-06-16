@@ -2,7 +2,7 @@ package searchengine.dto.sites;
 
 import lombok.Getter;
 import lombok.Setter;
-import searchengine.model.SQL.SiteInfo;
+import searchengine.model.sql.SiteInfo;
 
 import java.util.List;
 

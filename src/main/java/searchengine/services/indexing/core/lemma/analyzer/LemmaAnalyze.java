@@ -1,14 +1,9 @@
 package searchengine.services.indexing.core.lemma.analyzer;
 
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.apache.lucene.morphology.LuceneMorphology;
-import org.apache.lucene.morphology.english.EnglishLuceneMorphology;
-import org.apache.lucene.morphology.russian.RussianLuceneMorphology;
 import org.springframework.stereotype.Service;
-import searchengine.services.writeDataDB.SQL.lemmaTable.WriteLemmaTableImpl;
+import searchengine.services.writedatadb.sql.lemmatable.WriteLemmaTableImpl;
 
 import java.util.Map;
 import java.util.TreeMap;

@@ -2,7 +2,6 @@ package searchengine.dto.search;
 
 import lombok.Getter;
 import lombok.Setter;
-import searchengine.model.SQL.PageInfo;
 
 import java.util.List;
 

@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static searchengine.services.indexing.core.check.lifeThread.LifeThread.isAliveThread;
+import static searchengine.services.indexing.core.check.lifethread.LifeThread.isAliveThread;
 
 @RequiredArgsConstructor
 public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>> {
@@ -31,7 +31,7 @@ public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>> {
         if (checkUrl(url) && isAliveThread()) {
             Thread.currentThread().setName(url);
             Document doc = Jsoup.connect(url).userAgent(jsoupConf[0])
-                    .referrer(jsoupConf[1]).get(); // TODO: вынести в конфигурацию
+                    .referrer(jsoupConf[1]).get();
             addNewPage(doc);
             List<String> listAllRef = doc.select("a").eachAttr("abs:href");
             TreeSet<String> checkRef = filterSite(listAllRef);
@@ -68,7 +68,7 @@ public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>> {
                 Logger.getLogger(ParseHtmlPage.class.getName()).info(Thread.currentThread().isAlive()
                         + " - " + url + " JOIN complete");
             } catch (Exception ex) {
-                //Logger.getLogger(ParseHtmlPage.class.getName()).warning(url + " Не поддерживаемый контент"); //TODO: при ошибке добавить логирование с записью в БД
+               Logger.getLogger(ParseHtmlPage.class.getName()).warning(url + " Не поддерживаемый контент");
             }
         }
     }

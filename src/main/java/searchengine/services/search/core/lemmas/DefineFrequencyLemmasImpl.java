@@ -4,9 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import searchengine.dto.search.FrequencyLemmaDTO;
 import searchengine.dto.search.SearchObjectDTO;
-import searchengine.model.SQL.PageInfo;
-import searchengine.repository.SQL.LemmaRepository;
-import searchengine.repository.SQL.PageRepository;
+import searchengine.model.sql.PageInfo;
+import searchengine.repository.sql.PageRepository;
 import java.util.*;
 @Service
 public class DefineFrequencyLemmasImpl implements DefineFrequencyLemmasService{

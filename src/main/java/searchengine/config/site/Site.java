@@ -3,9 +3,6 @@ package searchengine.config.site;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 @Setter
 @Getter
 public class Site {
@@ -14,6 +11,5 @@ public class Site {
 
     public void setUrl(String url) {
         this.url = url.trim().replace("www.", "").replaceFirst("/$", "");
-        //this.url = url.trim().replace("www.", "");
     }
 }

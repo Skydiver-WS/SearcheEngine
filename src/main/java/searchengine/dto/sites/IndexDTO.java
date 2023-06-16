@@ -2,8 +2,8 @@ package searchengine.dto.sites;
 
 import lombok.Getter;
 import lombok.Setter;
-import searchengine.model.SQL.Lemma;
-import searchengine.model.SQL.PageInfo;
+import searchengine.model.sql.Lemma;
+import searchengine.model.sql.PageInfo;
 
 @Getter
 @Setter

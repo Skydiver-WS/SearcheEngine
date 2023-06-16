@@ -4,13 +4,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import searchengine.repository.SQL.SiteRepository;
+import searchengine.repository.sql.SiteRepository;
 import searchengine.services.stopIndexing.StopIndexingImpl;
 import searchengine.services.stopIndexing.StopIndexingService;
 
 import java.util.HashMap;
 
-import static searchengine.services.indexing.core.check.lifeThread.LifeThread.addThread;
+import static searchengine.services.indexing.core.check.lifethread.LifeThread.addThread;
 
 @SpringBootTest(classes = StopIndexingImpl.class)
 public class TestStopIndexing {

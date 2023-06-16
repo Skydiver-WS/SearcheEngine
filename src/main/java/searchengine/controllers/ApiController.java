@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import searchengine.dto.search.ResponseSearchDTO;
 import searchengine.dto.statistics.StatisticsResponse;
-import searchengine.repository.noSQL.CashStatisticsRepository;
 import searchengine.services.indexing.fullIndexing.IndexingService;
 import searchengine.services.stopIndexing.StopIndexingService;
 import searchengine.services.indexing.singleIndexing.IndexPageService;

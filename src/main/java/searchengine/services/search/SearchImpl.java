@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import searchengine.dto.search.*;
 
-import searchengine.model.SQL.PageInfo;
+import searchengine.model.sql.PageInfo;
 import searchengine.services.indexing.core.lemma.LemmaService;
 import searchengine.services.search.core.lemmas.DefineFrequencyLemmasService;
 import searchengine.services.search.core.lemmas.ListLemmasService;

@@ -1,7 +1,6 @@
 package searchengine.services.search.core.lemmas;
 
 import searchengine.dto.search.SearchObjectDTO;
-import searchengine.model.noSQL.CashLemmas;
 
 import java.util.List;
 

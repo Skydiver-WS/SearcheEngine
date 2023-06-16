@@ -8,15 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import searchengine.dto.sites.LemmaDTO;
 import searchengine.dto.sites.PageDTO;
-import searchengine.model.SQL.PageInfo;
-import searchengine.model.SQL.SiteInfo;
-import searchengine.repository.SQL.PageRepository;
-import searchengine.services.indexing.core.lemma.injectText.InjectText;
+import searchengine.model.sql.PageInfo;
+import searchengine.model.sql.SiteInfo;
+import searchengine.repository.sql.PageRepository;
+import searchengine.services.indexing.core.lemma.injecttext.InjectText;
 
 import java.util.*;
 import java.util.concurrent.ForkJoinTask;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /**
  * Данный класс предназначен для получения лемм.

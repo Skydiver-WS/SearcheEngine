@@ -4,10 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import searchengine.dto.search.FrequencyLemmaDTO;
 import searchengine.dto.search.SearchObjectDTO;
-import searchengine.model.SQL.SiteInfo;
-import searchengine.repository.SQL.LemmaRepository;
-import searchengine.repository.SQL.SiteRepository;
-import searchengine.services.search.core.lemmas.SearchCashLemmasService;
+import searchengine.model.sql.SiteInfo;
+import searchengine.repository.sql.SiteRepository;
 
 import java.util.ArrayList;
 import java.util.Arrays;

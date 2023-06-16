@@ -1,7 +1,7 @@
 package searchengine.services.search.core.result.snippet;
 
 import searchengine.dto.search.FrequencyLemmaDTO;
-import searchengine.model.SQL.PageInfo;
+import searchengine.model.sql.PageInfo;
 
 import java.util.List;
 

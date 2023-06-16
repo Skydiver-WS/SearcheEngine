@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import searchengine.dto.search.RelevanceDTO;
 import searchengine.dto.search.ResultDTO;
-import searchengine.model.SQL.PageInfo;
-import searchengine.repository.SQL.PageRepository;
-import searchengine.services.search.core.result.multiThredQuery.MultiThreadQuery;
+import searchengine.model.sql.PageInfo;
+import searchengine.repository.sql.PageRepository;
+import searchengine.services.search.core.result.multithredquery.MultiThreadQuery;
 import searchengine.services.search.core.result.snippet.SnippetService;
 
 import java.util.ArrayList;

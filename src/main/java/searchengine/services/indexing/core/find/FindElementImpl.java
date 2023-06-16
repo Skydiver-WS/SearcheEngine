@@ -4,16 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import searchengine.dto.sites.PageDTO;
 
-import searchengine.model.SQL.PageInfo;
-import searchengine.model.SQL.SiteInfo;
-import searchengine.repository.SQL.IndexRepository;
-import searchengine.repository.SQL.PageRepository;
-import searchengine.repository.SQL.SiteRepository;
+import searchengine.model.sql.PageInfo;
+import searchengine.model.sql.SiteInfo;
+import searchengine.repository.sql.PageRepository;
+import searchengine.repository.sql.SiteRepository;
 
 
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
@@ -23,8 +21,6 @@ public class FindElementImpl implements FindElementService {
     private SiteRepository siteRepository;
     @Autowired
     private PageRepository pageRepository;
-    @Autowired
-    private IndexRepository indexRepository;
 
     @Override
     public PageDTO find(String url) {
