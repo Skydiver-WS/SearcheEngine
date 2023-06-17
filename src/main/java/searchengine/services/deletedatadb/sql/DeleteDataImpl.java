@@ -29,6 +29,8 @@ public class DeleteDataImpl implements DeleteDataService {
     @Autowired
     private SiteRepository siteRepository;
 
+
+
     @Override
     public void delete(Site site) {
         Optional<SiteInfo> siteInfo = siteRepository.getSiteInfo(site.getUrl());
