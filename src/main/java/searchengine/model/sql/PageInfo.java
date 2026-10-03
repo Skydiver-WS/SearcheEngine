@@ -25,6 +25,6 @@ public class PageInfo {
     private String path;
     @Column(nullable = false)
     private int code;
-    @Column(columnDefinition = "MEDIUMTEXT", nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 }

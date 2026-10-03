@@ -22,9 +22,9 @@ public class LemmaAnalyze {
         Pattern pattern = Pattern.compile("СОЮЗ|МЕЖД|ПРЕДЛ|ARTICLE|CONJ|VBE|PN|PN_ADJ|PREP");
         for (String text : splitText) {
             try {
-                Logger.getLogger(WriteLemmaTableImpl.class.getName()).info("text  - " + text);
+                //Logger.getLogger(WriteLemmaTableImpl.class.getName()).info("text  - " + text);
                 String newForm = morphologies[0].getMorphInfo(text).get(0);
-                Logger.getLogger(WriteLemmaTableImpl.class.getName()).info("Russian lemma find - " + newForm);
+                //Logger.getLogger(WriteLemmaTableImpl.class.getName()).info("Russian lemma find - " + newForm);
                 Matcher matcher = pattern.matcher(newForm);
                 if (!matcher.find()) {
                     String t = finalText(newForm);
@@ -43,15 +43,15 @@ public class LemmaAnalyze {
 
     private String lemmaEnglish(String text, Pattern pattern) {
         try {
-            Logger.getLogger(WriteLemmaTableImpl.class.getName()).info("text - " + text);
+            //Logger.getLogger(WriteLemmaTableImpl.class.getName()).info("text - " + text);
             String newForm = morphologies[1].getMorphInfo(text).get(0);
-            Logger.getLogger(WriteLemmaTableImpl.class.getName()).info("English lemma find - " + newForm);
+            //Logger.getLogger(WriteLemmaTableImpl.class.getName()).info("English lemma find - " + newForm);
             Matcher matcher = pattern.matcher(newForm);
             if (!matcher.find()) {
                 return text;
             }
         } catch (Exception ex) {
-            Logger.getLogger(LemmaAnalyze.class.getName()).warning(ex.getMessage());
+            //Logger.getLogger(LemmaAnalyze.class.getName()).warning(ex.getMessage());
         }
         return null;
     }

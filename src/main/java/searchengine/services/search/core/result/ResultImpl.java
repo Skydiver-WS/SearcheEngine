@@ -71,11 +71,11 @@ public class ResultImpl implements ResultService {
             MultiThreadQuery multiQuery = new MultiThreadQuery(pageRepository, id);
             multiQuery.fork();
             listQuery.add(multiQuery);
-            Logger.getLogger(ResultImpl.class.getName()).info("Fork complete");
+            //Logger.getLogger(ResultImpl.class.getName()).info("Fork complete");
         }
         for (MultiThreadQuery query : listQuery) {
             pageInfoList.add(query.join());
-            Logger.getLogger(ResultImpl.class.getName()).info("Join complete");
+            //Logger.getLogger(ResultImpl.class.getName()).info("Join complete");
         }
         return pageInfoList;
     }

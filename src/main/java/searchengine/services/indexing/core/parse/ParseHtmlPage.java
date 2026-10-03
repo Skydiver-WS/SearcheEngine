@@ -37,8 +37,8 @@ public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>> {
             TreeSet<String> checkRef = filterSite(listAllRef);
             ArrayList<ParseHtmlPage> pages = fork(checkRef);
             join(pages);
-            Logger.getLogger(ParseHtmlPage.class.getName()).info(Thread.currentThread().isAlive() + " - "
-                    + "Complete");
+//            Logger.getLogger(ParseHtmlPage.class.getName()).info(Thread.currentThread().isAlive() + " - "
+//                    + "Complete");
             return finalWebStructure;
         }
         return null;
@@ -54,8 +54,8 @@ public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>> {
                 htmlPage.fork();
                 pages.add(htmlPage);
                 Thread.currentThread().setName(url);
-                Logger.getLogger(ParseHtmlPage.class.getName()).info(Thread.currentThread().isAlive()
-                        + " - " + url + " FORK complete");
+//                Logger.getLogger(ParseHtmlPage.class.getName()).info(Thread.currentThread().isAlive()
+//                        + " - " + url + " FORK complete");
             }
         }
         return pages;
@@ -65,10 +65,10 @@ public class ParseHtmlPage extends RecursiveTask<Set<PageDTO>> {
         for (ParseHtmlPage page : pages) {
             try {
                 finalWebStructure.addAll(page.join());
-                Logger.getLogger(ParseHtmlPage.class.getName()).info(Thread.currentThread().isAlive()
-                        + " - " + url + " JOIN complete");
+//                Logger.getLogger(ParseHtmlPage.class.getName()).info(Thread.currentThread().isAlive()
+//                        + " - " + url + " JOIN complete");
             } catch (Exception ex) {
-               Logger.getLogger(ParseHtmlPage.class.getName()).warning(url + " Не поддерживаемый контент");
+               //Logger.getLogger(ParseHtmlPage.class.getName()).warning(url + " Не поддерживаемый контент");
             }
         }
     }

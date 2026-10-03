@@ -11,6 +11,9 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <lucene.version>9.3.0</lucene.version>
+        <lombok.version>1.18.48</lombok.version>
+        <morphology.version>71af7f6f9d55eaef4bc7c493b09a28528cb4c783</morphology.version>
     </properties>
 
     <parent>
@@ -48,8 +51,9 @@
             <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -71,29 +75,29 @@
             <artifactId>jedis</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.lucene.morphology</groupId>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>${lucene.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-analysis-common</artifactId>
+            <version>${lucene.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.AKuznetsov.russianmorphology</groupId>
             <artifactId>morph</artifactId>
-            <version>1.5</version>
+            <version>${morphology.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.lucene.analysis</groupId>
-            <artifactId>morphology</artifactId>
-            <version>1.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.lucene.morphology</groupId>
-            <artifactId>dictionary-reader</artifactId>
-            <version>1.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.lucene.morphology</groupId>
+            <groupId>com.github.AKuznetsov.russianmorphology</groupId>
             <artifactId>english</artifactId>
-            <version>1.5</version>
+            <version>${morphology.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.lucene.morphology</groupId>
+            <groupId>com.github.AKuznetsov.russianmorphology</groupId>
             <artifactId>russian</artifactId>
-            <version>1.5</version>
+            <version>${morphology.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -105,8 +109,8 @@
 
     <repositories>
         <repository>
-            <id>skillbox-gitlab</id>
-            <url>https://gitlab.skillbox.ru/api/v4/projects/263574/packages/maven</url>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 </project>

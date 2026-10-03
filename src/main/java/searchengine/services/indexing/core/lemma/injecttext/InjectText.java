@@ -40,7 +40,7 @@ public class InjectText extends RecursiveTask<TreeMap<Integer, List<LemmaDTO>>> 
     @Override
     @SneakyThrows
     protected TreeMap<Integer, List<LemmaDTO>> compute() {
-        Logger.getLogger(InjectText.class.getName()).info(Thread.currentThread().getName() + " - start");
+        //Logger.getLogger(InjectText.class.getName()).info(Thread.currentThread().getName() + " - start");
         LemmaAnalyze analyze = new LemmaAnalyze(textSplit(), morphologies);
         Map<String, Integer> lemmas = analyze.runAnalyze();
         List<LemmaDTO> listLemmas = new ArrayList<>();

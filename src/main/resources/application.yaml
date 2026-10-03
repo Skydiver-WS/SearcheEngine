@@ -1,6 +1,6 @@
 # example values
 server:
-  port: 8080
+  port: 8081
 
 redis-settings:
   host: 127.0.0.1
@@ -13,16 +13,16 @@ jsoup-setting:
 
 spring:
   datasource:
-    username: root
-    password: password
-    url: jdbc:mysql://localhost:3306/search_engine?useSSL=false&requireSSL=false&allowPublicKeyRetrieval=true
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/search_engine
   jpa:
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
   main:
     allow-bean-definition-overriding: true

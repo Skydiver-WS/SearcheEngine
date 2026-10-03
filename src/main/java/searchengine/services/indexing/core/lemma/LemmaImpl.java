@@ -78,7 +78,7 @@ public class LemmaImpl implements LemmaService {
     }
     for (ForkJoinTask<TreeMap<Integer, List<LemmaDTO>>> text : listInjectClass) {
       allLemmas.putAll(text.join());
-      Logger.getLogger(InjectText.class.getName()).info(Thread.currentThread().getName() + " - finish");
+      //Logger.getLogger(InjectText.class.getName()).info(Thread.currentThread().getName() + " - finish");
     }
     return allLemmas;
   }
